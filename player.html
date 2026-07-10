@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Player — Nutri For Nutri</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Inter',sans-serif;font-weight:300;background:#F8F5EF;color:#0D0C0A;cursor:default;}
+a{text-decoration:none;color:inherit;}
+:root{--go:#C9A257;--gn:#7FC442;--dk:#0D0C0A;--cr:#F8F5EF;--topH:60px;--sbW:308px;}
+
+/* ── TOP BAR ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:var(--topH);display:flex;align-items:center;
+  background:#0D0C0A;border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 20px;gap:20px;
+}
+.tb-back{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:500;letter-spacing:.06em;color:rgba(248,245,239,.5);
+  transition:color .2s;flex-shrink:0;
+}
+.tb-back:hover{color:rgba(248,245,239,.9);}
+.tb-back svg{opacity:.6;}
+.tb-divider{width:1px;height:20px;background:rgba(255,255,255,.1);flex-shrink:0;}
+.tb-brand{
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1rem;color:var(--go);letter-spacing:.02em;flex-shrink:0;
+}
+.tb-course{font-size:12px;font-weight:500;color:rgba(248,245,239,.75);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tb-progress{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.tb-bar{width:120px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden;}
+.tb-fill{height:100%;background:var(--go);border-radius:2px;transition:width .4s;}
+.tb-pct{font-size:10px;color:rgba(248,245,239,.4);min-width:28px;}
+.tb-btn{
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--go);color:#0D0C0A;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;
+  transition:opacity .2s;
+}
+.tb-btn:hover{opacity:.85;}
+
+/* ── LAYOUT ── */
+#layout{position:fixed;top:var(--topH);left:0;right:0;bottom:0;display:flex;}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sbW);flex-shrink:0;
+  background:#fff;border-right:1px solid rgba(13,12,10,.09);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sb-head{
+  padding:20px 20px 16px;border-bottom:1px solid rgba(13,12,10,.07);
+  flex-shrink:0;
+}
+.sb-course-badge{
+  font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--go);margin-bottom:6px;display:block;
+}
+.sb-course-name{font-size:13px;font-weight:700;color:#0D0C0A;line-height:1.3;}
+.sb-modules{overflow-y:auto;flex:1;padding-bottom:20px;}
+.sb-modules::-webkit-scrollbar{width:4px;}
+.sb-modules::-webkit-scrollbar-track{background:transparent;}
+.sb-modules::-webkit-scrollbar-thumb{background:rgba(13,12,10,.1);border-radius:2px;}
+
+/* MODULE */
+.module{border-bottom:1px solid rgba(13,12,10,.06);}
+.module-hd{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:14px 20px;cursor:pointer;
+  transition:background .15s;
+  user-select:none;
+}
+.module-hd:hover{background:rgba(13,12,10,.02);}
+.module-hd.open{background:rgba(201,162,87,.04);}
+.module-num{
+  font-size:9px;font-weight:700;color:rgba(13,12,10,.3);
+  min-width:20px;margin-top:1px;letter-spacing:.05em;
+}
+.module-title{font-size:12.5px;font-weight:600;color:#0D0C0A;line-height:1.35;flex:1;}
+.module-arr{
+  font-size:10px;color:rgba(13,12,10,.3);
+  transition:transform .25s;margin-top:2px;flex-shrink:0;
+}
+.module-hd.open .module-arr{transform:rotate(180deg);}
+.module-lessons{display:none;}
+.module-lessons.open{display:block;}
+
+/* LESSON ITEM */
+.lesson-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 20px 9px 50px;cursor:pointer;
+  transition:background .15s;
+  border-left:2px solid transparent;
+}
+.lesson-item:hover{background:rgba(13,12,10,.03);}
+.lesson-item.active{background:rgba(201,162,87,.07);border-left-color:var(--go);}
+.lesson-check{
+  width:16px;height:16px;border-radius:50%;
+  border:1.5px solid rgba(13,12,10,.2);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.lesson-item.done .lesson-check{background:var(--gn);border-color:var(--gn);}
+.lesson-item.done .lesson-check::after{content:'✓';font-size:9px;color:#fff;font-weight:700;}
+.lesson-item.active .lesson-check{border-color:var(--go);}
+.lesson-name{font-size:12px;font-weight:400;color:rgba(13,12,10,.7);line-height:1.35;}
+.lesson-item.active .lesson-name{color:#0D0C0A;font-weight:500;}
+.lesson-dur{font-size:10px;color:rgba(13,12,10,.3);margin-left:auto;flex-shrink:0;}
+
+/* ── MAIN ── */
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+#main::-webkit-scrollbar{width:6px;}
+#main::-webkit-scrollbar-track{background:transparent;}
+#main::-webkit-scrollbar-thumb{background:rgba(13,12,10,.1);border-radius:3px;}
+
+/* VIDEO AREA */
+#video-wrap{background:#0D0C0A;width:100%;position:relative;}
+#video-inner{
+  max-width:960px;margin:0 auto;
+  aspect-ratio:16/9;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+#video-placeholder{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,#1e1c18 0%,#0D0C0A 70%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+}
+.vid-play-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(201,162,87,.15);border:2px solid rgba(201,162,87,.4);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;
+}
+.vid-play-btn:hover{background:rgba(201,162,87,.25);transform:scale(1.08);}
+.vid-play-tri{width:0;height:0;border-top:12px solid transparent;border-bottom:12px solid transparent;border-left:20px solid var(--go);margin-left:4px;}
+.vid-label{font-size:11px;font-weight:500;color:rgba(248,245,239,.3);letter-spacing:.08em;text-transform:uppercase;}
+
+/* CONTENT AREA */
+#content-wrap{flex:1;padding:36px 48px 60px;max-width:960px;margin:0 auto;width:100%;}
+.lesson-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px;}
+.lesson-meta{flex:1;}
+.lesson-breadcrumb{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--go);margin-bottom:8px;}
+#lesson-title{font-size:1.6rem;font-weight:700;color:#0D0C0A;line-height:1.25;}
+.lesson-actions{display:flex;gap:10px;flex-shrink:0;margin-top:4px;}
+.btn-concluir{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  background:#0D0C0A;color:#F8F5EF;border:none;
+  padding:10px 20px;border-radius:8px;cursor:pointer;transition:opacity .2s;
+}
+.btn-concluir:hover{opacity:.8;}
+.btn-concluir.done{background:var(--gn);color:#fff;}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid rgba(13,12,10,.1);margin-bottom:28px;}
+.tab{
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 20px;cursor:pointer;color:rgba(13,12,10,.4);
+  border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;
+}
+.tab.active{color:#0D0C0A;border-bottom-color:var(--go);}
+
+/* LESSON BODY */
+#lesson-body{font-size:14px;font-weight:300;line-height:1.9;color:rgba(13,12,10,.65);}
+#lesson-body p{margin-bottom:14px;}
+#lesson-body strong{font-weight:600;color:#0D0C0A;}
+#lesson-body ul{padding-left:20px;margin-bottom:14px;}
+#lesson-body li{margin-bottom:6px;}
+
+/* NAV BUTTONS */
+.lesson-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid rgba(13,12,10,.08);}
+.nav-btn{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;font-weight:600;color:rgba(13,12,10,.5);
+  background:none;border:1px solid rgba(13,12,10,.12);
+  padding:10px 18px;border-radius:8px;cursor:pointer;transition:all .2s;
+}
+.nav-btn:hover{border-color:var(--go);color:var(--go);}
+.nav-btn:disabled{opacity:.3;cursor:not-allowed;}
+.nav-btn.next{background:#0D0C0A;color:#F8F5EF;border-color:#0D0C0A;}
+.nav-btn.next:hover{background:var(--go);border-color:var(--go);color:#0D0C0A;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <a href="cursos.html" class="tb-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Meus cursos
+  </a>
+  <div class="tb-divider"></div>
+  <span class="tb-brand">Nutri For Nutri</span>
+  <div class="tb-divider"></div>
+  <span class="tb-course" id="tb-course-name">—</span>
+  <div style="flex:1;"></div>
+  <div class="tb-progress">
+    <div class="tb-bar"><div class="tb-fill" id="tb-fill" style="width:0%"></div></div>
+    <span class="tb-pct" id="tb-pct">0%</span>
+  </div>
+  <button class="tb-btn" id="btn-concluir-top" onclick="markDone()">Marcar como concluída</button>
+</div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sb-head">
+      <span class="sb-course-badge" id="sb-badge">—</span>
+      <div class="sb-course-name" id="sb-name">—</div>
+    </div>
+    <div class="sb-modules" id="sb-modules"></div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div id="video-wrap">
+      <div id="video-inner">
+        <div id="video-placeholder">
+          <div class="vid-play-btn" onclick="playVideo()">
+            <div class="vid-play-tri"></div>
+          </div>
+          <span class="vid-label" id="vid-label">Clique para reproduzir</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-wrap">
+      <div class="lesson-header">
+        <div class="lesson-meta">
+          <p class="lesson-breadcrumb" id="lesson-breadcrumb">Módulo 1</p>
+          <h1 id="lesson-title">—</h1>
+        </div>
+        <div class="lesson-actions">
+          <button class="btn-concluir" id="btn-concluir" onclick="markDone()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Marcar como concluída
+          </button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'conteudo')">Conteúdo</div>
+        <div class="tab" onclick="switchTab(this,'materiais')">Materiais de apoio</div>
+      </div>
+
+      <div id="lesson-body"></div>
+
+      <div class="lesson-nav">
+        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Aula anterior
+        </button>
+        <button class="nav-btn next" id="btn-next" onclick="navigate(1)">
+          Próxima aula
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ─── TRACKING DE ACESSO → PLANILHA ─── */
+(function(){
+  var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec'; // mesma URL do cursos.html
+  if(WS_URL === 'COLE_SUA_URL_AQUI') return;
+  try {
+    var slug  = (location.search.match(/[?&]c=([^&]+)/)||[])[1]||'';
+    var email = localStorage.getItem('nfn_email')||'';
+    var name  = localStorage.getItem('nfn_name')||'';
+    if(email && slug){
+      var payload = new URLSearchParams({name:name,email:email,course:slug,type:'access'});
+      try { navigator.sendBeacon(WS_URL, payload); }
+      catch(ex){ fetch(WS_URL,{method:'POST',mode:'no-cors',body:payload}); }
+    }
+  }catch(ex){}
+})();
+
+/* ════════════════════════════════════════════
+   COURSE DATA
+═══════════════════════════════════════════════ */
+var COURSES = {
+  'comunidade': {
+    title: 'Comunidade Nutri For Nutri',
+    badge: 'Grátis · Porta de Entrada',
+    modules: [
+      { title: 'Módulo 1 — Boas-vindas', lessons: [
+        { name: 'Bem-vinda à Comunidade', dur: '5min', body: '<p>Olá! Seja bem-vinda à <strong>Comunidade Nutri For Nutri</strong>. Este é o seu espaço de aprendizado, troca e crescimento profissional.</p><p>Aqui você vai encontrar conteúdos científicos e práticos sobre terapia alimentar infantil, além de um grupo de nutricionistas comprometidas com a excelência clínica.</p><p>Vamos juntas construir uma prática mais segura, mais confiante e mais impactante.</p>' },
+        { name: 'Como aproveitar a comunidade', dur: '8min', body: '<p>Nesta aula você vai aprender como navegar pelos conteúdos, participar dos encontros ao vivo e aproveitar ao máximo tudo que a comunidade oferece.</p><ul><li>Acesso aos módulos de conteúdo</li><li>Calendário de aulas ao vivo</li><li>Grupo de discussão de casos</li><li>Biblioteca de materiais de apoio</li></ul>' },
+        { name: 'Compromisso de aprendizado', dur: '4min', body: '<p>Para tirar o máximo proveito da comunidade, recomendamos que você acesse os conteúdos com frequência e participe ativamente das discussões.</p><p>A consistência é o diferencial das nutricionistas que mais evoluem na terapia alimentar infantil.</p>' }
+      ]},
+      { title: 'Módulo 2 — Fundamentos', lessons: [
+        { name: 'O que é terapia alimentar infantil', dur: '18min', body: '<p>A terapia alimentar infantil é uma abordagem clínica especializada para crianças com dificuldades alimentares, sejam elas relacionadas a recusa, seletividade, fobias ou condições associadas como TEA e TDAH.</p><p><strong>Diferente da consulta nutricional tradicional</strong>, a terapia alimentar trabalha com a relação da criança com o alimento de forma progressiva, respeitando seu desenvolvimento e seu tempo.</p>' },
+        { name: 'Evidências científicas atuais', dur: '22min', body: '<p>Nesta aula exploramos as bases científicas que sustentam a terapia alimentar infantil, incluindo estudos recentes sobre neofobia, seletividade e desenvolvimento sensorial.</p><ul><li>Revisões sistemáticas sobre intervenção em seletividade alimentar</li><li>Modelos baseados em exposição gradual</li><li>Abordagem interdisciplinar na literatura</li></ul>' },
+        { name: 'Quando encaminhar e quando conduzir', dur: '15min', body: '<p>Uma das competências mais importantes da nutricionista especializada é saber identificar o que é da sua alçada e quando o caso exige uma equipe interdisciplinar.</p><p>Nesta aula você vai aprender os critérios de triagem e os sinais de alerta que indicam necessidade de encaminhamento.</p>' }
+      ]},
+      { title: 'Módulo 3 — Encontros Gravados', lessons: [
+        { name: 'Gravação: Discussão de Casos Clínicos', dur: '52min', body: '<p>Gravação do encontro ao vivo onde a Priscila conduziu a discussão de três casos reais de seletividade alimentar, com estratégias práticas de intervenção.</p>' },
+        { name: 'Gravação: Aula Prática — Escalada do Comer', dur: '48min', body: '<p>Aula prática demonstrando como estruturar a escalada do comer em consultório, com exemplos de como apresentar novos alimentos de forma progressiva e sem pressão.</p>' },
+        { name: 'Gravação: Perguntas e Respostas', dur: '35min', body: '<p>Sessão de perguntas e respostas respondendo as principais dúvidas das alunas sobre condução clínica, comunicação com a família e casos complexos.</p>' }
+      ]}
+    ]
+  },
+
+  'workshop': {
+    title: 'Workshop Prático',
+    badge: 'Produto de Entrada · Evento Online',
+    modules: [
+      { title: 'Módulo 1 — Preparação', lessons: [
+        { name: 'Bem-vinda ao Workshop', dur: '5min', body: '<p>Seja bem-vinda ao <strong>Workshop Prático Nutri For Nutri</strong>. Este evento foi desenhado para transformar a sua prática clínica com estratégias imediatamente aplicáveis.</p><p>Em uma manhã, você vai sair com ferramentas concretas para os principais desafios do atendimento infantil.</p>' },
+        { name: 'O que você vai aprender', dur: '6min', body: '<p>Este workshop cobre quatro das principais dores das nutricionistas que atendem crianças:</p><ul><li>Como conduzir casos de seletividade alimentar</li><li>Como estruturar uma devolutiva nutricional eficaz</li><li>Terapia alimentar na prática do consultório</li><li>Estratégias para crianças com TEA e TDAH</li></ul>' }
+      ]},
+      { title: 'Módulo 2 — Workshop', lessons: [
+        { name: 'Como conduzir casos de seletividade', dur: '45min', body: '<p>Nesta parte do workshop você vai aprender o passo a passo para conduzir com segurança um caso de seletividade alimentar, desde a avaliação até o plano de intervenção.</p><p><strong>O que você vai aprender:</strong></p><ul><li>Como diferenciar seletividade de recusa alimentar comum</li><li>Ferramentas de avaliação validadas</li><li>Como estruturar as primeiras sessões</li><li>Como envolver a família no processo</li></ul>' },
+        { name: 'Como estruturar uma devolutiva nutricional', dur: '38min', body: '<p>A devolutiva é o momento em que você comunica seus achados clínicos à família. Feita de forma estratégica, ela aumenta o engajamento e a adesão ao tratamento.</p><p>Nesta aula você aprende a estruturar devolutivas que geram confiança e continuidade.</p>' },
+        { name: 'Terapia alimentar na prática', dur: '42min', body: '<p>Uma visão geral do Método Mesa Leve™ e de como aplicar as principais ferramentas da terapia alimentar infantil no dia a dia do consultório.</p>' },
+        { name: 'Estratégias para TEA e TDAH', dur: '40min', body: '<p>Crianças com TEA e TDAH apresentam desafios alimentares específicos que exigem adaptações nas estratégias clínicas. Nesta aula você aprende como abordar esses casos com segurança e eficácia.</p>' }
+      ]},
+      { title: 'Módulo 3 — Próximos Passos', lessons: [
+        { name: 'Exercício de aplicação', dur: '10min', body: '<p>Coloque em prática o que você aprendeu com este exercício guiado. Escolha um caso do seu consultório e aplique as ferramentas apresentadas no workshop.</p>' },
+        { name: 'Próximos passos na sua formação', dur: '8min', body: '<p>Você concluiu o Workshop Prático. O próximo passo natural na sua jornada é a formação completa <strong>Terapia Alimentar Infantil — Método Mesa Leve™</strong>, onde você vai aprofundar tudo que foi introduzido aqui.</p>' }
+      ]}
+    ]
+  },
+
+  'terapia-alimentar': {
+    title: 'Terapia Alimentar Infantil',
+    badge: 'Formação Completa · Método Mesa Leve™',
+    modules: [
+      { title: 'Módulo 1 — Avaliação Clínica', lessons: [
+        { name: 'Introdução ao Método Mesa Leve™', dur: '20min', body: '<p>O <strong>Método Mesa Leve™</strong> é o protocolo desenvolvido pela Priscila Leite para condução clínica da terapia alimentar infantil. Fundamentado em evidências científicas e validado na prática clínica, ele oferece um caminho estruturado do acolhimento à alta.</p>' },
+        { name: 'Anamnese especializada', dur: '28min', body: '<p>A anamnese na terapia alimentar vai além dos dados nutricionais convencionais. Você precisa mapear a história alimentar da criança, os padrões relacionais, o contexto familiar e os fatores sensoriais e comportamentais envolvidos.</p><ul><li>Roteiro completo de anamnese</li><li>Perguntas-chave para pais e cuidadores</li><li>Observação do comportamento alimentar</li></ul>' },
+        { name: 'Instrumentos de avaliação validados', dur: '22min', body: '<p>Conheça os principais instrumentos de avaliação utilizados na terapia alimentar infantil, suas indicações, limitações e como interpretar os resultados na prática clínica.</p>' },
+        { name: 'Diagnóstico diferencial', dur: '30min', body: '<p>Nem toda recusa alimentar é seletividade. Nesta aula você aprende a diferenciar os quadros mais comuns e identificar quando o caso exige avaliação interdisciplinar.</p>' }
+      ]},
+      { title: 'Módulo 2 — Planejamento Terapêutico', lessons: [
+        { name: 'Estruturando o plano de intervenção', dur: '25min', body: '<p>Como organizar um plano de intervenção claro, com objetivos mensuráveis, etapas definidas e indicadores de progresso que você e a família possam acompanhar.</p>' },
+        { name: 'Definindo metas realistas com a família', dur: '18min', body: '<p>A negociação de metas com a família é uma etapa crítica do tratamento. Metas impossíveis geram frustração; metas muito fáceis geram estagnação. Aprenda a encontrar o equilíbrio.</p>' },
+        { name: 'Frequência e estrutura das sessões', dur: '15min', body: '<p>Como organizar o atendimento: frequência ideal, duração das sessões, o que trabalhar em cada encontro e como evoluir progressivamente.</p>' }
+      ]},
+      { title: 'Módulo 3 — Escalada do Comer', lessons: [
+        { name: 'O que é a escalada do comer', dur: '20min', body: '<p>A escalada do comer é o processo de exposição progressiva da criança a novos alimentos, respeitando sua hierarquia sensorial e sua janela de tolerância.</p><p>É a ferramenta central do Método Mesa Leve™.</p>' },
+        { name: 'Como estruturar a escalada na prática', dur: '32min', body: '<p>Passo a passo para implementar a escalada do comer no consultório, incluindo como apresentar a proposta para a família, como adaptar para diferentes perfis de crianças e como documentar o progresso.</p>' },
+        { name: 'Lidando com regressões e resistências', dur: '22min', body: '<p>Regressões fazem parte do processo. Aprenda a identificar o que está por trás de uma regressão, como ajustar a estratégia e como comunicar isso para a família sem gerar ansiedade.</p>' }
+      ]},
+      { title: 'Módulo 4 — Ferramentas Práticas', lessons: [
+        { name: 'Recursos sensoriais no consultório', dur: '26min', body: '<p>Ferramentas e materiais sensoriais que apoiam a terapia alimentar, como usá-los e como adaptar conforme o perfil sensorial de cada criança.</p>' },
+        { name: 'Fichas e formulários clínicos', dur: '14min', body: '<p>Modelos de fichas e formulários para organizar o atendimento, registrar o progresso e manter um prontuário clínico completo e profissional.</p>' },
+        { name: 'Comunicação visual para crianças', dur: '18min', body: '<p>O uso de recursos visuais (pranchas de comunicação, sequências ilustradas, cardápios visuais) como ferramentas terapêuticas e de adesão.</p>' }
+      ]},
+      { title: 'Módulo 5 — Manejo Familiar', lessons: [
+        { name: 'O papel dos pais no tratamento', dur: '22min', body: '<p>A família é parte fundamental do tratamento. Aprenda como engajar os pais como co-terapeutas, definir seu papel claro no processo e evitar os erros mais comuns de manejo familiar.</p>' },
+        { name: 'Orientando pais ansiosos', dur: '20min', body: '<p>A ansiedade dos pais é um dos maiores obstáculos ao tratamento. Aprenda a reconhecê-la, acolhê-la e trabalhar com ela de forma clínica e estratégica.</p>' },
+        { name: 'Devolutiva familiar eficaz', dur: '25min', body: '<p>Como comunicar o progresso, as dificuldades e os próximos passos para a família de forma clara, empática e que gere engajamento contínuo.</p>' }
+      ]},
+      { title: 'Módulo 6 — Casos Clínicos Reais', lessons: [
+        { name: 'Caso 1 — Seletividade severa (5 anos)', dur: '38min', body: '<p>Análise detalhada de um caso real de seletividade severa em uma criança de 5 anos, desde a avaliação inicial até a alta, com todos os desafios e decisões clínicas do caminho.</p>' },
+        { name: 'Caso 2 — Recusa após episódio traumático', dur: '30min', body: '<p>Como conduzir um caso de recusa alimentar desencadeada por um episódio traumático (engasgo, vômito, doença), incluindo o trabalho com a ansiedade da criança e da família.</p>' },
+        { name: 'Caso 3 — TEA com seletividade extrema', dur: '42min', body: '<p>Caso complexo de uma criança com TEA nível 2 e seletividade alimentar extrema. Como adaptar o Método Mesa Leve™ para as necessidades específicas desta população.</p>' },
+        { name: 'Alta clínica — critérios e condução', dur: '18min', body: '<p>Como definir os critérios de alta, como conduzir este momento com a família e como estruturar o acompanhamento pós-alta para consolidar os resultados.</p>' }
+      ]}
+    ]
+  },
+
+  'seletividade': {
+    title: 'Seletividade Alimentar',
+    badge: 'Formação Especializada',
+    modules: [
+      { title: 'Módulo 1 — Avaliação e Diagnóstico', lessons: [
+        { name: 'Entendendo a seletividade alimentar', dur: '20min', body: '<p>O que é seletividade alimentar, como diferenciá-la de outros quadros de recusa e por que ela exige uma abordagem especializada.</p>' },
+        { name: 'Diagnóstico diferencial', dur: '28min', body: '<p>Como diferenciar seletividade alimentar de ARFID, neofobia, recusa condicionada e quadros associados a condições como TEA, TDAH e transtornos sensoriais.</p>' },
+        { name: 'Instrumentos e escalas de avaliação', dur: '22min', body: '<p>Ferramentas validadas para quantificar a severidade da seletividade e monitorar a evolução clínica ao longo do tratamento.</p>' }
+      ]},
+      { title: 'Módulo 2 — Planejamento', lessons: [
+        { name: 'Estruturando o plano terapêutico', dur: '25min', body: '<p>Como organizar um plano de intervenção para casos de seletividade, com etapas claras, objetivos mensuráveis e indicadores de progresso.</p>' },
+        { name: 'Hierarquia sensorial dos alimentos', dur: '20min', body: '<p>Como mapear a hierarquia sensorial da criança e usá-la para construir a sequência de introdução de novos alimentos de forma estratégica e segura.</p>' },
+        { name: 'Definindo metas com a família', dur: '16min', body: '<p>Como negociar metas realistas com os pais, evitar armadilhas comuns e manter o engajamento familiar ao longo do processo.</p>' }
+      ]},
+      { title: 'Módulo 3 — Condução Clínica', lessons: [
+        { name: 'Exposição gradual e dessensibilização', dur: '30min', body: '<p>O protocolo completo de exposição gradual para crianças seletivas, passo a passo, com exemplos práticos e adaptações para diferentes perfis.</p>' },
+        { name: 'Manejo comportamental no consultório', dur: '26min', body: '<p>Técnicas de manejo comportamental durante as sessões, como lidar com resistência, como usar reforços positivos e como estruturar a sessão para maximizar a adesão da criança.</p>' },
+        { name: 'Documentação e monitoramento', dur: '14min', body: '<p>Como documentar o progresso de forma sistemática, monitorar a evolução e adaptar o plano conforme necessário.</p>' }
+      ]}
+    ]
+  },
+
+  'introducao-alimentar': {
+    title: 'Introdução Alimentar',
+    badge: 'Formação Especializada',
+    modules: [
+      { title: 'Módulo 1 — Fundamentos', lessons: [
+        { name: 'Bases científicas da introdução alimentar', dur: '22min', body: '<p>O que a evidência mais recente diz sobre o momento ideal para iniciar a IA, quais alimentos introduzir primeiro e como a abordagem clínica pode fazer a diferença.</p>' },
+        { name: 'Fisiologia do desenvolvimento na IA', dur: '18min', body: '<p>Como o sistema digestivo, sensorial e motor do bebê se desenvolve ao longo do primeiro ano de vida e como isso deve guiar a introdução alimentar.</p>' }
+      ]},
+      { title: 'Módulo 2 — Condução Familiar', lessons: [
+        { name: 'Orientando a família durante a IA', dur: '28min', body: '<p>Como conduzir a família durante todo o processo de introdução alimentar: o que esperar em cada fase, como lidar com medos e ansiedades e como criar um ambiente favorável para a exploração alimentar.</p>' },
+        { name: 'Comunicação clínica na IA', dur: '20min', body: '<p>Como transmitir informações técnicas de forma clara e acolhedora, validando as preocupações dos pais e gerando confiança no processo.</p>' },
+        { name: 'Manejo de recusas na IA', dur: '22min', body: '<p>Como diferenciar recusas normais do desenvolvimento de sinais de alerta, e como orientar os pais a responder de forma construtiva.</p>' }
+      ]},
+      { title: 'Módulo 3 — Protocolos Práticos', lessons: [
+        { name: 'Protocolos para o consultório', dur: '26min', body: '<p>Roteiros e protocolos práticos para estruturar as consultas de introdução alimentar, do primeiro contato ao acompanhamento mensal.</p>' },
+        { name: 'Casos especiais na IA', dur: '30min', body: '<p>Como abordar a introdução alimentar em bebês prematuros, com refluxo, com alergias alimentares ou com histórico familiar de seletividade.</p>' }
+      ]}
+    ]
+  },
+
+  'devolutiva': {
+    title: 'Devolutiva Nutricional',
+    badge: 'Formação Especializada · Comunicação Clínica',
+    modules: [
+      { title: 'Módulo 1 — Fundamentos da Comunicação', lessons: [
+        { name: 'Por que a devolutiva define o tratamento', dur: '18min', body: '<p>A devolutiva é muito mais do que um relatório clínico: é o momento em que você constrói (ou destrói) a aliança terapêutica com a família. Entenda por que ela é decisiva para o sucesso do tratamento.</p>' },
+        { name: 'Comunicação assertiva no contexto clínico', dur: '22min', body: '<p>Fundamentos da comunicação assertiva aplicados à clínica pediátrica: como ser direta sem ser fria, técnica sem ser inacessível, empática sem perder a autoridade.</p>' }
+      ]},
+      { title: 'Módulo 2 — Estrutura da Devolutiva', lessons: [
+        { name: 'O modelo da devolutiva em 5 etapas', dur: '30min', body: '<p>O modelo estruturado que a Priscila usa em todas as devolutivas, com as 5 etapas que transformam a consulta em uma experiência clara, profissional e geradora de engajamento.</p><ul><li>Acolhimento e alinhamento</li><li>Apresentação dos achados</li><li>Significação e contexto</li><li>Plano e objetivos</li><li>Compromisso e próximos passos</li></ul>' },
+        { name: 'Linguagem acessível para cada perfil familiar', dur: '20min', body: '<p>Como adaptar sua linguagem para diferentes perfis de famílias: pais ansiosos, pais em negação, pais superengajados e pais ausentes.</p>' },
+        { name: 'Devolutiva escrita e oral', dur: '16min', body: '<p>Quando usar uma devolutiva escrita, como estruturá-la, e como ela complementa a devolutiva oral no processo de adesão familiar.</p>' }
+      ]},
+      { title: 'Módulo 3 — Engajamento Familiar', lessons: [
+        { name: 'Como aumentar a adesão ao tratamento', dur: '25min', body: '<p>Estratégias baseadas em evidências para aumentar a adesão familiar ao tratamento, reduzir faltas e cancelamentos e manter a família motivada ao longo das sessões.</p>' },
+        { name: 'Lidando com objeções e resistências', dur: '22min', body: '<p>Como responder de forma clínica e estratégica quando a família questiona o diagnóstico, resiste ao plano ou não está conseguindo implementar as orientações em casa.</p>' }
+      ]}
+    ]
+  },
+
+  'educacao-alimentar': {
+    title: 'Educação Alimentar',
+    badge: 'Formação Especializada · Estratégias Lúdicas',
+    modules: [
+      { title: 'Módulo 1 — Desenvolvimento e Alimentação', lessons: [
+        { name: 'Alimentação no contexto do desenvolvimento infantil', dur: '22min', body: '<p>Como o desenvolvimento cognitivo, sensorial e emocional da criança influencia sua relação com os alimentos, e como usar esse conhecimento a favor da educação alimentar.</p>' },
+        { name: 'Vínculo com os alimentos — como ele se forma', dur: '18min', body: '<p>O vínculo da criança com os alimentos começa antes do nascimento e é profundamente moldado pelas experiências alimentares dos primeiros anos. Entenda como intervir de forma positiva nesse processo.</p>' }
+      ]},
+      { title: 'Módulo 2 — Estratégias Lúdicas', lessons: [
+        { name: 'O que são estratégias lúdicas e por que funcionam', dur: '16min', body: '<p>A ludicidade é a linguagem natural da criança. Quando integramos o jogo e a brincadeira à alimentação, reduzimos a ansiedade, aumentamos a curiosidade e criamos experiências positivas com os alimentos.</p>' },
+        { name: 'Atividades sensoriais com alimentos', dur: '28min', body: '<p>Um repertório de atividades sensoriais que você pode usar no consultório e orientar os pais a replicar em casa, respeitando a janela de tolerância de cada criança.</p>' },
+        { name: 'Jogos e brincadeiras na terapia alimentar', dur: '24min', body: '<p>Como usar jogos, histórias, personagens e brincadeiras como ferramentas terapêuticas para engajar crianças resistentes e criar novas associações positivas com os alimentos.</p>' }
+      ]},
+      { title: 'Módulo 3 — Aplicação no Consultório', lessons: [
+        { name: 'Montando seu kit de estratégias lúdicas', dur: '20min', body: '<p>Quais materiais ter no consultório, como organizar um espaço favorável à terapia lúdica e como apresentar as atividades para a criança de forma natural e convidativa.</p>' },
+        { name: 'Orientando os pais para o ambiente doméstico', dur: '18min', body: '<p>Como orientar os pais a criar um ambiente alimentar positivo em casa, com estratégias lúdicas adaptadas para a rotina familiar.</p>' }
+      ]}
+    ]
+  },
+
+  'mentoria': {
+    title: 'Mentoria Nutri For Nutri',
+    badge: '⭐ Programa Premium',
+    modules: [
+      { title: 'Módulo 1 — Segurança Clínica', lessons: [
+        { name: 'Boas-vindas à Mentoria', dur: '12min', body: '<p>Seja bem-vinda à <strong>Mentoria Nutri For Nutri</strong>, o programa mais completo de acompanhamento para nutricionistas que desejam dominar a terapia alimentar infantil.</p><p>Aqui você terá acesso a supervisão individualizada, discussão de casos reais e um desenvolvimento profissional estruturado ao longo da nossa jornada juntas.</p>' },
+        { name: 'Raciocínio clínico avançado', dur: '35min', body: '<p>Como desenvolver um raciocínio clínico sólido para casos complexos: como coletar e integrar informações, como formular hipóteses e como tomar decisões clínicas fundamentadas mesmo diante de incerteza.</p>' },
+        { name: 'Discussão de casos — Sessão 1', dur: '60min', body: '<p>Supervisão clínica ao vivo com discussão de casos reais trazidos pelas alunas. Análise detalhada de avaliação, raciocínio diagnóstico e plano de intervenção.</p>' }
+      ]},
+      { title: 'Módulo 2 — Raciocínio Clínico', lessons: [
+        { name: 'Casos complexos — abordagem sistemática', dur: '40min', body: '<p>Como abordar casos que fogem do padrão: crianças com múltiplas comorbidades, famílias em situação de vulnerabilidade, casos com histórico de intervenções anteriores sem sucesso.</p>' },
+        { name: 'Decisões clínicas difíceis', dur: '30min', body: '<p>Como navegar em situações clínicas ambíguas, quando encaminhar, como comunicar diagnósticos complexos e como proteger a aliança terapêutica em momentos de crise.</p>' },
+        { name: 'Discussão de casos — Sessão 2', dur: '60min', body: '<p>Segunda sessão de supervisão clínica com foco em casos intermediários e avançados trazidos pelas alunas.</p>' }
+      ]},
+      { title: 'Módulo 3 — Autoridade e Posicionamento', lessons: [
+        { name: 'Construindo autoridade na área', dur: '28min', body: '<p>Como posicionar-se como referência em nutrição pediátrica e terapia alimentar infantil: qual conteúdo produzir, como falar para colegas de profissão e como construir uma reputação clínica sólida.</p>' },
+        { name: 'Comunicação profissional e marketing clínico', dur: '24min', body: '<p>Como comunicar seu trabalho de forma ética e estratégica, atrair os pacientes certos e construir uma clínica sustentável baseada em resultados.</p>' }
+      ]},
+      { title: 'Módulo 4 — Evolução Profissional', lessons: [
+        { name: 'Planejamento de carreira', dur: '22min', body: '<p>Como estruturar sua trajetória profissional na área de nutrição pediátrica: definir sua especialização, escolher suas formações complementares e traçar metas de curto e longo prazo.</p>' },
+        { name: 'Discussão de casos — Sessão 3', dur: '60min', body: '<p>Terceira sessão de supervisão com foco em evolução de casos em andamento e reflexões sobre o desenvolvimento clínico de cada aluna.</p>' },
+        { name: 'Encerramento e próximos passos', dur: '18min', body: '<p>Reflexão sobre a jornada, celebração dos avanços e orientações para os próximos passos na carreira de cada aluna da mentoria.</p>' }
+      ]}
+    ]
+  }
+};
+
+/* ════════════════════════════════════════════
+   PLAYER STATE
+═══════════════════════════════════════════════ */
+var slug = (location.search.match(/[?&]c=([^&]+)/) || [])[1] || 'terapia-alimentar';
+var course = COURSES[slug] || COURSES['terapia-alimentar'];
+var currentMod = 0;
+var currentLes = 0;
+var done = {};   // { "0-0": true, "0-1": true, ... }
+
+/* flat list of all lessons */
+var allLessons = [];
+course.modules.forEach(function(m, mi){
+  m.lessons.forEach(function(l, li){ allLessons.push({mi:mi, li:li, lesson:l, mod:m}); });
+});
+
+/* ── INIT ── */
+document.title = course.title + ' — Nutri For Nutri';
+document.getElementById('tb-course-name').textContent = course.title;
+document.getElementById('sb-badge').textContent = course.badge;
+document.getElementById('sb-name').textContent = course.title;
+buildSidebar();
+loadLesson(0, 0);
+
+/* ── BUILD SIDEBAR ── */
+function buildSidebar(){
+  var sb = document.getElementById('sb-modules');
+  sb.innerHTML = '';
+  course.modules.forEach(function(m, mi){
+    var mod = document.createElement('div');
+    mod.className = 'module';
+
+    var hd = document.createElement('div');
+    hd.className = 'module-hd' + (mi===0?' open':'');
+    hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
+    hd.addEventListener('click', function(){
+      this.classList.toggle('open');
+      lessons.classList.toggle('open');
+    });
+
+    var lessons = document.createElement('div');
+    lessons.className = 'module-lessons' + (mi===0?' open':'');
+    lessons.id = 'mod-'+mi;
+
+    m.lessons.forEach(function(l, li){
+      var item = document.createElement('div');
+      item.className = 'lesson-item';
+      item.id = 'lesson-'+mi+'-'+li;
+      item.innerHTML = '<div class="lesson-check"></div><span class="lesson-name">'+l.name+'</span><span class="lesson-dur">'+l.dur+'</span>';
+      item.addEventListener('click', function(){ loadLesson(mi, li); });
+      lessons.appendChild(item);
+    });
+
+    mod.appendChild(hd);
+    mod.appendChild(lessons);
+    sb.appendChild(mod);
+  });
+}
+
+/* ── LOAD LESSON ── */
+function loadLesson(mi, li){
+  currentMod = mi; currentLes = li;
+  var m = course.modules[mi];
+  var l = m.lessons[li];
+  var key = mi+'-'+li;
+
+  /* sidebar highlight */
+  document.querySelectorAll('.lesson-item').forEach(function(x){ x.classList.remove('active'); });
+  var el = document.getElementById('lesson-'+mi+'-'+li);
+  if(el){ el.classList.add('active'); /* open parent module */ el.closest('.module-lessons').classList.add('open'); el.closest('.module-lessons').previousElementSibling.classList.add('open'); }
+
+  /* content */
+  document.getElementById('lesson-breadcrumb').textContent = m.title;
+  document.getElementById('lesson-title').textContent = l.name;
+  document.getElementById('vid-label').textContent = l.name;
+  document.getElementById('lesson-body').innerHTML = l.body || '';
+
+  /* concluir btn */
+  var btn = document.getElementById('btn-concluir');
+  if(done[key]){ btn.classList.add('done'); btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Concluída'; }
+  else { btn.classList.remove('done'); btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Marcar como concluída'; }
+
+  /* nav buttons */
+  var idx = allLessons.findIndex(function(x){ return x.mi===mi&&x.li===li; });
+  document.getElementById('btn-prev').disabled = idx <= 0;
+  document.getElementById('btn-next').disabled = idx >= allLessons.length-1;
+
+  /* scroll main to top */
+  document.getElementById('main').scrollTo(0, 0);
+  updateProgress();
+}
+
+/* ── NAVIGATE ── */
+function navigate(dir){
+  var idx = allLessons.findIndex(function(x){ return x.mi===currentMod&&x.li===currentLes; });
+  var next = allLessons[idx+dir];
+  if(next) loadLesson(next.mi, next.li);
+}
+
+/* ── MARK DONE ── */
+function markDone(){
+  var key = currentMod+'-'+currentLes;
+  done[key] = true;
+  var item = document.getElementById('lesson-'+currentMod+'-'+currentLes);
+  if(item){ item.classList.add('done'); }
+  var btn = document.getElementById('btn-concluir');
+  btn.classList.add('done');
+  btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Concluída';
+  updateProgress();
+  /* auto advance */
+  setTimeout(function(){ navigate(1); }, 600);
+}
+
+/* ── PROGRESS ── */
+function updateProgress(){
+  var total = allLessons.length;
+  var doneCount = Object.keys(done).length;
+  var pct = Math.round(doneCount/total*100);
+  document.getElementById('tb-fill').style.width = pct+'%';
+  document.getElementById('tb-pct').textContent = pct+'%';
+}
+
+/* ── TAB SWITCH ── */
+function switchTab(el, tab){
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  if(tab==='materiais'){
+    document.getElementById('lesson-body').innerHTML = '<p style="color:rgba(13,12,10,.4);font-style:italic;">Materiais de apoio desta aula serão disponibilizados em breve.</p>';
+  } else {
+    loadLesson(currentMod, currentLes);
+  }
+}
+
+/* ── VIDEO PLAY (placeholder) ── */
+function playVideo(){
+  var vp = document.getElementById('video-placeholder');
+  vp.innerHTML = '<p style="color:rgba(248,245,239,.3);font-size:13px;">Vídeo desta aula em breve.</p>';
+}
+</script>
+</body>
+</html>

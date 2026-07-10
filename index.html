@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Priscila Leite — Nutricionista Infantil</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+@property --star-a{syntax:'<angle>';initial-value:0deg;inherits:false;}
+:root{
+  --cr:#F8F5EF; --cr2:#EEE8D8; --dk:#0D0C0A; --dk2:#161410;
+  --g:rgba(13,12,10,.42); --bd:rgba(13,12,10,.1);
+  --go:#C9A257; --gn:#7FC442;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;font-weight:300;background:var(--cr);color:var(--dk);overflow-x:hidden;cursor:none;}
+a{text-decoration:none;color:inherit;}
+
+/* GRAIN */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+}
+
+/* CURTAIN — dark wipe that lifts on load */
+#curtain{position:fixed;inset:0;background:var(--dk);z-index:8000;pointer-events:none;}
+
+/* CURSOR */
+#c{position:fixed;width:8px;height:8px;background:var(--dk);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .25s;}
+#co{position:fixed;width:42px;height:42px;border:1.5px solid rgba(13,12,10,.28);border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s;}
+body.hov #c{width:3px;height:3px;background:var(--go);}
+body.hov #co{width:60px;height:60px;border-color:var(--go);}
+/* cursor invertido em fundos escuros */
+body.dk-bg #c{background:rgba(248,245,239,.88);}
+body.dk-bg #co{border-color:rgba(248,245,239,.3);}
+body.dk-bg.hov #c{background:var(--go);}
+body.dk-bg.hov #co{border-color:var(--go);}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:26px 5%;border-bottom:1px solid transparent;transition:background .5s,border-color .5s,backdrop-filter .5s;}
+#nav.s{background:rgba(248,245,239,.93);backdrop-filter:blur(28px);border-color:var(--bd);}
+.nl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:var(--go);letter-spacing:.02em;}
+.nm{display:flex;gap:40px;list-style:none;}
+.nm a{font-size:9.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:rgba(13,12,10,.42);transition:color .2s;cursor:none;}
+.nm a:hover{color:var(--dk);}
+.nc{position:relative;font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding:12px 28px;background:rgba(13,12,10,.07);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);border:1.5px solid rgba(13,12,10,.2);color:var(--dk);overflow:hidden;transition:color .4s;cursor:none;display:inline-block;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 -1px 0 rgba(13,12,10,.04);}
+.nc::before{content:'';position:absolute;inset:0;background:var(--dk);transform:translateX(-101%);transition:transform .45s cubic-bezier(.22,1,.36,1);}
+.nc span{position:relative;z-index:1;}
+.nc:hover{color:var(--cr);}
+.nc:hover::before{transform:translateX(0);}
+
+/* REVEAL ANIMATION */
+.lr{display:block;overflow:hidden;padding-bottom:.2em;margin-bottom:-.12em;}
+.lri{display:block;transform:translateY(115%) skewY(4deg);transition:transform 1.3s cubic-bezier(.77,0,.175,1);}
+.lri.v{transform:translateY(0) skewY(0);}
+.fu{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s cubic-bezier(.22,1,.36,1);}
+.fu.v{opacity:1;transform:none;}
+/* slide from left — for problem items */
+.sl{opacity:0;transform:translateX(-48px);transition:opacity .85s ease,transform .85s cubic-bezier(.22,1,.36,1);}
+.sl.v{opacity:1;transform:none;}
+.d1{transition-delay:.12s;}.d2{transition-delay:.24s;}.d3{transition-delay:.36s;}.d4{transition-delay:.48s;}.d5{transition-delay:.6s;}
+
+/* HERO */
+#hero{height:100svh;min-height:720px;display:flex;align-items:center;padding:130px 5% 80px;position:relative;overflow:hidden;}
+/* hero background grid */
+#hgrid{position:absolute;inset:-5%;pointer-events:none;
+  background-image:linear-gradient(rgba(13,12,10,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(13,12,10,.07) 1px,transparent 1px);
+  background-size:110px 110px;opacity:0;transition:opacity 2s ease;}
+#hgrid.v{opacity:1;}
+/* canvas light beams — drawn by JS */
+#hbeams{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+/* vertical gold accent line */
+#hvline{position:absolute;left:5%;top:0;width:1px;height:0;background:linear-gradient(to bottom,transparent,var(--go),transparent);transition:height 1.4s cubic-bezier(.22,1,.36,1);opacity:.55;}
+#hvline.v{height:100%;}
+.hew{font-size:9px;font-weight:600;letter-spacing:.38em;text-transform:uppercase;color:var(--go);margin-bottom:52px;display:flex;align-items:center;gap:12px;}
+.hew::before,.hew::after{content:'';width:20px;height:1px;background:var(--go);}
+/* hero number watermark */
+.hwm{position:absolute;right:3%;bottom:-4%;font-family:'Cormorant Garamond',serif;font-size:clamp(18rem,38vw,42rem);font-weight:300;color:var(--go);opacity:.04;line-height:1;pointer-events:none;user-select:none;letter-spacing:-.06em;transform:translateY(0);animation:wmdrift 18s ease-in-out infinite alternate;}
+@keyframes wmdrift{from{transform:translateY(0);}to{transform:translateY(-20px);}}
+.htit{font-family:'Cormorant Garamond',serif;font-size:clamp(3.8rem,9vw,10.5rem);font-weight:300;line-height:.96;letter-spacing:-.03em;}
+.htit em{font-style:italic;color:var(--go);}
+.hrule{width:0;height:1px;background:linear-gradient(to right,var(--go),rgba(201,162,87,.1));margin:38px 0 30px;transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+.hrule.v{width:min(52vw,600px);}
+.hsub{font-size:clamp(.85rem,1.05vw,.96rem);font-weight:300;color:var(--g);max-width:480px;line-height:2;}
+.hctas{display:flex;gap:16px;margin-top:48px;align-items:center;flex-wrap:wrap;}
+.btnA{position:relative;display:inline-flex;align-items:center;gap:10px;background:rgba(13,12,10,.85);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.13),inset 0 -1.5px 0 rgba(0,0,0,.3);color:var(--cr);padding:18px 52px;font-size:10.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;overflow:hidden;transition:color .4s;cursor:none;}
+.btnA::before{content:'';position:absolute;inset:0;background:var(--go);transform:translateX(-101%);transition:transform .52s cubic-bezier(.22,1,.36,1);}
+.btnA:hover::before{transform:translateX(0);}
+.btnA span{position:relative;z-index:1;}
+.btnB{font-size:10.5px;font-weight:400;letter-spacing:.13em;text-transform:uppercase;color:var(--g);cursor:none;border-bottom:1px solid transparent;transition:color .25s,border-color .25s;padding-bottom:2px;}
+.btnB:hover{color:var(--dk);border-color:var(--dk);}
+.hscr{position:absolute;bottom:36px;left:5%;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.hsl{width:1px;height:52px;background:linear-gradient(to bottom,var(--dk),transparent);animation:drip 2.6s ease infinite;}
+.hst{font-size:7.5px;letter-spacing:.38em;text-transform:uppercase;color:var(--g);}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top;opacity:1;}65%{transform:scaleY(1);opacity:1;}100%{transform:scaleY(1);opacity:0;}}
+
+/* TICKER */
+.tck{background:rgba(201,162,87,.9);backdrop-filter:blur(18px) saturate(200%);-webkit-backdrop-filter:blur(18px) saturate(200%);overflow:hidden;padding:14px 0;position:relative;border-top:1px solid rgba(255,255,255,.35);border-bottom:1px solid rgba(201,162,87,.6);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(140,100,30,.25);}
+/* edge vignette — escurece as bordas, centro fica brilhante */
+.tck::before{
+  content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse 32% 100% at 50% 50%, transparent 0%, rgba(140,100,30,.52) 100%);
+}
+/* centro luminoso com brilho pulsante */
+.tck::after{
+  content:'';position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:radial-gradient(ellipse 16% 100% at 50% 50%, rgba(255,248,210,.32) 0%, transparent 70%);
+  animation:tickerGlow 3.8s ease-in-out infinite;
+}
+@keyframes tickerGlow{
+  0%,100%{opacity:.7;}
+  50%{opacity:1;}
+}
+.tcw{display:flex;white-space:nowrap;animation:tck 22s linear infinite;position:relative;z-index:2;}
+.tci{display:inline-flex;align-items:center;gap:14px;padding:0 28px;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--dk);flex-shrink:0;}
+.tcd{width:3px;height:3px;background:rgba(13,12,10,.3);border-radius:50%;}
+@keyframes tck{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTION BASE */
+section{padding:160px 5%;position:relative;}
+.w{max-width:1320px;margin:0 auto;}
+.slb{display:flex;align-items:center;gap:14px;margin-bottom:28px;}
+.sn{font-size:8.5px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--go);}
+.sl-bar{width:46px;height:1px;background:linear-gradient(to right,var(--go),transparent);}
+.sk{font-size:8.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:rgba(13,12,10,.35);}
+.stit{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,8rem);font-weight:300;line-height:.98;letter-spacing:-.03em;}
+.stit em{color:var(--go);font-style:italic;}
+.sbg{position:absolute;right:3%;font-family:'Cormorant Garamond',serif;font-size:clamp(13rem,32vw,32rem);font-weight:300;color:var(--dk);opacity:.032;line-height:1;pointer-events:none;user-select:none;letter-spacing:-.05em;}
+.sb{font-size:15px;font-weight:300;color:var(--g);line-height:1.95;}
+
+/* S01 PROBLEMA */
+#prob{background:var(--cr);}
+.p01g{display:grid;grid-template-columns:1fr 1fr;gap:90px;margin-top:76px;align-items:start;}
+.phl{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,2.8vw,3rem);font-weight:400;font-style:italic;line-height:1.25;color:var(--dk);margin-bottom:24px;position:relative;padding-left:20px;}
+.phlq{position:absolute;left:-10px;top:-24px;font-family:'Cormorant Garamond',serif;font-size:6rem;color:var(--go);opacity:.12;line-height:1;pointer-events:none;}
+/* PROBLEM CARDS — borda que se desenha */
+.pits{display:flex;flex-direction:column;gap:2px;}
+.pit{background:var(--cr);padding:32px 28px;position:relative;cursor:default;}
+/* 4 border-trace edges */
+.pit .bt,.pit .bb{position:absolute;height:1px;background:var(--go);width:0;}
+.pit .bt{top:0;left:0;transition:width .55s linear;}
+.pit .bb{bottom:0;right:0;transition:width .55s linear .9s;}
+.pit .br,.pit .bl{position:absolute;width:1px;background:var(--go);height:0;}
+.pit .br{top:0;right:0;transition:height .4s linear .5s;}
+.pit .bl{bottom:0;left:0;transition:height .4s linear 1.4s;}
+/* triggered when .pit gets .v class */
+.pit.v .bt{width:100%;}
+.pit.v .br{height:100%;}
+.pit.v .bb{width:100%;}
+.pit.v .bl{height:100%;}
+/* inner content */
+.pit-inner{display:flex;align-items:flex-start;gap:20px;position:relative;z-index:1;
+  opacity:0;transform:translateY(10px);transition:opacity .55s ease .25s,transform .55s ease .25s;}
+.pit.v .pit-inner{opacity:1;transform:none;}
+.pit-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--go);opacity:.18;line-height:1;flex-shrink:0;min-width:42px;margin-top:-4px;transition:opacity .35s;}
+.pt{font-size:13.5px;font-weight:500;color:var(--dk);margin-bottom:6px;line-height:1.45;transition:color .35s;}
+.ps{font-size:12px;font-weight:300;color:var(--g);line-height:1.7;transition:color .35s;}
+/* pit hover — levanta o card com sombra e fundo escuro */
+.pit{transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease,background .35s ease;}
+.pit:hover{background:rgba(22,20,16,.84);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.1),0 20px 56px rgba(13,12,10,.24),0 4px 18px rgba(13,12,10,.16);transform:scale(1.025) translateY(-4px);z-index:3;}
+.pit:hover .pt{color:rgba(248,245,239,.92);}
+.pit:hover .ps{color:rgba(248,245,239,.4);}
+.pit:hover .pit-num{opacity:.28;}
+
+/* STATS */
+#stats{background:var(--dk);padding:0;position:relative;}
+#stats::before{
+  content:'';position:absolute;inset:0;padding:2px;z-index:10;pointer-events:none;
+  background:conic-gradient(from var(--star-a),
+    transparent 0%,transparent 80%,
+    rgba(201,162,87,.4) 85%,
+    rgba(255,240,160,.9) 87.5%,
+    rgba(255,255,255,1) 89%,
+    rgba(255,240,160,.9) 90.5%,
+    rgba(201,162,87,.4) 93%,
+    transparent 96%,transparent 100%);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:starOrbit 5s linear infinite;
+  filter:drop-shadow(0 0 6px rgba(201,162,87,.7));
+}
+@keyframes starOrbit{to{--star-a:360deg;}}
+.stg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.05);}
+.stc{background:var(--dk);padding:88px 36px;text-align:center;
+  transition:background .4s,transform .35s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;
+  position:relative;z-index:1;cursor:default;}
+.stc:hover{background:rgba(25,23,16,.82);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid rgba(255,255,255,.07);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(0,0,0,.3),0 0 50px rgba(0,0,0,.55);transform:scale(1.07);z-index:2;}
+.stnum{display:block;font-family:'Cormorant Garamond',serif;font-size:clamp(4.5rem,8.5vw,8.5rem);font-weight:300;color:var(--go);line-height:1;margin-bottom:16px;}
+.stlbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);line-height:1.8;}
+.stsub{font-size:10.5px;color:rgba(255,255,255,.14);margin-top:9px;font-style:italic;}
+
+/* SOBRE */
+#sobre{background:var(--cr2);}
+.sobg{display:grid;grid-template-columns:5fr 6fr;gap:110px;align-items:center;margin-top:72px;}
+/* photo wrapper with effects */
+.imgw{position:relative;width:100%;}
+/* scan line */
+.scanl{position:absolute;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,162,87,.6),transparent);z-index:4;pointer-events:none;animation:scanDown 6s ease-in-out infinite 1.8s;}
+@keyframes scanDown{
+  0%{top:0%;opacity:0;}5%{opacity:1;}90%{opacity:.7;}100%{top:100%;opacity:0;}
+}
+/* floating dot accents */
+.fdot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--go);opacity:.7;pointer-events:none;}
+.fdot1{right:-14px;top:28%;animation:fdrift 4s ease-in-out infinite;}
+.fdot2{right:-26px;top:38%;width:3px;height:3px;animation:fdrift 4s ease-in-out infinite .8s;}
+.fdot3{left:-14px;bottom:30%;animation:fdrift 4s ease-in-out infinite 1.6s;}
+@keyframes fdrift{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+/* rotating dashed ring */
+.fring{position:absolute;inset:-28px;border:1px dashed rgba(201,162,87,.18);border-radius:50%;animation:spin 28s linear infinite;pointer-events:none;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.imgf{width:100%;aspect-ratio:.72;background:var(--cr);border:1px solid var(--bd);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+/* animated corner brackets */
+.cr-tl,.cr-tr,.cr-bl,.cr-br{position:absolute;width:0;height:0;pointer-events:none;transition:width .7s cubic-bezier(.22,1,.36,1),height .7s cubic-bezier(.22,1,.36,1);}
+.cr-tl{top:12px;left:12px;border-top:1px solid var(--go);border-left:1px solid var(--go);}
+.cr-tr{top:12px;right:12px;border-top:1px solid var(--go);border-right:1px solid var(--go);transition-delay:.12s;}
+.cr-bl{bottom:12px;left:12px;border-bottom:1px solid var(--go);border-left:1px solid var(--go);transition-delay:.24s;}
+.cr-br{bottom:12px;right:12px;border-bottom:1px solid var(--go);border-right:1px solid var(--go);transition-delay:.36s;}
+.imgf.revealed .cr-tl,.imgf.revealed .cr-tr,.imgf.revealed .cr-bl,.imgf.revealed .cr-br{width:28px;height:28px;}
+.iph{font-size:80px;opacity:.3;}
+.bdg{position:absolute;bottom:28px;right:-18px;background:var(--go);color:var(--dk);padding:20px 24px;}
+.bdgn{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:700;line-height:1;}
+.bdgl{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:5px;}
+/* CHECKLIST — linha que se estende + texto que revela */
+.cks{list-style:none;margin-top:32px;}
+.cks li{font-size:13px;font-weight:300;color:var(--g);padding:18px 0;position:relative;overflow:hidden;
+  opacity:0;transform:translateX(-22px);
+  transition:opacity .6s ease .5s,transform .6s cubic-bezier(.22,1,.36,1) .5s;}
+.cks li.v{opacity:1;transform:none;}
+/* linha dourada que se estende da esquerda pra direita */
+.cks li::before{
+  content:'';position:absolute;top:0;left:0;
+  height:1px;width:0;border-radius:0;background:none;margin:0;
+  background:linear-gradient(to right,var(--go),var(--gn) 60%,transparent);
+  transition:width .7s cubic-bezier(.22,1,.36,1);
+}
+.cks li.v::before{width:100%;}
+/* linha divisória embaixo */
+.cks li::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:var(--bd);}
+
+/* MÉTODO */
+#met{background:linear-gradient(135deg,var(--cr2) 0%,var(--cr) 55%,var(--cr2) 100%);}
+.metg{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:rgba(201,162,87,.12);margin-top:72px;}
+.mc{
+  background:rgba(248,245,239,.52);
+  backdrop-filter:blur(22px) saturate(160%);
+  -webkit-backdrop-filter:blur(22px) saturate(160%);
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:0 4px 28px rgba(13,12,10,.05),inset 0 1.5px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(13,12,10,.04);
+  padding:52px 34px;position:relative;overflow:hidden;cursor:none;
+  transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;
+}
+.mc:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(13,12,10,.1),inset 0 1.5px 0 rgba(255,255,255,.95);}
+.mc::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(to right,var(--go),var(--gn));transform:scaleX(0);transform-origin:left;transition:transform .55s cubic-bezier(.22,1,.36,1);}
+.mc:hover::after{transform:scaleX(1);}
+.mn{font-family:'Cormorant Garamond',serif;font-size:7rem;font-weight:300;color:var(--go);opacity:.1;line-height:1;margin-bottom:22px;}
+.mi{font-size:28px;margin-bottom:14px;}
+.mt{font-size:14px;font-weight:500;color:var(--dk);margin-bottom:10px;}
+.mb{font-size:12px;font-weight:300;color:var(--g);line-height:1.9;}
+
+/* RESULTADOS */
+#res{background:var(--dk);}
+.rtit{color:rgba(248,245,239,.92);}
+.rtit em{color:var(--gn);}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:rgba(255,255,255,.04);margin-top:72px;}
+.rc{background:rgba(13,12,10,.78);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);border:1px solid rgba(255,255,255,.06);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.09);padding:56px 46px;position:relative;overflow:hidden;transition:background .35s,box-shadow .35s;}
+.rc:hover{background:rgba(23,21,16,.88);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.13),0 0 30px rgba(0,0,0,.3);}
+.rc::after{content:'';position:absolute;top:0;left:0;bottom:0;width:0;background:var(--go);transition:width .45s cubic-bezier(.22,1,.36,1);}
+.rc:hover::after{width:3px;}
+.rq{position:absolute;top:18px;right:22px;font-family:'Cormorant Garamond',serif;font-size:11rem;color:var(--go);opacity:.06;line-height:1;pointer-events:none;}
+.rtag{font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gn);margin-bottom:22px;}
+.rhl{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:400;font-style:italic;line-height:1.22;color:rgba(248,245,239,.88);margin-bottom:18px;}
+.rp{font-size:13px;font-weight:300;color:rgba(248,245,239,.37);line-height:1.95;margin-bottom:26px;}
+.rbox{background:rgba(201,162,87,.07);border-left:2px solid var(--go);padding:14px 18px;margin-bottom:26px;}
+.rbox p{font-size:12px;font-weight:500;color:var(--go);}
+.rbox span{font-size:11px;font-weight:300;color:rgba(248,245,239,.27);display:block;margin-top:3px;}
+.rft{display:flex;align-items:center;gap:13px;border-top:1px solid rgba(255,255,255,.05);padding-top:22px;}
+.rav{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--go),var(--gn));display:flex;align-items:center;justify-content:center;font-size:22px;}
+.ri strong{font-size:13px;font-weight:500;color:rgba(248,245,239,.88);display:block;}
+.ri span{font-size:11px;color:rgba(248,245,239,.27);}
+.rstars{color:var(--go);font-size:10px;letter-spacing:2px;margin-top:2px;}
+
+/* CTA FINAL */
+#ctaf{background:var(--cr);padding:200px 5%;text-align:center;position:relative;overflow:hidden;}
+#ctaf::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:900px;border-radius:50%;border:1px solid rgba(201,162,87,.08);animation:ring 5s ease infinite;}
+#ctaf::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:580px;height:580px;border-radius:50%;border:1px solid rgba(201,162,87,.13);animation:ring 5s ease 1.6s infinite;}
+@keyframes ring{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1;}50%{transform:translate(-50%,-50%) scale(1.06);opacity:.4;}}
+.ctain{position:relative;z-index:1;}
+.ctat{font-family:'Cormorant Garamond',serif;font-size:clamp(3.2rem,9vw,10.5rem);font-weight:300;line-height:.96;letter-spacing:-.03em;margin-bottom:28px;}
+.ctat em{font-style:italic;color:var(--go);}
+.ctap{font-size:15px;font-weight:300;color:var(--g);max-width:440px;margin:0 auto 58px;line-height:1.95;}
+
+/* FOOTER */
+footer{background:#0B0A08;padding:52px 5%;border-top:1px solid rgba(255,255,255,.04);}
+.ft{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
+.ftl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:rgba(201,162,87,.38);}
+.ftc{font-size:9px;color:rgba(255,255,255,.48);letter-spacing:.12em;text-transform:uppercase;}
+.ftlks{display:flex;gap:24px;}
+.ftlks a{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:.14em;text-transform:uppercase;transition:color .2s;cursor:none;}
+.ftlks a:hover{color:var(--go);}
+
+/* RESPONSIVE */
+@media(max-width:1080px){.p01g,.sobg,.rg{grid-template-columns:1fr;gap:60px;}.stg{grid-template-columns:1fr 1fr;}.metg{grid-template-columns:1fr 1fr;}.nm{display:none;}}
+@media(max-width:600px){section{padding:100px 5%;}.metg{grid-template-columns:1fr;}body{cursor:auto;}#c,#co{display:none;}.hwm{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- CURTAIN (lifts on load) -->
+<div id="curtain"></div>
+
+<div id="c"></div>
+<div id="co"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="index.html" class="nl">Priscila Leite</a>
+  <ul class="nm">
+    <li><a href="#prob">Perspectiva</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#met">Método</a></li>
+    <li><a href="#res">Resultados</a></li>
+  </ul>
+  <a href="cursos.html" class="nc"><span>Plataforma →</span></a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="hgrid"></div>
+  <canvas id="hbeams"></canvas>
+  <div id="hvline"></div>
+  <div class="hwm">PL</div>
+  <div style="position:relative;z-index:2;max-width:1100px;width:100%;padding-left:32px;">
+    <p class="hew fu">Nutricionista Infantil</p>
+    <h1 class="htit">
+      <span class="lr"><span class="lri">A criança que</span></span>
+      <span class="lr"><span class="lri"><em>você recusou</em></span></span>
+      <span class="lr"><span class="lri">foi pra outra.</span></span>
+    </h1>
+    <div class="hrule" id="hrule"></div>
+    <p class="hsub fu">Aprenda o método clínico que transforma qualquer nutricionista em especialista infantil — antes mesmo de acumular anos de consultório.</p>
+    <div class="hctas fu">
+      <a href="cursos.html" class="btnA"><span>Acessar a Plataforma</span></a>
+      <a href="#sobre" class="btnB">Conhecer a Priscila</a>
+    </div>
+  </div>
+  <div class="hscr">
+    <div class="hsl"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="tck">
+  <div class="tcw">
+    <span class="tci">Seletividade Alimentar<span class="tcd"></span></span>
+    <span class="tci">Terapia Alimentar Infantil<span class="tcd"></span></span>
+    <span class="tci">Autismo &amp; Neurodivergências<span class="tcd"></span></span>
+    <span class="tci">Escalada do Comer<span class="tcd"></span></span>
+    <span class="tci">Segurança Clínica<span class="tcd"></span></span>
+    <span class="tci">Formação de Especialistas<span class="tcd"></span></span>
+    <span class="tci">Seletividade Alimentar<span class="tcd"></span></span>
+    <span class="tci">Terapia Alimentar Infantil<span class="tcd"></span></span>
+    <span class="tci">Autismo &amp; Neurodivergências<span class="tcd"></span></span>
+    <span class="tci">Escalada do Comer<span class="tcd"></span></span>
+    <span class="tci">Segurança Clínica<span class="tcd"></span></span>
+    <span class="tci">Formação de Especialistas<span class="tcd"></span></span>
+  </div>
+</div>
+
+<!-- 01 — O PROBLEMA -->
+<section id="prob">
+  <div class="sbg" style="top:60px;">01</div>
+  <div class="w">
+    <div class="slb fu">
+      <span class="sn">01 / 04</span>
+      <div class="sl-bar"></div>
+      <span class="sk">Perspectiva</span>
+    </div>
+    <h2 class="stit">
+      <span class="lr"><span class="lri">O mercado está cheio</span></span>
+      <span class="lr"><span class="lri">de nutricionistas que</span></span>
+      <span class="lr"><span class="lri">sabem a <em>teoria.</em></span></span>
+    </h2>
+    <div class="p01g">
+      <div>
+        <p class="phl fu">
+          <span class="phlq">"</span>
+          "Tinha embasamento teórico mas não sabia colocar em prática — e travava quando a criança evoluía, sem saber o que fazer em seguida."
+        </p>
+        <p class="sb fu">Esse é o relato de uma aluna. Mas poderia ser de qualquer nutricionista que nunca teve acesso a um método clínico real.</p>
+        <br/>
+        <p class="sb fu">Há uma diferença brutal entre <em>saber</em> nutrição infantil e saber <strong style="color:var(--dk);font-weight:500">conduzir</strong> um caso infantil. Essa diferença separa quem recusa pacientes de quem os recebe com confiança.</p>
+      </div>
+      <div>
+        <div class="pits">
+          <div class="pit">
+            <div class="bt"></div><div class="br"></div><div class="bb"></div><div class="bl"></div>
+            <div class="pit-inner">
+              <div class="pit-num">01</div>
+              <div><p class="pt">Você recusa casos de autismo por medo de errar</p><p class="ps">Mesmo tendo estudado o tema, não sabe como agir na prática do consultório.</p></div>
+            </div>
+          </div>
+          <div class="pit">
+            <div class="bt"></div><div class="br"></div><div class="bb"></div><div class="bl"></div>
+            <div class="pit-inner">
+              <div class="pit-num">02</div>
+              <div><p class="pt">Você trava quando a criança evolui</p><p class="ps">A teoria está lá. O raciocínio clínico para o próximo passo, não.</p></div>
+            </div>
+          </div>
+          <div class="pit">
+            <div class="bt"></div><div class="br"></div><div class="bb"></div><div class="bl"></div>
+            <div class="pit-inner">
+              <div class="pit-num">03</div>
+              <div><p class="pt">Você escolhe apenas os pacientes mais fáceis</p><p class="ps">E fica vendo outras nutricionistas atenderem os casos que você recusou.</p></div>
+            </div>
+          </div>
+          <div class="pit">
+            <div class="bt"></div><div class="br"></div><div class="bb"></div><div class="bl"></div>
+            <div class="pit-inner">
+              <div class="pit-num">04</div>
+              <div><p class="pt">Você cobra menos porque não se sente especialista</p><p class="ps">Mesmo com anos de estudo, a insegurança ainda determina o seu preço.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stg">
+    <div class="stc fu">
+      <span class="stnum" data-target="5" data-prefix="+">+0</span>
+      <span class="stlbl">Anos de Experiência<br/>Clínica</span>
+    </div>
+    <div class="stc fu d1">
+      <span class="stnum" data-target="100" data-prefix="+">+0</span>
+      <span class="stlbl">Nutricionistas<br/>Transformadas</span>
+    </div>
+    <div class="stc fu d2">
+      <span class="stnum" data-target="3">0</span>
+      <span class="stlbl">Meses Até Triplicar<br/>a Cartela de Pacientes</span>
+      <span class="stsub">resultado médio das alunas</span>
+    </div>
+    <div class="stc fu d3">
+      <span class="stnum" data-target="5">0</span>
+      <span class="stlbl">Clínicas Onde<br/>Uma Aluna Passou a Atender</span>
+      <span class="stsub">em apenas 3 meses</span>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — SOBRE -->
+<section id="sobre">
+  <div class="sbg" style="top:60px;">02</div>
+  <div class="w">
+    <div class="slb fu">
+      <span class="sn">02 / 04</span>
+      <div class="sl-bar"></div>
+      <span class="sk">Sobre a Priscila</span>
+    </div>
+    <div class="sobg">
+      <div class="fu" style="position:relative;">
+        <div class="imgw">
+          <div class="fring"></div>
+          <div class="imgf" id="imgf">
+            <div class="cr-tl"></div>
+            <div class="cr-tr"></div>
+            <div class="cr-bl"></div>
+            <div class="cr-br"></div>
+            <div class="scanl"></div>
+            <span class="iph">👩‍⚕️</span>
+          </div>
+          <div class="fdot fdot1"></div>
+          <div class="fdot fdot2"></div>
+          <div class="fdot fdot3"></div>
+        </div>
+        <div class="bdg"><div class="bdgn">+5</div><div class="bdgl">Anos de<br/>Experiência</div></div>
+      </div>
+      <div>
+        <h2 class="stit" style="font-size:clamp(2.4rem,5.2vw,6rem);">
+          <span class="lr"><span class="lri">Da clínica ao</span></span>
+          <span class="lr"><span class="lri"><em>ensino que</em></span></span>
+          <span class="lr"><span class="lri">transforma.</span></span>
+        </h2>
+        <div style="width:44px;height:1px;background:linear-gradient(to right,var(--go),transparent);margin:28px 0;"></div>
+        <p class="sb fu">Priscila Leite é nutricionista especialista em público infantil, com vasta experiência no atendimento de crianças com seletividade alimentar, autismo e neurodivergências.</p>
+        <p class="sb fu" style="margin-top:16px;">Ela percebeu que a maioria das nutricionistas não recusa pacientes por incapacidade — mas por ausência de um <strong style="color:var(--dk);font-weight:500">método clínico claro</strong>. Foi então que passou a ensinar.</p>
+        <ul class="cks">
+          <li>Especialista em seletividade alimentar e terapia alimentar infantil</li>
+          <li style="transition-delay:.12s">Referência no atendimento de crianças com TEA e neurodivergências</li>
+          <li style="transition-delay:.24s">Criadora do método baseado na Escalada do Comer</li>
+          <li style="transition-delay:.36s">Mentora de nutricionistas em todo o Brasil</li>
+          <li style="transition-delay:.48s">Indicada por pediatras, fonos, TOs e equipes multiprofissionais</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 — MÉTODO -->
+<section id="met">
+  <div class="sbg" style="top:60px;">03</div>
+  <div class="w">
+    <div class="slb fu">
+      <span class="sn">03 / 04</span>
+      <div class="sl-bar"></div>
+      <span class="sk">O Método</span>
+    </div>
+    <h2 class="stit" style="max-width:800px;">
+      <span class="lr"><span class="lri">Como a teoria vira</span></span>
+      <span class="lr"><span class="lri"><em>domínio clínico.</em></span></span>
+    </h2>
+    <div class="metg">
+      <div class="mc fu">
+        <div class="mn">01</div>
+        <div class="mi">🔍</div>
+        <p class="mt">Avaliação dos Fatores</p>
+        <p class="mb">Identificar o que está por trás da seletividade — sensorial, comportamento, ambiente e relação familiar.</p>
+      </div>
+      <div class="mc fu d1">
+        <div class="mn">02</div>
+        <div class="mi">📊</div>
+        <p class="mt">Escalada do Comer</p>
+        <p class="mb">Identificar em qual nível a criança está e avançar com segurança, respeitando cada etapa sem forçar.</p>
+      </div>
+      <div class="mc fu d2">
+        <div class="mn">03</div>
+        <div class="mi">🤝</div>
+        <p class="mt">Vínculo Terapêutico</p>
+        <p class="mb">Construir confiança com a criança e a família — a base de qualquer evolução real no tratamento.</p>
+      </div>
+      <div class="mc fu d3">
+        <div class="mn">04</div>
+        <div class="mi">📋</div>
+        <p class="mt">Plano Terapêutico</p>
+        <p class="mb">Traçar objetivos reais e integrar a equipe multiprofissional com clareza clínica e comunicação eficaz.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 — RESULTADOS -->
+<section id="res">
+  <div class="sbg" style="top:60px;color:rgba(255,255,255,1);opacity:.018;">04</div>
+  <div class="w">
+    <div class="slb fu">
+      <span class="sn" style="color:rgba(201,162,87,.7);">04 / 04</span>
+      <div class="sl-bar"></div>
+      <span class="sk" style="color:rgba(248,245,239,.25);">Resultados</span>
+    </div>
+    <h2 class="stit rtit">
+      <span class="lr"><span class="lri">Nutricionistas que pararam</span></span>
+      <span class="lr"><span class="lri">de ter medo e passaram</span></span>
+      <span class="lr"><span class="lri">a ter <em>método.</em></span></span>
+    </h2>
+    <div class="rg">
+      <div class="rc fu">
+        <div class="rq">"</div>
+        <p class="rtag">✦ Mentoria Clínica</p>
+        <h3 class="rhl">"Da nutricionista que recusava crianças para a profissional com olhar clínico"</h3>
+        <p class="rp">Antes de trabalhar com a Pri, eu recusei dois pacientes autistas não-verbais por medo de não conseguir fazer um bom trabalho. Tinha embasamento teórico mas não sabia colocar em prática — e travava quando a criança evoluía.<br/><br/>Depois da mentoria passei a avaliar de forma criteriosa, traçar o plano terapêutico e ter um olhar clínico real. <strong style="color:rgba(248,245,239,.8);font-weight:500">Hoje atendo neurodivergentes com tranquilidade.</strong></p>
+        <div class="rbox"><p>📈 De 4 para 10–15 pacientes em apenas 3 meses</p><span>Trabalha em 5 clínicas · Indicada por 3+ pediatras que não conhecia</span></div>
+        <div class="rft"><div class="rav">👩</div><div class="ri"><strong>Renata</strong><span>Nutricionista · 5 anos de profissão</span><div class="rstars">★★★★★</div></div></div>
+      </div>
+      <div class="rc fu d2">
+        <div class="rq">"</div>
+        <p class="rtag">✦ Supervisão de Casos</p>
+        <h3 class="rhl">"Rompendo barreiras na seletividade — uma nutricionista em construção"</h3>
+        <p class="rp">Quando conheci a Pri, eu era nutricionista há 6 anos mas nunca tinha atuado com terapia alimentar. Tinha imenso medo de errar — chegava a pagar outras nutricionistas para me auxiliar nas suplementações.<br/><br/>O que foi crucial: entender que não é só o não comer. Tem o sensorial, o ambiente, o relacionamento com os pais. <strong style="color:rgba(248,245,239,.8);font-weight:500">Agora tenho um norte clínico claro.</strong></p>
+        <div class="rbox"><p>🌱 Olhar clínico ampliado e estruturado</p><span>Atende seletividade severa e autismo · Paciente explorando e manipulando alimentos</span></div>
+        <div class="rft"><div class="rav">👩</div><div class="ri"><strong>Laryssa</strong><span>Nutricionista · Maringá · 6 anos de profissão</span><div class="rstars">★★★★★</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="ctaf">
+  <div class="ctain">
+    <h2 class="ctat">
+      <span class="lr"><span class="lri">Você não precisa</span></span>
+      <span class="lr"><span class="lri">mais ter <em>medo</em></span></span>
+      <span class="lr"><span class="lri">de atender crianças.</span></span>
+    </h2>
+    <p class="ctap fu">Com o método certo, você vai conduzir cada caso com a confiança de quem sabe exatamente o que está fazendo.</p>
+    <div class="fu" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="cursos.html" class="btnA"><span>Acessar a Plataforma</span></a>
+      <a href="#res" class="btnB">Ver resultados</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <span class="ftl">Priscila Leite</span>
+    <p class="ftc">© 2025 · Vitaminando Pratos, Nutrindo Vidas</p>
+    <div class="ftlks">
+      <a href="#">Instagram</a>
+      <a href="#">Contato</a>
+      <a href="cursos.html">Plataforma</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* CURTAIN — lifts upward, revealing hero */
+(function(){
+  var cur=document.getElementById('curtain');
+  cur.style.transition='none';
+  cur.style.transform='translateY(0)';
+  setTimeout(function(){
+    cur.style.transition='transform 1.3s cubic-bezier(.77,0,.175,1)';
+    cur.style.transform='translateY(-100%)';
+  },60);
+  setTimeout(function(){cur.style.display='none';},1500);
+})();
+
+/* CURSOR */
+const c=document.getElementById('c'),co=document.getElementById('co');
+let mx=0,my=0,ox=0,oy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px';});
+(function L(){ox+=(mx-ox)*.1;oy+=(my-oy)*.1;co.style.left=ox+'px';co.style.top=oy+'px';requestAnimationFrame(L);})();
+document.querySelectorAll('a,button,.pit,.mc,.rc,.stc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+/* CURSOR — inverte cor em seções escuras */
+(function(){
+  const darkSels='#stats,#res,footer';
+  document.addEventListener('mousemove',e=>{
+    const el=document.elementFromPoint(e.clientX,e.clientY);
+    const inDark=!!el?.closest(darkSels);
+    const onDarkPit=!!el?.closest('.pit') && getComputedStyle(el.closest('.pit')).backgroundColor.includes('22, 20');
+    document.body.classList.toggle('dk-bg',inDark||onDarkPit);
+  },{passive:true});
+  document.querySelectorAll('.pit').forEach(p=>{
+    p.addEventListener('mouseenter',()=>document.body.classList.add('dk-bg'));
+    p.addEventListener('mouseleave',e=>{
+      const el=document.elementFromPoint(e.clientX,e.clientY);
+      if(!el?.closest(darkSels))document.body.classList.remove('dk-bg');
+    });
+  });
+})();
+
+/* NAV */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('s',scrollY>60),{passive:true});
+
+/* HERO on load — start after curtain has mostly lifted (~900ms) */
+window.addEventListener('load',()=>{
+  document.getElementById('hgrid').classList.add('v');
+  setTimeout(()=>document.getElementById('hrule').classList.add('v'),920);
+  setTimeout(()=>document.getElementById('hvline').classList.add('v'),200);
+  document.querySelectorAll('#hero .lri').forEach((el,i)=>setTimeout(()=>el.classList.add('v'),880+i*200));
+  document.querySelectorAll('#hero .fu').forEach((el,i)=>setTimeout(()=>el.classList.add('v'),1220+i*160));
+});
+
+/* HERO LIGHT BEAMS — canvas */
+(function(){
+  var cv=document.getElementById('hbeams');
+  var hero=document.getElementById('hero');
+  var ctx=cv.getContext('2d');
+  var W,H,mx=0.5,t=0;
+  function resize(){W=cv.width=hero.offsetWidth;H=cv.height=hero.offsetHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  /* beams: phase 0-1 (start x), period ms, half-width px, opacity */
+  var beams=[
+    {ph:0.06,per:24000,w:190,op:0.11},
+    {ph:0.21,per:18000,w:80, op:0.09},
+    {ph:0.38,per:30000,w:220,op:0.08},
+    {ph:0.55,per:15000,w:65, op:0.10},
+    {ph:0.70,per:22000,w:130,op:0.08},
+    {ph:0.85,per:27000,w:50, op:0.12},
+    {ph:0.92,per:12000,w:95, op:0.07},
+  ];
+  var ANG=-20*Math.PI/180;
+  function frame(ts){
+    ctx.clearRect(0,0,W,H);
+    beams.forEach(function(b){
+      var cx=(b.ph+0.16*Math.sin(ts/b.per*Math.PI*2))*W+(mx-0.5)*W*0.05;
+      ctx.save();
+      ctx.translate(cx,H*0.5);
+      ctx.rotate(ANG);
+      var g=ctx.createLinearGradient(-b.w,0,b.w,0);
+      g.addColorStop(0,'transparent');
+      g.addColorStop(0.5,'rgba(201,162,87,'+b.op+')');
+      g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;
+      ctx.fillRect(-b.w,-H*2,b.w*2,H*4);
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  document.addEventListener('mousemove',function(e){mx=e.clientX/window.innerWidth;});
+})();
+
+/* SCROLL REVEALS */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(({isIntersecting,target})=>{
+    if(!isIntersecting)return;
+    target.classList.add('v');
+    io.unobserve(target);
+  });
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.lri:not(#hero .lri),.fu:not(#hero .fu),.sl,.pit,.cks li').forEach(el=>io.observe(el));
+
+/* PHOTO corners reveal */
+const imgfIO=new IntersectionObserver(([e])=>{
+  if(e.isIntersecting){document.getElementById('imgf').classList.add('revealed');imgfIO.disconnect();}
+},{threshold:.3});
+imgfIO.observe(document.getElementById('imgf'));
+
+/* COUNTERS */
+function cnt(el){
+  const tgt=+el.dataset.target,pfx=el.dataset.prefix||'';
+  const dur=2600,t0=performance.now();
+  (function t(now){
+    const p=Math.min((now-t0)/dur,1);
+    el.textContent=pfx+Math.round((1-Math.pow(1-p,4))*tgt);
+    p<1?requestAnimationFrame(t):el.textContent=pfx+tgt;
+  })(t0);
+}
+document.querySelectorAll('[data-target]').forEach(el=>{
+  new IntersectionObserver(([e])=>{if(e.isIntersecting){cnt(el);}},{threshold:.5}).observe(el);
+});
+
+/* MAGNETIC BUTTONS */
+document.querySelectorAll('.btnA,.nc').forEach(btn=>{
+  btn.addEventListener('mousemove',e=>{const r=btn.getBoundingClientRect();btn.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.12}px)`;});
+  btn.addEventListener('mouseleave',()=>btn.style.transform='');
+});
+
+/* PAGE FADE TO cursos.html */
+document.querySelectorAll('a[href="cursos.html"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    document.body.style.transition='opacity .35s';
+    document.body.style.opacity='0';
+    setTimeout(()=>location.href='cursos.html',360);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Plataforma — Priscila Leite</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{--go:#C9A257;--gn:#7FC442;--dk:#0D0C0A;--dk2:#1a1714;--cr:#F8F5EF;--cr2:#EEE8D8;--bd:rgba(13,12,10,.09);--g:rgba(13,12,10,.38);}
+
+body{font-family:'Inter',sans-serif;font-weight:300;background:var(--cr);color:var(--dk);overflow-x:hidden;cursor:none;min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+/* ── GRAIN ── */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.033'/%3E%3C/svg%3E");}
+
+/* ── CURSOR ── */
+#c{position:fixed;width:8px;height:8px;background:var(--dk);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .2s;}
+#co{position:fixed;width:44px;height:44px;border:1.5px solid rgba(13,12,10,.22);border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s;}
+body.hov #c{width:3px;height:3px;background:var(--go);}
+body.hov #co{width:62px;height:62px;border-color:var(--go);}
+
+/* ── ANIMATED BACKGROUND ORBS ── */
+#bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;}
+.o1{width:800px;height:680px;background:radial-gradient(ellipse,rgba(201,162,87,.08) 0%,transparent 70%);top:-200px;left:-220px;animation:o1f 22s ease-in-out infinite;}
+.o2{width:620px;height:540px;background:radial-gradient(ellipse,rgba(127,196,66,.055) 0%,transparent 70%);bottom:-150px;right:-180px;animation:o2f 26s ease-in-out infinite;}
+.o3{width:500px;height:420px;background:radial-gradient(ellipse,rgba(201,162,87,.055) 0%,transparent 70%);top:38%;left:42%;animation:o3f 18s ease-in-out infinite;}
+.o4{width:380px;height:320px;background:radial-gradient(ellipse,rgba(127,196,66,.04) 0%,transparent 70%);top:18%;right:14%;animation:o4f 30s ease-in-out infinite;}
+@keyframes o1f{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(140px,110px) scale(1.12)}66%{transform:translate(-70px,160px) scale(.93)}}
+@keyframes o2f{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-110px,-70px) scale(1.18)}75%{transform:translate(80px,-110px) scale(.87)}}
+@keyframes o3f{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-90px,70px) scale(1.28)}}
+@keyframes o4f{0%,100%{transform:translate(0,0)}35%{transform:translate(90px,-55px) scale(1.22)}65%{transform:translate(-45px,95px) scale(.82)}}
+
+#bg-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:0 6%;height:72px;background:rgba(248,245,239,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);box-shadow:0 1px 0 rgba(13,12,10,.04);}
+.nl{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:var(--go);letter-spacing:.02em;transition:opacity .2s;cursor:none;}
+.nl:hover{opacity:.7;}
+.nback{display:inline-flex;align-items:center;gap:7px;font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--g);transition:color .25s;cursor:none;}
+.nback:hover{color:var(--dk);}
+
+/* ── HERO ── */
+#hero{padding:148px 6% 80px;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;}
+.h-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(201,162,87,.4);border-radius:100px;padding:8px 20px;font-size:9px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--go);margin-bottom:38px;background:rgba(201,162,87,.07);}
+.h-title{font-size:clamp(3.2rem,8vw,6.5rem);font-weight:800;line-height:.95;letter-spacing:-.03em;color:var(--dk);margin-bottom:20px;}
+.h-sub{font-size:15px;font-weight:300;color:var(--g);max-width:400px;line-height:1.8;}
+.h-rule{width:min(800px,90%);height:1px;background:var(--bd);margin:64px auto 0;}
+
+/* ── SECTION LABEL ── */
+#slabel-wrap{padding:0 6%;max-width:1240px;margin:0 auto;width:100%;position:relative;z-index:1;}
+.slabel{padding:52px 0 32px;font-size:8.5px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:var(--go);}
+
+/* ── GRID ── */
+#grid{padding:0 6% 130px;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:22px;position:relative;z-index:1;}
+
+/* ── CARD WRAP ── */
+.card-wrap{position:relative;border-radius:22px;}
+
+/* ── CARD ── */
+.card{
+  background:#fff;border-radius:20px;border:1px solid var(--bd);
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 2px 18px rgba(13,12,10,.055);
+  will-change:transform;
+  transition:border-color .4s,box-shadow .4s,background .3s;
+  cursor:none;
+}
+.card-wrap:hover .card{
+  border-color:rgba(201,162,87,.25);
+  box-shadow:0 32px 80px rgba(13,12,10,.2),0 10px 30px rgba(13,12,10,.12),inset 0 1px 0 rgba(255,255,255,.95);
+  background:linear-gradient(150deg,rgba(255,255,255,1) 0%,rgba(248,245,239,.98) 100%);
+}
+.card-wrap.gn-wrap:hover .card{border-color:rgba(127,196,66,.28);}
+.card-wrap:hover .card.premium{border-color:rgba(201,162,87,.42);}
+
+/* Ambient float when resting */
+.card-wrap:not(:hover) .card{animation:ambientFloat 6s ease-in-out infinite;animation-delay:var(--af,0s);}
+@keyframes ambientFloat{0%,100%{box-shadow:0 2px 18px rgba(13,12,10,.055);}50%{box-shadow:0 5px 28px rgba(13,12,10,.09),0 0 0 0.5px rgba(201,162,87,.07);}}
+
+/* ── SHIMMER SWEEP (resting only) ── */
+.card-shine{position:absolute;top:0;left:-90%;width:55%;height:100%;z-index:2;pointer-events:none;background:linear-gradient(108deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:skewX(-10deg);animation:cardShimmer 8s ease-in-out infinite;animation-delay:var(--sd,0s);}
+.card-wrap:hover .card-shine{opacity:0;transition:opacity .15s;}
+@keyframes cardShimmer{0%,72%,100%{left:-90%;opacity:0;}7%{opacity:1;}46%{left:140%;opacity:0;}}
+
+/* ── MOUSE SPOTLIGHT ── */
+.card-spot{position:absolute;inset:0;border-radius:20px;z-index:1;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,35%),rgba(201,162,87,.12) 0%,transparent 68%);opacity:0;transition:opacity .35s;}
+.card-wrap.gn-wrap .card-spot{background:radial-gradient(420px circle at var(--mx,50%) var(--my,35%),rgba(127,196,66,.1) 0%,transparent 68%);}
+.card-wrap:hover .card-spot{opacity:1;}
+
+/* ── RADIAL GLOW ── */
+.card-glow{position:absolute;top:0;left:0;right:0;height:220px;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 50% -5%,rgba(201,162,87,.09) 0%,transparent 70%);}
+.card.gn .card-glow{background:radial-gradient(ellipse at 50% -5%,rgba(127,196,66,.08) 0%,transparent 70%);}
+.card.premium .card-glow{background:radial-gradient(ellipse at 50% -5%,rgba(201,162,87,.14) 0%,transparent 65%);}
+
+/* ── DASHED PLAY CIRCLE rotates on hover ── */
+.card-wrap:hover .play-circle svg{animation:dashSpin 5s linear infinite;}
+@keyframes dashSpin{to{transform:rotate(360deg);}}
+
+/* ── CARD INNER ── */
+.card-inner{position:relative;z-index:3;padding:40px 38px 38px;display:flex;flex-direction:column;}
+
+/* BADGES */
+.card-badge{position:absolute;top:20px;right:20px;z-index:4;font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:6px 14px;border-radius:100px;}
+.bg-gratis{color:var(--gn);background:rgba(127,196,66,.1);border:1px solid rgba(127,196,66,.3);}
+.bg-entrada{color:#b07d20;background:rgba(201,162,87,.1);border:1px solid rgba(201,162,87,.3);}
+.bg-formacao{color:var(--go);background:rgba(201,162,87,.1);border:1px solid rgba(201,162,87,.3);}
+.bg-premium{color:#fff;background:var(--dk);border:1px solid rgba(201,162,87,.4);}
+
+/* PLAY */
+.play-wrap{display:flex;justify-content:center;align-items:center;margin:0 0 24px;}
+.play-circle{width:74px;height:74px;position:relative;display:flex;align-items:center;justify-content:center;}
+.play-circle svg{position:absolute;top:0;left:0;width:100%;height:100%;transform-origin:center;}
+.play-tri{width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:16px solid var(--go);margin-left:4px;position:relative;z-index:1;}
+.play-tri.gn{border-left-color:var(--gn);}
+.play-tri.dk{border-left-color:var(--dk);}
+
+/* CONTENT */
+.card-tag{text-align:center;font-size:8.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--go);margin-bottom:22px;opacity:.8;transition:opacity .3s;}
+.card-tag.gn{color:var(--gn);}
+.card-tag.dk{color:var(--dk);}
+.card-wrap:hover .card-tag{opacity:1;}
+.card-tit{font-size:1.35rem;font-weight:700;line-height:1.22;color:var(--dk);margin-bottom:10px;transition:text-shadow .4s;}
+.card-wrap:hover .card-tit{text-shadow:0 0 40px rgba(201,162,87,.2);}
+.card-items{list-style:none;margin-bottom:24px;flex:1;}
+.card-items li{font-size:12.5px;font-weight:300;color:var(--g);padding:5px 0;padding-left:16px;position:relative;line-height:1.5;transition:color .3s;}
+.card-items li::before{content:'—';position:absolute;left:0;color:var(--go);font-weight:400;}
+.card-items li.gn::before{color:var(--gn);}
+.card-wrap:hover .card-items li{color:rgba(13,12,10,.5);}
+.card-divider{height:1px;background:var(--bd);margin-bottom:20px;}
+
+/* ACCESS LINK */
+.card-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--go);letter-spacing:.01em;transition:gap .25s,opacity .25s;cursor:none;}
+.card-link.gn{color:var(--gn);}
+.card-link.dk{color:var(--dk);}
+.card-link:hover{gap:12px;opacity:.75;}
+
+/* FORM */
+.card-form{margin-top:20px;padding:22px;background:var(--cr);border-radius:14px;border:1px solid var(--bd);}
+.cf-tit{font-size:1rem;font-weight:700;color:var(--dk);margin-bottom:4px;}
+.cf-sub{font-size:12px;font-weight:300;color:var(--g);margin-bottom:18px;line-height:1.6;}
+.cf-label{font-size:8px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(13,12,10,.35);margin-bottom:6px;display:block;}
+.cf-input{width:100%;background:#fff;border:1px solid rgba(13,12,10,.14);border-radius:10px;padding:12px 14px;font-size:14px;font-weight:300;color:var(--dk);font-family:'Inter',sans-serif;margin-bottom:12px;transition:border-color .25s;outline:none;}
+.cf-input::placeholder{color:rgba(13,12,10,.22);}
+.cf-input:focus{border-color:rgba(201,162,87,.5);}
+.cf-btn{width:100%;background:var(--dk);color:var(--cr);border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;cursor:none;transition:background .25s,transform .2s;}
+.cf-btn:hover{background:var(--dk2);transform:translateY(-1px);}
+.cf-btn.gn{background:var(--gn);color:var(--dk);}
+.cf-btn.go{background:var(--go);color:var(--dk);}
+
+/* SVG orbit elements (style hook only — created by JS) */
+.card-svg-rim{overflow:visible;}
+
+/* RESPONSIVE */
+@media(max-width:900px){#grid{grid-template-columns:1fr;}.card-inner{padding:32px 26px;}}
+@media(max-width:640px){.h-title{font-size:3rem;}#grid,#slabel-wrap{padding-left:5%;padding-right:5%;}#nav{padding-left:5%;padding-right:5%;}body{cursor:auto;}#c,#co{display:none;}}
+</style>
+</head>
+<body>
+<div id="c"></div><div id="co"></div>
+
+<!-- ANIMATED BACKGROUND -->
+<div id="bg-orbs">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+  <div class="orb o4"></div>
+</div>
+<canvas id="bg-canvas"></canvas>
+
+<nav id="nav">
+  <a href="index.html" class="nl">Priscila Leite</a>
+  <a href="index.html" class="nback">← Voltar</a>
+</nav>
+
+<section id="hero">
+  <div class="h-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    Área de Membros
+  </div>
+  <h1 class="h-title">Seus cursos</h1>
+  <p class="h-sub">Selecione um curso abaixo para acessar o conteúdo exclusivo.</p>
+  <div class="h-rule"></div>
+</section>
+
+<div id="slabel-wrap"><p class="slabel">Esteira de Produtos — Nutri For Nutri</p></div>
+
+<div id="grid">
+
+  <!-- 01 COMUNIDADE GRÁTIS -->
+  <div class="card-wrap gn-wrap" style="--sd:0s;--af:0s;">
+    <div class="card gn">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-gratis">Grátis</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#7FC442" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri gn"></div>
+        </div></div>
+        <p class="card-tag gn">01 — Comunidade</p>
+        <h2 class="card-tit">Comunidade Nutri For Nutri</h2>
+        <ul class="card-items">
+          <li class="gn">Conteúdos científicos e práticos sobre terapia alimentar infantil</li>
+          <li class="gn">Encontros, aulas ao vivo e discussões de casos clínicos</li>
+          <li class="gn">Espaço para troca entre nutricionistas</li>
+          <li class="gn">Geração de confiança antes de qualquer oferta paga</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link gn" data-form="form-1" data-slug="comunidade">Acessar a comunidade <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-1" style="display:none;">
+          <h3 class="cf-tit">Entrar na Comunidade</h3><p class="cf-sub">Digite seus dados para acessar o conteúdo gratuito.</p>
+          <form onsubmit="goPlayer(event,'comunidade')">
+            <label class="cf-label" for="n1">Nome</label><input class="cf-input" id="n1" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e1">E-mail</label><input class="cf-input" id="e1" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn gn" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 WORKSHOP PRÁTICO -->
+  <div class="card-wrap" style="--sd:1.6s;--af:.9s;">
+    <div class="card">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-entrada">Entrada</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri"></div>
+        </div></div>
+        <p class="card-tag">02 — Workshop Presencial</p>
+        <h2 class="card-tit">Workshop: Seletividade Alimentar<br/><span style="font-size:.9rem;font-weight:400;color:var(--go);">Da teoria à conduta clínica</span></h2>
+        <ul class="card-items">
+          <li>Avaliação diferencial: seletividade vs. recusa alimentar</li>
+          <li>Protocolo de conduta clínica passo a passo</li>
+          <li>Manejo familiar: como orientar pais e cuidadores</li>
+          <li>Casos com TEA, TDAH e hipersensibilidade sensorial</li>
+          <li>Ferramentas práticas que funcionam no consultório real</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="workshop-seletividade.html" class="card-link" data-slug="workshop">Acessar o workshop <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 TERAPIA ALIMENTAR -->
+  <div class="card-wrap" style="--sd:3.2s;--af:1.8s;">
+    <div class="card">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-formacao">Formação</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri"></div>
+        </div></div>
+        <p class="card-tag">03 — Formação Completa</p>
+        <h2 class="card-tit">Terapia Alimentar Infantil<br/><span style="font-size:1rem;font-weight:400;color:var(--go);">Método Mesa Leve™</span></h2>
+        <ul class="card-items">
+          <li>Avaliação clínica e planejamento terapêutico</li>
+          <li>Escalada do comer e ferramentas práticas</li>
+          <li>Manejo familiar e casos clínicos reais</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link" data-form="form-3" data-slug="terapia-alimentar">Acessar o curso <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-3" style="display:none;">
+          <h3 class="cf-tit">Acessar Formação</h3><p class="cf-sub">Digite seus dados para entrar na área de membros.</p>
+          <form onsubmit="goPlayer(event,'terapia-alimentar')">
+            <label class="cf-label" for="n3">Nome</label><input class="cf-input" id="n3" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e3">E-mail</label><input class="cf-input" id="e3" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn go" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 SELETIVIDADE ALIMENTAR -->
+  <div class="card-wrap" style="--sd:.8s;--af:2.7s;">
+    <div class="card">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-formacao">Formação</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri"></div>
+        </div></div>
+        <p class="card-tag">04 — Formação Especializada</p>
+        <h2 class="card-tit">Seletividade Alimentar</h2>
+        <ul class="card-items">
+          <li>Avaliação e diagnóstico diferencial</li>
+          <li>Planejamento terapêutico para casos de recusa alimentar</li>
+          <li>Condução clínica passo a passo</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link" data-form="form-4" data-slug="seletividade">Acessar o curso <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-4" style="display:none;">
+          <h3 class="cf-tit">Acessar Formação</h3><p class="cf-sub">Digite seus dados para entrar na área de membros.</p>
+          <form onsubmit="goPlayer(event,'seletividade')">
+            <label class="cf-label" for="n4">Nome</label><input class="cf-input" id="n4" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e4">E-mail</label><input class="cf-input" id="e4" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn go" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 INTRODUÇÃO ALIMENTAR -->
+  <div class="card-wrap" style="--sd:2.4s;--af:3.6s;">
+    <div class="card">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-formacao">Formação</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri"></div>
+        </div></div>
+        <p class="card-tag">05 — Formação Especializada</p>
+        <h2 class="card-tit">Introdução Alimentar</h2>
+        <ul class="card-items">
+          <li>Condução da família durante todo o processo de IA</li>
+          <li>Técnicas baseadas em evidências</li>
+          <li>Protocolos práticos para o consultório</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link" data-form="form-5" data-slug="introducao-alimentar">Acessar o curso <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-5" style="display:none;">
+          <h3 class="cf-tit">Acessar Formação</h3><p class="cf-sub">Digite seus dados para entrar na área de membros.</p>
+          <form onsubmit="goPlayer(event,'introducao-alimentar')">
+            <label class="cf-label" for="n5">Nome</label><input class="cf-input" id="n5" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e5">E-mail</label><input class="cf-input" id="e5" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn go" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 DEVOLUTIVA NUTRICIONAL -->
+  <div class="card-wrap" style="--sd:4s;--af:1.2s;">
+    <div class="card">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-formacao">Formação</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri"></div>
+        </div></div>
+        <p class="card-tag">06 — Comunicação Clínica</p>
+        <h2 class="card-tit">Devolutiva Nutricional</h2>
+        <ul class="card-items">
+          <li>Devolutivas claras, profissionais e estratégicas</li>
+          <li>Como aumentar o engajamento familiar durante o tratamento</li>
+          <li>Comunicação que gera confiança e continuidade</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link" data-form="form-6" data-slug="devolutiva">Acessar o curso <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-6" style="display:none;">
+          <h3 class="cf-tit">Acessar Formação</h3><p class="cf-sub">Digite seus dados para entrar na área de membros.</p>
+          <form onsubmit="goPlayer(event,'devolutiva')">
+            <label class="cf-label" for="n6">Nome</label><input class="cf-input" id="n6" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e6">E-mail</label><input class="cf-input" id="e6" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn go" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 EDUCAÇÃO ALIMENTAR -->
+  <div class="card-wrap" style="--sd:1.1s;--af:4.5s;">
+    <div class="card">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-formacao">Formação</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".7"/></svg>
+          <div class="play-tri"></div>
+        </div></div>
+        <p class="card-tag">07 — Estratégias Lúdicas</p>
+        <h2 class="card-tit">Educação Alimentar</h2>
+        <ul class="card-items">
+          <li>Atividades que favorecem o vínculo da criança com os alimentos</li>
+          <li>Respeitando o desenvolvimento infantil</li>
+          <li>Ferramentas práticas para aplicar no consultório</li>
+          <li>Estratégias para creches e escolas: intervenção nutricional em grupo</li>
+          <li>Parceria com educadores: como orientar professores e coordenadores</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link" data-form="form-7" data-slug="educacao-alimentar">Acessar o curso <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-7" style="display:none;">
+          <h3 class="cf-tit">Acessar Formação</h3><p class="cf-sub">Digite seus dados para entrar na área de membros.</p>
+          <form onsubmit="goPlayer(event,'educacao-alimentar')">
+            <label class="cf-label" for="n7">Nome</label><input class="cf-input" id="n7" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e7">E-mail</label><input class="cf-input" id="e7" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn go" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08 MENTORIA PREMIUM -->
+  <div class="card-wrap" style="--sd:2.9s;--af:3s;">
+    <div class="card premium">
+      <div class="card-shine"></div><div class="card-spot"></div><div class="card-glow"></div>
+      <span class="card-badge bg-premium">⭐ Premium</span>
+      <div class="card-inner">
+        <div class="play-wrap"><div class="play-circle">
+          <svg viewBox="0 0 74 74" fill="none"><circle cx="37" cy="37" r="33" stroke="#C9A257" stroke-width="1.5" stroke-dasharray="5 3.5" stroke-linecap="round" opacity=".45"/></svg>
+          <div class="play-tri dk"></div>
+        </div></div>
+        <p class="card-tag dk">08 — Programa Premium</p>
+        <h2 class="card-tit">Mentoria Nutri For Nutri</h2>
+        <ul class="card-items">
+          <li>Segurança clínica: discussão de casos reais em acompanhamento</li>
+          <li>Raciocínio clínico: refinamento contínuo com supervisão especializada</li>
+          <li>Autoridade: apoio na construção do posicionamento na área</li>
+          <li>Evolução profissional: acompanhamento do desenvolvimento</li>
+          <li>Acesso direto: relação próxima com a Priscila</li>
+        </ul>
+        <div class="card-divider"></div>
+        <a href="#" class="card-link dk" data-form="form-8" data-slug="mentoria">Acessar a mentoria <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-8" style="display:none;background:rgba(13,12,10,.04);">
+          <h3 class="cf-tit">Acessar Mentoria</h3><p class="cf-sub">Digite seus dados para entrar na área exclusiva.</p>
+          <form onsubmit="goPlayer(event,'mentoria')">
+            <label class="cf-label" for="n8">Nome</label><input class="cf-input" id="n8" type="text" placeholder="Seu nome" required/>
+            <label class="cf-label" for="e8">E-mail</label><input class="cf-input" id="e8" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn" type="submit">Acessar agora →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+<!-- ── DEPOIMENTOS ── -->
+<section id="depoimentos" style="padding:0 6% 120px;max-width:1240px;margin:0 auto;position:relative;z-index:1;">
+  <div style="padding:0 0 40px;">
+    <p class="slabel" style="padding:0 0 16px;">Depoimentos — Quem já viveu</p>
+    <h2 style="font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.03em;color:var(--dk);line-height:1.1;margin-bottom:12px;">O que dizem as nutricionistas</h2>
+    <p style="font-size:14px;font-weight:300;color:var(--g);max-width:440px;line-height:1.8;">Experiências reais de quem participou dos workshops e formações da Priscila.</p>
+  </div>
+
+  <!-- FOTOS + TEXTO -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:32px;">
+    <div style="background:#fff;border-radius:20px;border:1px solid var(--bd);overflow:hidden;box-shadow:0 2px 18px rgba(13,12,10,.055);">
+      <img src="assets/fotos/priscila-1.jpg" alt="Priscila Leite — Workshop presencial" style="width:100%;height:260px;object-fit:cover;display:block;">
+      <div style="padding:28px 30px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:var(--go);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">PL</div>
+          <div><p style="font-size:13px;font-weight:600;color:var(--dk);">Priscila Leite</p><p style="font-size:11px;color:var(--g);">Workshop Presencial</p></div>
+        </div>
+        <p style="font-size:14px;font-weight:300;color:var(--g);line-height:1.75;font-style:italic;">"A troca que acontece quando a gente coloca nutricionistas juntas, na prática, é algo que nenhum curso online consegue replicar."</p>
+      </div>
+    </div>
+    <div style="background:#fff;border-radius:20px;border:1px solid var(--bd);overflow:hidden;box-shadow:0 2px 18px rgba(13,12,10,.055);">
+      <img src="assets/fotos/priscila-2.jpg" alt="Priscila Leite — Formação clínica" style="width:100%;height:260px;object-fit:cover;display:block;">
+      <div style="padding:28px 30px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:var(--gn);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;">★</div>
+          <div><p style="font-size:13px;font-weight:600;color:var(--dk);">Método Mesa Leve™</p><p style="font-size:11px;color:var(--g);">Terapia Alimentar Infantil</p></div>
+        </div>
+        <p style="font-size:14px;font-weight:300;color:var(--g);line-height:1.75;font-style:italic;">"Cada módulo foi pensado para a nutricionista que atende de verdade — não teórico demais, não superficial demais. É clínico, é real."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VÍDEOS DO WORKSHOP -->
+  <div style="margin-bottom:16px;">
+    <p class="slabel" style="padding:0 0 20px;">Workshop Presencial — Registros em vídeo</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:48px;">
+    <div style="background:#fff;border-radius:16px;border:1px solid var(--bd);overflow:hidden;box-shadow:0 2px 14px rgba(13,12,10,.05);">
+      <video controls preload="metadata" style="width:100%;display:block;background:#0D0C0A;" poster="">
+        <source src="assets/videos/VID_20240525_173328758.mp4" type="video/mp4">
+      </video>
+      <div style="padding:16px 18px;"><p style="font-size:12px;font-weight:600;color:var(--dk);margin-bottom:4px;">Workshop — Parte 1</p><p style="font-size:11px;color:var(--g);">Priscila conduzindo a formação</p></div>
+    </div>
+    <div style="background:#fff;border-radius:16px;border:1px solid var(--bd);overflow:hidden;box-shadow:0 2px 14px rgba(13,12,10,.05);">
+      <video controls preload="metadata" style="width:100%;display:block;background:#0D0C0A;">
+        <source src="assets/videos/VID_20240525_173412880.mp4" type="video/mp4">
+      </video>
+      <div style="padding:16px 18px;"><p style="font-size:12px;font-weight:600;color:var(--dk);margin-bottom:4px;">Workshop — Parte 2</p><p style="font-size:11px;color:var(--g);">Participantes em atividade prática</p></div>
+    </div>
+    <div style="background:#fff;border-radius:16px;border:1px solid var(--bd);overflow:hidden;box-shadow:0 2px 14px rgba(13,12,10,.05);">
+      <video controls preload="metadata" style="width:100%;display:block;background:#0D0C0A;">
+        <source src="assets/videos/VID_20240525_173453771.mp4" type="video/mp4">
+      </video>
+      <div style="padding:16px 18px;"><p style="font-size:12px;font-weight:600;color:var(--dk);margin-bottom:4px;">Depoimentos — Participantes</p><p style="font-size:11px;color:var(--g);">O que elas acharam do workshop</p></div>
+    </div>
+  </div>
+
+  <!-- AVALIAÇÕES -->
+  <div style="margin-bottom:16px;">
+    <p class="slabel" style="padding:0 0 20px;">Avaliações — Deixe a sua</p>
+  </div>
+  <div id="reviews-list" style="display:flex;flex-direction:column;gap:14px;margin-bottom:32px;"></div>
+  <div style="background:#fff;border-radius:20px;border:1px solid var(--bd);padding:32px 36px;box-shadow:0 2px 18px rgba(13,12,10,.055);">
+    <h3 style="font-size:1rem;font-weight:700;color:var(--dk);margin-bottom:6px;">Deixe seu comentário</h3>
+    <p style="font-size:12px;font-weight:300;color:var(--g);margin-bottom:22px;line-height:1.6;">Sua experiência ajuda outras nutricionistas a tomarem a melhor decisão.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+      <input id="rev-nome" class="cf-input" type="text" placeholder="Seu nome" style="margin:0;">
+      <input id="rev-curso" class="cf-input" type="text" placeholder="Curso ou workshop" style="margin:0;">
+    </div>
+    <div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--g);">Nota:</span>
+      <div id="star-select" style="display:flex;gap:4px;">
+        <span class="star-btn" data-v="1" style="font-size:22px;cursor:pointer;color:#ddd;">★</span>
+        <span class="star-btn" data-v="2" style="font-size:22px;cursor:pointer;color:#ddd;">★</span>
+        <span class="star-btn" data-v="3" style="font-size:22px;cursor:pointer;color:#ddd;">★</span>
+        <span class="star-btn" data-v="4" style="font-size:22px;cursor:pointer;color:#ddd;">★</span>
+        <span class="star-btn" data-v="5" style="font-size:22px;cursor:pointer;color:#ddd;">★</span>
+      </div>
+    </div>
+    <textarea id="rev-texto" class="cf-input" rows="3" placeholder="Escreva sua experiência…" style="resize:vertical;margin-bottom:12px;"></textarea>
+    <button class="cf-btn go" onclick="submitReview()" style="max-width:220px;">Publicar avaliação →</button>
+  </div>
+</section>
+
+<script>
+/* ─── REVIEWS ─── */
+var revRating = 0;
+document.querySelectorAll('.star-btn').forEach(function(s){
+  s.addEventListener('click', function(){
+    revRating = +this.dataset.v;
+    document.querySelectorAll('.star-btn').forEach(function(b){
+      b.style.color = +b.dataset.v <= revRating ? '#C9A257' : '#ddd';
+    });
+  });
+});
+
+var reviews = JSON.parse(localStorage.getItem('nfn_reviews') || '[]');
+function renderReviews(){
+  var list = document.getElementById('reviews-list');
+  list.innerHTML = '';
+  reviews.forEach(function(r){
+    var stars = '';
+    for(var i=1;i<=5;i++) stars += '<span style="color:'+(i<=r.rating?'#C9A257':'#ddd')+'">★</span>';
+    list.innerHTML += '<div style="background:#fff;border-radius:16px;border:1px solid var(--bd);padding:22px 26px;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+      +'<div><span style="font-size:13px;font-weight:600;color:var(--dk);">'+r.nome+'</span>'
+      +' <span style="font-size:11px;color:var(--g);margin-left:8px;">'+r.curso+'</span></div>'
+      +'<div>'+stars+'</div></div>'
+      +'<p style="font-size:13px;font-weight:300;color:rgba(13,12,10,.6);line-height:1.7;font-style:italic;">"'+r.texto+'"</p>'
+      +'</div>';
+  });
+}
+renderReviews();
+
+function submitReview(){
+  var nome = document.getElementById('rev-nome').value.trim();
+  var curso = document.getElementById('rev-curso').value.trim();
+  var texto = document.getElementById('rev-texto').value.trim();
+  if(!nome || !texto){ alert('Preencha nome e comentário.'); return; }
+  reviews.unshift({nome:nome, curso:curso||'Geral', rating:revRating||5, texto:texto});
+  localStorage.setItem('nfn_reviews', JSON.stringify(reviews));
+  renderReviews();
+  document.getElementById('rev-nome').value='';
+  document.getElementById('rev-curso').value='';
+  document.getElementById('rev-texto').value='';
+  revRating=0;
+  document.querySelectorAll('.star-btn').forEach(function(b){b.style.color='#ddd';});
+  document.getElementById('reviews-list').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+
+<script>
+/* ─── CURSOR ─── */
+(function(){
+  var c=document.getElementById('c'),co=document.getElementById('co');
+  var mx=window.innerWidth/2,my=window.innerHeight/2,ox=mx,oy=my;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;c.style.left=mx+'px';c.style.top=my+'px';},{passive:true});
+  (function loop(){ox+=(mx-ox)*.11;oy+=(my-oy)*.11;co.style.left=ox+'px';co.style.top=oy+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,button').forEach(function(el){
+    el.addEventListener('mouseenter',function(){document.body.classList.add('hov');});
+    el.addEventListener('mouseleave',function(){document.body.classList.remove('hov');});
+  });
+})();
+
+/* ─── BACKGROUND PARTICLES ─── */
+(function(){
+  var cv=document.getElementById('bg-canvas'),ctx=cv.getContext('2d'),pts=[];
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  function init(){
+    resize();pts=[];
+    for(var i=0;i<42;i++){
+      pts.push({
+        x:Math.random()*cv.width,y:Math.random()*cv.height,
+        r:Math.random()*1.8+.4,
+        vx:(Math.random()-.5)*.22,vy:-Math.random()*.32-.07,
+        a:Math.random()*.22,da:(Math.random()-.5)*.005,
+        c:Math.random()>.55?'#7FC442':'#C9A257'
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(var i=0;i<pts.length;i++){
+      var p=pts[i];
+      p.x+=p.vx;p.y+=p.vy;p.a+=p.da;
+      if(p.a<.015){p.a=.015;p.da=-p.da;}
+      if(p.a>.25){p.a=.25;p.da=-p.da;}
+      if(p.y<-8){p.y=cv.height+8;p.x=Math.random()*cv.width;}
+      if(p.x<-8)p.x=cv.width+8;
+      if(p.x>cv.width+8)p.x=-8;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.globalAlpha=p.a;
+      ctx.fillStyle=p.c;
+      ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    requestAnimationFrame(draw);
+  }
+  init();draw();
+  window.addEventListener('resize',init,{passive:true});
+})();
+
+/* ─── SVG ORBIT RIM — exact rectangle path via stroke-dashoffset ─── */
+function buildRims(){
+  var ns='http://www.w3.org/2000/svg';
+
+  document.querySelectorAll('.card-wrap').forEach(function(wrap,idx){
+    // Clean up if rebuilding
+    var old=wrap.querySelector('.card-svg-rim');
+    if(old)old.remove();
+
+    var card=wrap.querySelector('.card');
+    var isGn=wrap.classList.contains('gn-wrap');
+    var rimC=isGn?'#7FC442':'#C9A257';
+    var faintC=isGn?'rgba(127,196,66,.14)':'rgba(201,162,87,.14)';
+
+    var cr=card.getBoundingClientRect();
+    var PD=5;                          // SVG extends 5px outside card edges
+    var W=Math.round(cr.width)+PD*2;
+    var H=Math.round(cr.height)+PD*2;
+    var RX=25;                         // border-radius (20px card + 5px padding)
+    var S=PD;                          // stroke sits at the card border line
+
+    // Perimeter of the rounded rect
+    var ew=W-S*2-2*RX;   // straight edge width
+    var eh=H-S*2-2*RX;   // straight edge height
+    var perim=Math.round(2*(ew+eh)+2*Math.PI*RX);
+    var cLen=Math.round(perim*.16);    // comet tail length = 16% of perimeter
+    var gap=perim-cLen;
+
+    // SVG element
+    var svg=document.createElementNS(ns,'svg');
+    svg.setAttribute('class','card-svg-rim');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);
+    svg.style.cssText='position:absolute;top:-'+PD+'px;left:-'+PD+'px;width:'+W+'px;height:'+H+'px;pointer-events:none;z-index:4;opacity:0;transition:opacity .45s ease;overflow:visible;';
+
+    // Defs — glow filter
+    var defs=document.createElementNS(ns,'defs');
+    var flt=document.createElementNS(ns,'filter');
+    var fid='gf'+idx;
+    flt.setAttribute('id',fid);
+    flt.setAttribute('x','-100%');flt.setAttribute('y','-100%');
+    flt.setAttribute('width','300%');flt.setAttribute('height','300%');
+    var fgb=document.createElementNS(ns,'feGaussianBlur');
+    fgb.setAttribute('stdDeviation','6');
+    flt.appendChild(fgb);defs.appendChild(flt);svg.appendChild(defs);
+
+    function mkRect(attrs){
+      var el=document.createElementNS(ns,'rect');
+      el.setAttribute('x',S);el.setAttribute('y',S);
+      el.setAttribute('width',W-S*2);el.setAttribute('height',H-S*2);
+      el.setAttribute('rx',RX);el.setAttribute('fill','none');
+      for(var k in attrs)el.setAttribute(k,attrs[k]);
+      return el;
+    }
+
+    // 1. Faint static track (always visible when hovered)
+    var track=mkRect({'stroke':faintC,'stroke-width':'1'});
+
+    // 2. Wide blurry glow behind the comet
+    var glow=mkRect({'stroke':rimC,'stroke-width':'16','stroke-linecap':'round',
+      'stroke-dasharray':cLen+' '+gap,'stroke-dashoffset':'0',
+      'opacity':'.3','filter':'url(#'+fid+')'});
+
+    // 3. Crisp bright comet line
+    var comet=mkRect({'stroke':rimC,'stroke-width':'2.5','stroke-linecap':'round',
+      'stroke-dasharray':cLen+' '+gap,'stroke-dashoffset':'0','opacity':'.9'});
+
+    // 4. Tiny white hot tip at the front
+    var tipLen=16;
+    var tip=mkRect({'stroke':'rgba(255,255,255,.9)','stroke-width':'3','stroke-linecap':'round',
+      'stroke-dasharray':tipLen+' '+(gap+cLen-tipLen),'stroke-dashoffset':'0'});
+
+    svg.appendChild(track);svg.appendChild(glow);svg.appendChild(comet);svg.appendChild(tip);
+    wrap.appendChild(svg);
+
+    // Animation
+    var offset=-Math.random()*perim;           // random starting position per card
+    var speed=perim/(190+idx*18);              // slight speed variation
+    var frameId=null,isHov=false,leaveTimer=null;
+
+    function tick(){
+      offset-=speed;
+      if(offset<-perim)offset+=perim;
+      var tipOffset=offset-cLen+tipLen;
+      glow.setAttribute('stroke-dashoffset',offset);
+      comet.setAttribute('stroke-dashoffset',offset);
+      tip.setAttribute('stroke-dashoffset',tipOffset);
+      frameId=isHov?requestAnimationFrame(tick):null;
+    }
+
+    // 3-D TILT tracking mouse
+    wrap.addEventListener('mousemove',function(e){
+      var r=card.getBoundingClientRect();
+      var dx=(e.clientX-(r.left+r.width*.5))/(r.width*.5);
+      var dy=(e.clientY-(r.top+r.height*.5))/(r.height*.5);
+      card.style.transform=
+        'perspective(900px) rotateX('+(-dy*10)+'deg) rotateY('+(dx*10)+'deg) '+
+        'translateY(-14px) scale(1.025)';
+      // Update spotlight position
+      card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100).toFixed(1)+'%');
+      card.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
+    },{passive:true});
+
+    wrap.addEventListener('mouseenter',function(){
+      clearTimeout(leaveTimer);
+      isHov=true;
+      svg.style.opacity='1';
+      card.style.transition='transform .1s ease-out,border-color .4s,box-shadow .4s,background .3s';
+      if(!frameId)frameId=requestAnimationFrame(tick);
+    });
+
+    wrap.addEventListener('mouseleave',function(){
+      isHov=false;
+      svg.style.opacity='0';
+      // Springy return animation
+      card.style.transition='transform .9s cubic-bezier(.23,1,.32,1),border-color .4s,box-shadow .4s,background .3s';
+      card.style.transform='';
+      leaveTimer=setTimeout(function(){if(!isHov)card.style.transition='';},960);
+    });
+  });
+}
+
+// Init after fonts are loaded so getBoundingClientRect is accurate
+if(document.fonts&&document.fonts.ready){
+  document.fonts.ready.then(function(){setTimeout(buildRims,80);});
+}else{
+  window.addEventListener('load',function(){setTimeout(buildRims,80);});
+}
+
+// Rebuild on resize
+var rTimer;
+window.addEventListener('resize',function(){clearTimeout(rTimer);rTimer=setTimeout(buildRims,220);},{passive:true});
+
+/* ─── FORM TOGGLE ─── */
+document.querySelectorAll('.card-link[data-form]').forEach(function(link){
+  link.addEventListener('click',function(e){
+    e.preventDefault();
+    var form=document.getElementById(this.getAttribute('data-form'));
+    var open=form.style.display!=='none';
+    form.style.display=open?'none':'block';
+    if(!open)setTimeout(function(){form.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+  });
+});
+
+/* ─── GOOGLE SHEETS ENDPOINT ─────────────────────────────────────────
+   Após criar o Apps Script (veja instruções), cole a URL aqui:
+─────────────────────────────────────────────────────────────────────── */
+var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec';
+
+/* ─── PLAYER REDIRECT + TRACKING ─── */
+function goPlayer(e, slug) {
+  e.preventDefault();
+  var form = e.target;
+  var name  = (form.querySelector('input[type="text"]')  || {}).value || '';
+  var email = (form.querySelector('input[type="email"]') || {}).value || '';
+  name  = name.trim();
+  email = email.trim();
+
+  // Persiste para o player rastrear acessos futuros
+  try { localStorage.setItem('nfn_name', name); localStorage.setItem('nfn_email', email); } catch(ex){}
+
+  // Envia dados para a planilha (fire-and-forget)
+  if (WS_URL !== 'COLE_SUA_URL_AQUI') {
+    var payload = new URLSearchParams({name:name, email:email, course:slug, type:'form'});
+    try { navigator.sendBeacon(WS_URL, payload); }
+    catch(ex) { fetch(WS_URL,{method:'POST',mode:'no-cors',body:payload}); }
+  }
+
+  window.location.href = 'player.html?c=' + slug;
+}
+</script>
+</body>
+</html>

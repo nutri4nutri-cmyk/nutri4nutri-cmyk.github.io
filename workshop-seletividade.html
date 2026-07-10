@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Workshop: Seletividade Alimentar — Priscila Leite</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --go:#C9A257;--go2:rgba(201,162,87,.1);--go3:rgba(201,162,87,.2);
+  --dk:#0D0C0A;--dk2:#1a1714;--dk3:#2a2520;
+  --cr:#F8F5EF;--cr2:#EEE8D8;
+  --g:rgba(13,12,10,.42);--bd:rgba(13,12,10,.09);
+  --gn:#7FC442;
+  --nav-h:60px;--side-w:310px;
+}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Inter',sans-serif;font-weight:300;background:var(--dk);color:var(--cr);display:flex;flex-direction:column;}
+
+/* ── TOP NAV ── */
+#topnav{
+  height:var(--nav-h);flex-shrink:0;
+  background:rgba(13,12,10,.97);border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;padding:0 20px;gap:16px;z-index:100;
+}
+.tn-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--go);white-space:nowrap;text-decoration:none;}
+.tn-divider{width:1px;height:24px;background:rgba(255,255,255,.1);}
+.tn-course{font-size:12px;font-weight:500;color:rgba(255,255,255,.7);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tn-progress-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.tn-progress-bar{width:120px;height:4px;background:rgba(255,255,255,.1);border-radius:100px;overflow:hidden;}
+.tn-progress-fill{height:100%;background:var(--go);border-radius:100px;transition:width .4s;}
+.tn-pct{font-size:11px;font-weight:600;color:var(--go);}
+.tn-avatar{width:32px;height:32px;border-radius:50%;background:var(--go);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--dk);flex-shrink:0;cursor:pointer;}
+.tn-back{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;flex-shrink:0;}
+.tn-back:hover{color:var(--go);}
+
+/* ── MAIN LAYOUT ── */
+#layout{display:flex;flex:1;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--side-w);flex-shrink:0;
+  background:rgba(255,255,255,.03);border-right:1px solid rgba(255,255,255,.07);
+  overflow-y:auto;overflow-x:hidden;
+}
+#sidebar::-webkit-scrollbar{width:3px;}
+#sidebar::-webkit-scrollbar-track{background:transparent;}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(201,162,87,.25);border-radius:10px;}
+
+.sb-head{padding:20px 20px 14px;border-bottom:1px solid rgba(255,255,255,.06);}
+.sb-title{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--go);opacity:.8;}
+.sb-count{font-size:11px;color:rgba(255,255,255,.35);margin-top:4px;}
+
+.module{border-bottom:1px solid rgba(255,255,255,.05);}
+.module-head{
+  padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;transition:background .2s;user-select:none;
+}
+.module-head:hover{background:rgba(255,255,255,.04);}
+.module-head.open{background:rgba(201,162,87,.06);}
+.mod-info{flex:1;}
+.mod-num{font-size:8.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--go);opacity:.7;margin-bottom:3px;}
+.mod-name{font-size:12.5px;font-weight:500;color:rgba(255,255,255,.85);line-height:1.3;}
+.mod-meta{font-size:10px;color:rgba(255,255,255,.35);margin-top:3px;}
+.mod-chevron{width:16px;height:16px;flex-shrink:0;transition:transform .25s;color:rgba(255,255,255,.3);}
+.module-head.open .mod-chevron{transform:rotate(180deg);}
+
+.lessons{display:none;}
+.module-head.open + .lessons{display:block;}
+.lesson{
+  padding:11px 20px 11px 32px;display:flex;align-items:center;gap:10px;
+  cursor:pointer;transition:background .2s;border-left:2px solid transparent;
+}
+.lesson:hover{background:rgba(255,255,255,.04);}
+.lesson.active{background:rgba(201,162,87,.1);border-left-color:var(--go);}
+.lesson.done .les-icon{background:rgba(127,196,66,.2);color:var(--gn);}
+.les-icon{
+  width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:9px;color:rgba(255,255,255,.4);transition:all .2s;
+}
+.lesson.active .les-icon{border-color:var(--go);color:var(--go);}
+.les-info{flex:1;min-width:0;}
+.les-name{font-size:12px;font-weight:400;color:rgba(255,255,255,.7);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lesson.active .les-name{color:rgba(255,255,255,.95);font-weight:500;}
+.les-dur{font-size:10px;color:rgba(255,255,255,.3);flex-shrink:0;}
+
+/* ── CONTENT AREA ── */
+#content{flex:1;overflow-y:auto;background:var(--dk2);}
+#content::-webkit-scrollbar{width:4px;}
+#content::-webkit-scrollbar-track{background:transparent;}
+#content::-webkit-scrollbar-thumb{background:rgba(201,162,87,.2);border-radius:10px;}
+
+/* ── VIDEO PLAYER ── */
+#player-wrap{background:#000;position:relative;width:100%;}
+#player-wrap video{width:100%;max-height:56vw;display:block;object-fit:contain;}
+.player-placeholder{
+  width:100%;aspect-ratio:16/9;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;background:#0a0908;
+  gap:16px;cursor:pointer;
+}
+.pl-play-btn{
+  width:72px;height:72px;border-radius:50%;background:rgba(201,162,87,.15);
+  border:2px solid rgba(201,162,87,.4);display:flex;align-items:center;justify-content:center;
+  transition:all .25s;
+}
+.player-placeholder:hover .pl-play-btn{background:var(--go);border-color:var(--go);}
+.pl-play-btn svg{margin-left:4px;}
+.pl-label{font-size:13px;font-weight:300;color:rgba(255,255,255,.5);}
+
+/* ── LESSON CONTENT ── */
+#lesson-body{padding:36px 44px 60px;max-width:860px;}
+.lb-tag{font-size:8.5px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--go);opacity:.8;margin-bottom:10px;}
+.lb-title{font-size:1.8rem;font-weight:700;letter-spacing:-.02em;color:rgba(255,255,255,.95);margin-bottom:8px;line-height:1.25;}
+.lb-meta{font-size:12px;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:16px;margin-bottom:30px;}
+.lb-desc{font-size:14px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.85;margin-bottom:32px;}
+.lb-nav{display:flex;gap:12px;margin-bottom:48px;}
+.lb-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:12px;
+  font-size:13px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;
+  transition:all .2s;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.7);
+}
+.lb-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);}
+.lb-btn.primary{background:var(--go);color:var(--dk);border-color:var(--go);}
+.lb-btn.primary:hover{background:#b8912e;}
+.lb-btn.done-btn{background:rgba(127,196,66,.12);color:var(--gn);border-color:rgba(127,196,66,.3);}
+
+/* MATERIALS */
+.materials{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px 28px;margin-bottom:40px;}
+.mat-title{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:16px;}
+.mat-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.mat-item:last-child{border:none;padding-bottom:0;}
+.mat-icon{width:36px;height:36px;border-radius:10px;background:rgba(201,162,87,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mat-name{font-size:13px;font-weight:400;color:rgba(255,255,255,.75);}
+.mat-type{font-size:10px;color:rgba(255,255,255,.35);}
+.mat-dl{margin-left:auto;font-size:11px;font-weight:600;color:var(--go);cursor:pointer;white-space:nowrap;}
+
+/* COMMENTS */
+.comments-section{border-top:1px solid rgba(255,255,255,.07);padding-top:36px;}
+.cs-title{font-size:14px;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:24px;}
+.comment-form{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;margin-bottom:28px;}
+.cf-row{display:flex;gap:10px;margin-bottom:10px;}
+.w-input{
+  flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:11px 14px;font-size:13px;font-family:'Inter',sans-serif;
+  color:rgba(255,255,255,.85);outline:none;transition:border-color .2s;
+}
+.w-input:focus{border-color:rgba(201,162,87,.4);}
+.w-input::placeholder{color:rgba(255,255,255,.25);}
+.w-textarea{resize:vertical;min-height:80px;}
+.cf-submit{
+  padding:10px 22px;border-radius:10px;background:var(--go);color:var(--dk);
+  font-size:12px;font-weight:700;font-family:'Inter',sans-serif;border:none;cursor:pointer;
+  transition:background .2s;white-space:nowrap;
+}
+.cf-submit:hover{background:#b8912e;}
+.comment-list{display:flex;flex-direction:column;gap:16px;}
+.comment-item{display:flex;gap:12px;}
+.c-avatar{width:34px;height:34px;border-radius:50%;background:var(--dk3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--go);flex-shrink:0;}
+.c-body{flex:1;}
+.c-header{display:flex;align-items:baseline;gap:10px;margin-bottom:5px;}
+.c-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.85);}
+.c-time{font-size:10px;color:rgba(255,255,255,.3);}
+.c-text{font-size:13px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.7;}
+.c-actions{display:flex;gap:14px;margin-top:8px;}
+.c-act{font-size:11px;color:rgba(255,255,255,.3);cursor:pointer;transition:color .2s;}
+.c-act:hover{color:var(--go);}
+.priscila-badge{font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:rgba(201,162,87,.2);color:var(--go);padding:2px 8px;border-radius:100px;margin-left:6px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  :root{--side-w:260px;}
+  #lesson-body{padding:24px 24px 48px;}
+}
+@media(max-width:680px){
+  #sidebar{display:none;}
+  .lb-title{font-size:1.4rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav id="topnav">
+  <a href="cursos.html" class="tn-back">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Cursos
+  </a>
+  <div class="tn-divider"></div>
+  <a href="index.html" class="tn-logo">Priscila Leite</a>
+  <div class="tn-divider"></div>
+  <span class="tn-course">Workshop: Seletividade Alimentar</span>
+  <div class="tn-progress-wrap">
+    <div class="tn-progress-bar"><div class="tn-progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <span class="tn-pct" id="prog-pct">0%</span>
+  </div>
+  <div class="tn-avatar" id="user-avatar">N</div>
+</nav>
+
+<div id="layout">
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-head">
+    <div class="sb-title">Conteúdo do Workshop</div>
+    <div class="sb-count" id="sb-count">0 de 18 aulas concluídas</div>
+  </div>
+
+  <!-- MODULE 1 -->
+  <div class="module">
+    <div class="module-head open" onclick="toggleMod(this)">
+      <div class="mod-info">
+        <div class="mod-num">Módulo 01</div>
+        <div class="mod-name">Boas-vindas</div>
+        <div class="mod-meta">2 aulas · 12 min</div>
+      </div>
+      <svg class="mod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="lessons">
+      <div class="lesson active" data-id="1-1" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Apresentação do workshop</div></div>
+        <div class="les-dur">6 min</div>
+      </div>
+      <div class="lesson" data-id="1-2" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Como aproveitar ao máximo</div></div>
+        <div class="les-dur">6 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module">
+    <div class="module-head" onclick="toggleMod(this)">
+      <div class="mod-info">
+        <div class="mod-num">Módulo 02</div>
+        <div class="mod-name">Fundamentos</div>
+        <div class="mod-meta">3 aulas · 42 min</div>
+      </div>
+      <svg class="mod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="lessons" style="display:none">
+      <div class="lesson" data-id="2-1" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">O que é seletividade alimentar</div></div>
+        <div class="les-dur">15 min</div>
+      </div>
+      <div class="lesson" data-id="2-2" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Diagnóstico diferencial: seletividade vs. recusa</div></div>
+        <div class="les-dur">18 min</div>
+      </div>
+      <div class="lesson" data-id="2-3" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Bases neurológicas e sensoriais</div></div>
+        <div class="les-dur">9 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 3 -->
+  <div class="module">
+    <div class="module-head" onclick="toggleMod(this)">
+      <div class="mod-info">
+        <div class="mod-num">Módulo 03</div>
+        <div class="mod-name">Avaliação Clínica</div>
+        <div class="mod-meta">3 aulas · 48 min</div>
+      </div>
+      <svg class="mod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="lessons" style="display:none">
+      <div class="lesson" data-id="3-1" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Anamnese especializada em seletividade</div></div>
+        <div class="les-dur">20 min</div>
+      </div>
+      <div class="lesson" data-id="3-2" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Ferramentas de avaliação</div></div>
+        <div class="les-dur">16 min</div>
+      </div>
+      <div class="lesson" data-id="3-3" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Escalas e protocolos clínicos</div></div>
+        <div class="les-dur">12 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 4 -->
+  <div class="module">
+    <div class="module-head" onclick="toggleMod(this)">
+      <div class="mod-info">
+        <div class="mod-num">Módulo 04</div>
+        <div class="mod-name">Conduta Terapêutica</div>
+        <div class="mod-meta">4 aulas · 62 min</div>
+      </div>
+      <svg class="mod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="lessons" style="display:none">
+      <div class="lesson" data-id="4-1" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Planejamento do tratamento</div></div>
+        <div class="les-dur">18 min</div>
+      </div>
+      <div class="lesson" data-id="4-2" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">A escalada do comer — passo a passo</div></div>
+        <div class="les-dur">22 min</div>
+      </div>
+      <div class="lesson" data-id="4-3" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Técnicas de dessensibilização sensorial</div></div>
+        <div class="les-dur">14 min</div>
+      </div>
+      <div class="lesson" data-id="4-4" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Acompanhamento e reavaliação</div></div>
+        <div class="les-dur">8 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 5 -->
+  <div class="module">
+    <div class="module-head" onclick="toggleMod(this)">
+      <div class="mod-info">
+        <div class="mod-num">Módulo 05</div>
+        <div class="mod-name">Casos Especiais</div>
+        <div class="mod-meta">3 aulas · 52 min</div>
+      </div>
+      <svg class="mod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="lessons" style="display:none">
+      <div class="lesson" data-id="5-1" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">TEA e seletividade alimentar</div></div>
+        <div class="les-dur">22 min</div>
+      </div>
+      <div class="lesson" data-id="5-2" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">TDAH e comportamento alimentar</div></div>
+        <div class="les-dur">16 min</div>
+      </div>
+      <div class="lesson" data-id="5-3" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Hipersensibilidade sensorial</div></div>
+        <div class="les-dur">14 min</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 6 -->
+  <div class="module">
+    <div class="module-head" onclick="toggleMod(this)">
+      <div class="mod-info">
+        <div class="mod-num">Módulo 06</div>
+        <div class="mod-name">Manejo Familiar</div>
+        <div class="mod-meta">3 aulas · 44 min</div>
+      </div>
+      <svg class="mod-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="lessons" style="display:none">
+      <div class="lesson" data-id="6-1" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Orientação e acolhimento dos pais</div></div>
+        <div class="les-dur">18 min</div>
+      </div>
+      <div class="lesson" data-id="6-2" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Estratégias para o ambiente doméstico</div></div>
+        <div class="les-dur">14 min</div>
+      </div>
+      <div class="lesson" data-id="6-3" onclick="openLesson(this)">
+        <div class="les-icon">▶</div>
+        <div class="les-info"><div class="les-name">Parceria com escola e creche</div></div>
+        <div class="les-dur">12 min</div>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="content">
+
+  <!-- VIDEO PLAYER -->
+  <div id="player-wrap">
+    <div class="player-placeholder" id="player-ph" onclick="playVideo()">
+      <div class="pl-play-btn">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(201,162,87,.9)"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <span class="pl-label" id="ph-label">Clique para iniciar a aula</span>
+    </div>
+    <video id="main-video" style="display:none;width:100%;background:#000;" controls>
+      <source src="assets/videos/VID_20240525_173328758.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- LESSON BODY -->
+  <div id="lesson-body">
+    <div class="lb-tag" id="lb-mod">Módulo 01 — Boas-vindas</div>
+    <h1 class="lb-title" id="lb-title">Apresentação do workshop</h1>
+    <div class="lb-meta">
+      <span id="lb-dur">⏱ 6 min</span>
+      <span id="lb-idx">Aula 1 de 18</span>
+    </div>
+    <p class="lb-desc" id="lb-desc">Bem-vinda ao Workshop de Seletividade Alimentar da Priscila Leite. Nesta aula de abertura, você vai entender a proposta do programa, como o conteúdo está organizado, e o que você vai ser capaz de aplicar na sua prática clínica ao final de cada módulo.</p>
+
+    <!-- NAV BUTTONS -->
+    <div class="lb-nav">
+      <button class="lb-btn" onclick="prevLesson()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Aula anterior
+      </button>
+      <button class="lb-btn done-btn" id="done-btn" onclick="markDone()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+        Marcar como concluída
+      </button>
+      <button class="lb-btn primary" onclick="nextLesson()">
+        Próxima aula
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- MATERIALS -->
+    <div class="materials" id="materials">
+      <div class="mat-title">Materiais desta aula</div>
+      <div class="mat-item">
+        <div class="mat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A257" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <div><div class="mat-name">Protocolo de Anamnese — Seletividade</div><div class="mat-type">PDF · 4 páginas</div></div>
+        <span class="mat-dl">↓ Baixar</span>
+      </div>
+      <div class="mat-item">
+        <div class="mat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A257" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div><div class="mat-name">Escala de Seletividade — Checklist Clínico</div><div class="mat-type">PDF · 2 páginas</div></div>
+        <span class="mat-dl">↓ Baixar</span>
+      </div>
+      <div class="mat-item">
+        <div class="mat-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A257" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div><div class="mat-name">Slides da apresentação</div><div class="mat-type">PDF · 22 slides</div></div>
+        <span class="mat-dl">↓ Baixar</span>
+      </div>
+    </div>
+
+    <!-- COMMENTS -->
+    <div class="comments-section">
+      <div class="cs-title" id="cs-count">Comentários (0)</div>
+      <div class="comment-form">
+        <div class="cf-row">
+          <input class="w-input" id="c-nome" type="text" placeholder="Seu nome">
+        </div>
+        <textarea class="w-input w-textarea" id="c-texto" placeholder="Escreva sua dúvida ou comentário sobre esta aula…"></textarea>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+          <button class="cf-submit" onclick="postComment()">Comentar →</button>
+        </div>
+      </div>
+      <div class="comment-list" id="comment-list"></div>
+    </div>
+  </div><!-- /lesson-body -->
+
+</main>
+</div><!-- /layout -->
+
+<script>
+/* ─── DATA ─── */
+var lessons = [
+  {id:'1-1',mod:'Módulo 01 — Boas-vindas',title:'Apresentação do workshop',dur:'6 min',idx:'1 de 18',desc:'Bem-vinda ao Workshop de Seletividade Alimentar da Priscila Leite. Nesta aula de abertura, você vai entender a proposta do programa, como o conteúdo está organizado, e o que você vai ser capaz de aplicar na sua prática clínica ao final de cada módulo.'},
+  {id:'1-2',mod:'Módulo 01 — Boas-vindas',title:'Como aproveitar ao máximo',dur:'6 min',idx:'2 de 18',desc:'Dicas práticas para absorver o conteúdo do workshop com mais efetividade: como anotar, como aplicar entre os módulos, e como trazer seus próprios casos para reflexão.'},
+  {id:'2-1',mod:'Módulo 02 — Fundamentos',title:'O que é seletividade alimentar',dur:'15 min',idx:'3 de 18',desc:'Definição clínica de seletividade alimentar, diferenciação dos subtipos e prevalência na população pediátrica. Base conceitual essencial para a prática clínica segura.'},
+  {id:'2-2',mod:'Módulo 02 — Fundamentos',title:'Diagnóstico diferencial: seletividade vs. recusa',dur:'18 min',idx:'4 de 18',desc:'Como diferenciar clinicamente seletividade alimentar de recusa alimentar e outros transtornos alimentares na infância. Critérios, red flags e quando encaminhar.'},
+  {id:'2-3',mod:'Módulo 02 — Fundamentos',title:'Bases neurológicas e sensoriais',dur:'9 min',idx:'5 de 18',desc:'Compreendendo o processamento sensorial na criança seletiva — visão, tato, olfato, paladar e propriocepção. Por que algumas crianças reagem de forma intensa a texturas e sabores.'},
+  {id:'3-1',mod:'Módulo 03 — Avaliação Clínica',title:'Anamnese especializada em seletividade',dur:'20 min',idx:'6 de 18',desc:'Roteiro de anamnese completo para casos de seletividade alimentar: histórico alimentar, marco do desenvolvimento, histórico familiar, e perguntas-chave que revelam o padrão da criança.'},
+  {id:'3-2',mod:'Módulo 03 — Avaliação Clínica',title:'Ferramentas de avaliação',dur:'16 min',idx:'7 de 18',desc:'Instrumentos validados para avaliação clínica: diário alimentar, registros fotográficos, questionários de comportamento alimentar e escalas de gravidade.'},
+  {id:'3-3',mod:'Módulo 03 — Avaliação Clínica',title:'Escalas e protocolos clínicos',dur:'12 min',idx:'8 de 18',desc:'Aplicação prática das principais escalas usadas em consultório: BAMBI, CEBQ, Food Neophobia Scale. Como interpretar os resultados e usá-los no planejamento terapêutico.'},
+  {id:'4-1',mod:'Módulo 04 — Conduta Terapêutica',title:'Planejamento do tratamento',dur:'18 min',idx:'9 de 18',desc:'Como estruturar um plano terapêutico individualizado: definição de metas, frequência dos atendimentos, envolvimento familiar e critérios de progressão.'},
+  {id:'4-2',mod:'Módulo 04 — Conduta Terapêutica',title:'A escalada do comer — passo a passo',dur:'22 min',idx:'10 de 18',desc:'O protocolo da Escalada do Comer na prática clínica: as etapas da exposição gradual ao alimento, como avançar e recuar sem gerar trauma, e estratégias lúdicas para cada fase.'},
+  {id:'4-3',mod:'Módulo 04 — Conduta Terapêutica',title:'Técnicas de dessensibilização sensorial',dur:'14 min',idx:'11 de 18',desc:'Técnicas de dessensibilização oral e sensorial para aplicar no consultório: exploração tátil, brincadeiras com textura, sequenciamento sensorial e integração com a Terapia Ocupacional.'},
+  {id:'4-4',mod:'Módulo 04 — Conduta Terapêutica',title:'Acompanhamento e reavaliação',dur:'8 min',idx:'12 de 18',desc:'Como conduzir as sessões de acompanhamento, reavaliar o progresso, ajustar o plano e comunicar avanços à família de forma motivadora.'},
+  {id:'5-1',mod:'Módulo 05 — Casos Especiais',title:'TEA e seletividade alimentar',dur:'22 min',idx:'13 de 18',desc:'Particularidades da seletividade em crianças com Transtorno do Espectro Autista: sensibilidade sensorial aumentada, rotinas alimentares rígidas, e abordagem multidisciplinar.'},
+  {id:'5-2',mod:'Módulo 05 — Casos Especiais',title:'TDAH e comportamento alimentar',dur:'16 min',idx:'14 de 18',desc:'Como o TDAH impacta o comportamento alimentar infantil: impulsividade, distração nas refeições, seletividade associada e estratégias específicas para esse público.'},
+  {id:'5-3',mod:'Módulo 05 — Casos Especiais',title:'Hipersensibilidade sensorial',dur:'14 min',idx:'15 de 18',desc:'Abordagem nutricional da hipersensibilidade sensorial fora do espectro do autismo: crianças "exigentes", paladares muito seletivos e como conduzir sem patologizar.'},
+  {id:'6-1',mod:'Módulo 06 — Manejo Familiar',title:'Orientação e acolhimento dos pais',dur:'18 min',idx:'16 de 18',desc:'Como acolher os pais de crianças seletivas — que frequentemente chegam ao consultório ansiosos e culpados — e transformar essa relação em aliança terapêutica.'},
+  {id:'6-2',mod:'Módulo 06 — Manejo Familiar',title:'Estratégias para o ambiente doméstico',dur:'14 min',idx:'17 de 18',desc:'Orientações práticas para a rotina das refeições em casa: organização do ambiente, divisão de responsabilidades entre pais e criança, e como evitar os erros mais comuns.'},
+  {id:'6-3',mod:'Módulo 06 — Manejo Familiar',title:'Parceria com escola e creche',dur:'12 min',idx:'18 de 18',desc:'Como orientar educadores e coordenadores escolares sobre a seletividade alimentar, criar um plano alimentar para o ambiente escolar e garantir continuidade do tratamento.'},
+];
+
+var totalLessons = lessons.length;
+var done = JSON.parse(localStorage.getItem('ws_sel_done') || '[]');
+var comments = JSON.parse(localStorage.getItem('ws_sel_comments') || '{}');
+var currentId = '1-1';
+var userName = localStorage.getItem('nfn_name') || 'Nutricionista';
+
+/* ─── USER AVATAR ─── */
+document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
+
+/* ─── PROGRESS ─── */
+function updateProgress(){
+  var pct = Math.round(done.length / totalLessons * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('sb-count').textContent = done.length + ' de ' + totalLessons + ' aulas concluídas';
+}
+updateProgress();
+
+/* ─── TOGGLE MODULE ─── */
+function toggleMod(head){
+  head.classList.toggle('open');
+  var les = head.nextElementSibling;
+  les.style.display = les.style.display === 'none' ? 'block' : 'none';
+}
+
+/* ─── OPEN LESSON ─── */
+function openLesson(el){
+  document.querySelectorAll('.lesson').forEach(function(l){ l.classList.remove('active'); });
+  el.classList.add('active');
+  currentId = el.dataset.id;
+  var l = lessons.find(function(x){ return x.id === currentId; });
+  if(!l) return;
+  document.getElementById('lb-mod').textContent = l.mod;
+  document.getElementById('lb-title').textContent = l.title;
+  document.getElementById('lb-dur').textContent = '⏱ ' + l.dur;
+  document.getElementById('lb-idx').textContent = 'Aula ' + l.idx;
+  document.getElementById('lb-desc').textContent = l.desc;
+  // Reset video
+  var vid = document.getElementById('main-video');
+  vid.style.display = 'none';
+  vid.pause();
+  document.getElementById('player-ph').style.display = 'flex';
+  document.getElementById('ph-label').textContent = 'Clique para iniciar a aula';
+  // Done btn
+  var isDone = done.indexOf(currentId) !== -1;
+  var btn = document.getElementById('done-btn');
+  btn.style.opacity = isDone ? '.5' : '1';
+  btn.textContent = isDone ? '✓ Concluída' : '✓ Marcar como concluída';
+  // Comments
+  renderComments();
+  document.getElementById('content').scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ─── PLAY VIDEO ─── */
+function playVideo(){
+  document.getElementById('player-ph').style.display = 'none';
+  var vid = document.getElementById('main-video');
+  vid.style.display = 'block';
+  vid.play();
+}
+
+/* ─── MARK DONE ─── */
+function markDone(){
+  if(done.indexOf(currentId) === -1){
+    done.push(currentId);
+    localStorage.setItem('ws_sel_done', JSON.stringify(done));
+  }
+  var el = document.querySelector('.lesson.active');
+  if(el){ el.classList.add('done'); el.querySelector('.les-icon').textContent = '✓'; }
+  updateProgress();
+  var btn = document.getElementById('done-btn');
+  btn.style.opacity = '.5';
+  btn.textContent = '✓ Concluída';
+  setTimeout(nextLesson, 400);
+}
+
+/* ─── NAV ─── */
+function currentIdx(){ return lessons.findIndex(function(l){ return l.id === currentId; }); }
+function nextLesson(){
+  var i = currentIdx();
+  if(i < lessons.length - 1){
+    var next = document.querySelector('[data-id="'+lessons[i+1].id+'"]');
+    if(next){
+      // Open parent module if closed
+      var mod = next.closest('.module');
+      var head = mod.querySelector('.module-head');
+      if(!head.classList.contains('open')){
+        head.classList.add('open');
+        mod.querySelector('.lessons').style.display = 'block';
+      }
+      openLesson(next);
+    }
+  }
+}
+function prevLesson(){
+  var i = currentIdx();
+  if(i > 0){
+    var prev = document.querySelector('[data-id="'+lessons[i-1].id+'"]');
+    if(prev){
+      var mod = prev.closest('.module');
+      var head = mod.querySelector('.module-head');
+      if(!head.classList.contains('open')){
+        head.classList.add('open');
+        mod.querySelector('.lessons').style.display = 'block';
+      }
+      openLesson(prev);
+    }
+  }
+}
+
+/* ─── COMMENTS ─── */
+function renderComments(){
+  var list = comments[currentId] || [];
+  document.getElementById('cs-count').textContent = 'Comentários (' + list.length + ')';
+  var html = '';
+  list.forEach(function(c){
+    var initials = c.nome.charAt(0).toUpperCase();
+    var isPris = c.nome.toLowerCase().indexOf('priscila') !== -1;
+    html += '<div class="comment-item">'
+      + '<div class="c-avatar" style="'+(isPris?'background:var(--go);color:var(--dk)':'')+'">' + initials + '</div>'
+      + '<div class="c-body">'
+      + '<div class="c-header"><span class="c-name">' + c.nome + '</span>'
+      + (isPris ? '<span class="priscila-badge">Priscila</span>' : '')
+      + '<span class="c-time">' + c.time + '</span></div>'
+      + '<p class="c-text">' + c.texto + '</p>'
+      + '</div></div>';
+  });
+  document.getElementById('comment-list').innerHTML = html || '<p style="font-size:13px;color:rgba(255,255,255,.3);font-style:italic;">Seja a primeira a comentar nesta aula.</p>';
+}
+renderComments();
+
+function postComment(){
+  var nome = document.getElementById('c-nome').value.trim();
+  var texto = document.getElementById('c-texto').value.trim();
+  if(!nome || !texto){ alert('Preencha nome e comentário.'); return; }
+  if(!comments[currentId]) comments[currentId] = [];
+  var now = new Date();
+  comments[currentId].push({
+    nome: nome, texto: texto,
+    time: 'Hoje, ' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0')
+  });
+  localStorage.setItem('ws_sel_comments', JSON.stringify(comments));
+  renderComments();
+  document.getElementById('c-nome').value = '';
+  document.getElementById('c-texto').value = '';
+}
+
+/* ─── INIT DONE MARKS ─── */
+done.forEach(function(id){
+  var el = document.querySelector('[data-id="'+id+'"]');
+  if(el){ el.classList.add('done'); el.querySelector('.les-icon').textContent = '✓'; }
+});
+</script>
+</body>
+</html>
