@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -37,253 +37,191 @@ src="https://www.facebook.com/tr?id=1017324754333197&ev=PageView&noscript=1"
   --bg:#0D0C0A;
   --card:#141210;
   --card2:#1B1915;
-  --go:#C7A16A; --brown:#A47855; --sage-lt:#C6DABF;
-  --go2:rgba(201,162,87,.12);
-  --go3:rgba(201,162,87,.25);
+  --go:#C7A16A;
+  --go2:rgba(199,161,106,.12);
+  --go3:rgba(199,161,106,.28);
+  --sage:#8DA88C;
+  --sage-lt:#C6DABF;
   --wt:#F5F0E8;
-  --wt2:rgba(245,240,232,.55);
+  --wt2:rgba(245,240,232,.58);
   --wt3:rgba(245,240,232,.2);
   --gn:#4CAF76;
-  --border:rgba(201,162,87,.18);
+  --border:rgba(199,161,106,.18);
 }
 html{scroll-behavior:smooth}
 body{
-  background:var(--bg);
-  color:var(--wt);
+  background:var(--bg);color:var(--wt);
   font-family:'Satoshi',system-ui,sans-serif;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:0 0 60px;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:0 0 80px;overflow-x:hidden;
 }
+.page{width:100%;max-width:420px;padding:0 20px;position:relative}
 
-/* ── page wrap ── */
-.page{width:100%;max-width:420px;padding:0 20px}
+/* orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+.orb1{width:360px;height:360px;background:radial-gradient(circle,rgba(199,161,106,.14),transparent 70%);top:-110px;left:50%;transform:translateX(-50%)}
+.orb2{width:260px;height:260px;background:radial-gradient(circle,rgba(141,168,140,.09),transparent 70%);bottom:220px;right:-70px}
+.orb3{width:200px;height:200px;background:radial-gradient(circle,rgba(199,161,106,.07),transparent 70%);top:45%;left:-70px}
 
-/* ── bg orbs ── */
-.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
-.orb1{width:320px;height:320px;background:radial-gradient(circle,rgba(201,162,87,.13),transparent 70%);top:-80px;left:50%;transform:translateX(-50%)}
-.orb2{width:260px;height:260px;background:radial-gradient(circle,rgba(76,175,118,.07),transparent 70%);bottom:100px;right:-60px}
-
-/* ── profile ── */
-.profile{
-  display:flex;flex-direction:column;align-items:center;
-  padding:52px 0 28px;text-align:center;position:relative;z-index:1
-}
-.avatar-wrap{position:relative;margin-bottom:20px}
-.avatar{
-  width:90px;height:90px;border-radius:50%;
-  background:linear-gradient(135deg,#1f1c18,#2a2620);
-  border:2px solid var(--go);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;font-weight:700;color:var(--go);letter-spacing:-.5px;
-  overflow:hidden;
-}
-.avatar img{width:100%;height:100%;object-fit:cover}
-.avatar-ring{
-  position:absolute;inset:-5px;border-radius:50%;
-  border:1.5px solid transparent;
-  background:linear-gradient(var(--bg),var(--bg)) padding-box,
-             linear-gradient(135deg,var(--go),transparent 60%) border-box;
-  animation:spin 8s linear infinite;
-}
+/* profile */
+.profile{display:flex;flex-direction:column;align-items:center;padding:52px 0 30px;text-align:center;position:relative;z-index:1}
+.avatar-wrap{position:relative;margin-bottom:22px}
+.avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(145deg,#181510,#222018);border:2px solid rgba(199,161,106,.35);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.avatar svg{width:68px;height:68px}
+.avatar-ring{position:absolute;inset:-6px;border-radius:50%;border:1.5px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,conic-gradient(from 0deg,var(--go),transparent 40%,var(--sage-lt) 70%,var(--go)) border-box;animation:spin 10s linear infinite}
+.avatar-ring2{position:absolute;inset:-12px;border-radius:50%;border:1px solid rgba(199,161,106,.1);animation:spin 20s linear infinite reverse}
 @keyframes spin{to{transform:rotate(360deg)}}
-.badge-verified{
-  position:absolute;bottom:2px;right:2px;
-  width:22px;height:22px;border-radius:50%;
-  background:var(--go);
-  display:flex;align-items:center;justify-content:center;
-  border:2px solid var(--bg);
-  font-size:10px;
-}
-.profile-tag{
-  font-size:8px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
-  color:var(--go);opacity:.8;margin-bottom:8px;
-}
-.profile-name{font-size:22px;font-weight:700;color:var(--wt);letter-spacing:-.3px;margin-bottom:6px}
-.profile-bio{
-  font-size:13px;color:var(--wt2);line-height:1.55;max-width:300px;
-  font-weight:400;
-}
-.profile-stats{
-  display:flex;gap:28px;margin-top:20px;
-}
+.badge-v{position:absolute;bottom:3px;right:3px;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--go),#b8912e);display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);font-size:9px;color:#0D0C0A;font-weight:700}
+.profile-tag{font-size:8px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--go);opacity:.9;margin-bottom:10px}
+.profile-name{font-size:24px;font-weight:700;letter-spacing:-.4px;margin-bottom:8px;background:linear-gradient(135deg,#F5F0E8 40%,rgba(199,161,106,.85));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.profile-bio{font-size:13px;color:var(--wt2);line-height:1.62;max-width:315px}
+.profile-stats{display:flex;gap:32px;margin-top:22px}
 .stat{text-align:center}
-.stat-n{font-size:17px;font-weight:700;color:var(--wt)}
-.stat-l{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--wt2);margin-top:2px}
+.stat-n{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--wt),var(--go));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-l{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--wt2);margin-top:3px}
 
-/* ── concierge quiz ── */
-.quiz-card{
-  position:relative;z-index:1;
-  background:linear-gradient(135deg,rgba(201,162,87,.1),rgba(201,162,87,.03));
-  border:1px solid var(--go3);
-  border-radius:20px;padding:22px 20px;margin-bottom:16px;
-  text-align:center;
-}
-.quiz-icon{font-size:22px;margin-bottom:10px}
-.quiz-title{font-size:14px;font-weight:600;color:var(--wt);margin-bottom:6px}
-.quiz-sub{font-size:12px;color:var(--wt2);margin-bottom:18px;line-height:1.5}
-.quiz-opts{display:flex;flex-direction:column;gap:9px}
-.quiz-opt{
-  background:rgba(255,255,255,.04);border:1px solid var(--border);
-  border-radius:12px;padding:12px 16px;
-  font-size:12px;font-weight:500;color:var(--wt2);
-  cursor:pointer;transition:all .25s;text-align:left;
-  display:flex;align-items:center;gap:10px;
-}
-.quiz-opt:hover,.quiz-opt.active{
-  background:var(--go2);border-color:var(--go);color:var(--wt);
-}
-.quiz-opt-icon{font-size:16px;flex-shrink:0}
+/* divider */
+.divider{width:100%;position:relative;z-index:1;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.divider span{font-size:8px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--wt2);white-space:nowrap}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
 
-/* ── main CTA ── */
-.cta-main{
-  position:relative;z-index:1;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  width:100%;padding:15px 24px;border-radius:14px;
-  background:linear-gradient(135deg,#C7A16A,#b8912e);
-  color:#0D0C0A;font-size:14px;font-weight:700;letter-spacing:.02em;
-  text-decoration:none;border:none;cursor:pointer;
-  box-shadow:0 8px 32px rgba(201,162,87,.3);
-  transition:all .25s;margin-bottom:12px;
-}
-.cta-main:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,162,87,.4)}
-.cta-main svg{width:17px;height:17px;flex-shrink:0}
+/* lead card */
+.lead-card{position:relative;z-index:1;background:linear-gradient(145deg,rgba(199,161,106,.07),rgba(199,161,106,.02));border:1px solid var(--border);border-radius:24px;padding:26px 22px;margin-bottom:22px}
+.lead-hd{text-align:center;margin-bottom:22px}
+.lead-icon{font-size:28px;margin-bottom:10px;display:block}
+.lead-title{font-size:15px;font-weight:700;color:var(--wt);margin-bottom:6px}
+.lead-sub{font-size:12px;color:var(--wt2);line-height:1.6}
 
-.cta-sec{
-  position:relative;z-index:1;
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  width:100%;padding:13px 24px;border-radius:14px;
-  background:transparent;border:1px solid var(--border);
-  color:var(--wt2);font-size:13px;font-weight:500;
-  text-decoration:none;cursor:pointer;transition:all .25s;margin-bottom:24px;
-}
-.cta-sec:hover{border-color:var(--go);color:var(--wt);background:var(--go2)}
+/* progress */
+.prog-bar{width:100%;height:3px;background:rgba(255,255,255,.09);border-radius:99px;margin-bottom:18px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--go),var(--sage-lt));border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.step-dots{display:flex;justify-content:center;gap:8px;margin-bottom:22px}
+.sdot{width:6px;height:6px;border-radius:50%;background:rgba(245,240,232,.15);transition:all .3s}
+.sdot.active{background:var(--go);width:20px;border-radius:3px}
+.sdot.done{background:var(--sage)}
 
-/* ── section label ── */
-.sec-label{
-  font-size:8px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
-  color:var(--wt2);margin-bottom:14px;display:flex;align-items:center;gap:10px;
-  position:relative;z-index:1;
-}
-.sec-label::after{
-  content:'';flex:1;height:1px;background:var(--border);
-}
+/* steps */
+.step{display:none}
+.step.on{display:block}
 
-/* ── product cards ── */
-.products{display:flex;flex-direction:column;gap:10px;position:relative;z-index:1;margin-bottom:24px}
-.prod-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:16px;padding:16px 18px;
-  display:flex;align-items:center;gap:14px;
-  text-decoration:none;color:inherit;transition:all .25s;
-}
-.prod-card:hover{background:var(--card2);border-color:var(--go);transform:translateX(3px)}
-.prod-icon{
-  width:44px;height:44px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-size:19px;
-}
-.prod-icon.gn{background:rgba(76,175,118,.12)}
-.prod-icon.go{background:rgba(201,162,87,.12)}
-.prod-icon.wt{background:rgba(245,240,232,.07)}
-.prod-info{flex:1;min-width:0}
-.prod-tag{font-size:8px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--go);opacity:.7;margin-bottom:3px}
-.prod-tag.gn{color:var(--gn)}
-.prod-name{font-size:13px;font-weight:600;color:var(--wt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prod-desc{font-size:11px;color:var(--wt2);margin-top:2px}
-.prod-badge{
-  font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  padding:4px 10px;border-radius:100px;flex-shrink:0;
-}
-.prod-badge.gratis{background:rgba(76,175,118,.15);color:var(--gn);border:1px solid rgba(76,175,118,.3)}
-.prod-badge.pago{background:var(--go2);color:var(--go);border:1px solid var(--go3)}
-.prod-badge.premium{background:rgba(201,162,87,.2);color:var(--go);border:1px solid rgba(201,162,87,.4)}
+/* inputs */
+.fi{width:100%;padding:13px 16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--wt);font-size:13px;font-family:inherit;transition:border-color .2s,box-shadow .2s;outline:none;margin-bottom:10px}
+.fi:focus{border-color:rgba(199,161,106,.5);box-shadow:0 0 0 3px rgba(199,161,106,.08)}
+.fi::placeholder{color:var(--wt3)}
+textarea.fi{resize:none;min-height:85px;margin-bottom:10px}
 
-/* ── lead form ── */
-.form-card{
-  position:relative;z-index:1;
-  background:var(--card);border:1px solid var(--border);
-  border-radius:20px;padding:24px 20px;margin-bottom:24px;
-}
-.form-title{font-size:15px;font-weight:700;color:var(--wt);margin-bottom:4px}
-.form-sub{font-size:12px;color:var(--wt2);margin-bottom:18px;line-height:1.5}
-.form-row{display:flex;flex-direction:column;gap:10px}
-.form-input{
-  width:100%;padding:13px 16px;border-radius:12px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
-  color:var(--wt);font-size:13px;font-family:inherit;
-  transition:border-color .2s;outline:none;
-}
-.form-input:focus{border-color:var(--go)}
-.form-input::placeholder{color:var(--wt3)}
-.form-btn{
-  width:100%;padding:13px;border-radius:12px;
-  background:var(--go);color:#0D0C0A;
-  font-size:13px;font-weight:700;letter-spacing:.03em;
-  border:none;cursor:pointer;transition:all .2s;margin-top:4px;font-family:inherit;
-}
-.form-btn:hover{background:#b8912e;transform:translateY(-1px)}
-.form-success{
-  display:none;text-align:center;padding:16px;
-  color:var(--gn);font-size:13px;font-weight:500;
-}
+/* q opts */
+.q-title{font-size:14px;font-weight:600;color:var(--wt);margin-bottom:4px;text-align:center}
+.q-sub{font-size:11px;color:var(--wt2);text-align:center;margin-bottom:15px}
+.q-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:15px}
+.q-opt{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:12px;padding:13px 15px;cursor:pointer;transition:all .22s;text-align:left;width:100%}
+.q-opt:hover,.q-opt.sel{background:var(--go2);border-color:rgba(199,161,106,.4)}
+.q-opt.sel{border-color:var(--go)}
+.q-opt em{font-size:18px;flex-shrink:0;font-style:normal}
+.q-opt span{font-size:12px;font-weight:500;color:var(--wt2);line-height:1.4}
+.q-opt.sel span{color:var(--wt)}
 
-/* ── social links ── */
-.socials{
-  display:flex;justify-content:center;gap:12px;
-  position:relative;z-index:1;margin-bottom:28px;
-}
-.social-btn{
-  width:46px;height:46px;border-radius:14px;
-  background:var(--card);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  text-decoration:none;transition:all .25s;
-  font-size:18px;color:var(--wt2);
-}
-.social-btn:hover{border-color:var(--go);color:var(--go);background:var(--go2);transform:translateY(-2px)}
+/* buttons */
+.btn-p{width:100%;padding:14px 24px;border-radius:14px;background:linear-gradient(135deg,var(--go),#b8912e);color:#0D0C0A;font-size:14px;font-weight:700;letter-spacing:.02em;border:none;cursor:pointer;transition:all .25s;font-family:inherit;box-shadow:0 8px 30px rgba(199,161,106,.22);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(199,161,106,.33)}
+.btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-s{width:100%;padding:12px 24px;border-radius:14px;background:transparent;border:1px solid var(--border);color:var(--wt2);font-size:13px;font-weight:500;cursor:pointer;transition:all .25s;font-family:inherit;margin-top:8px}
+.btn-s:hover{border-color:var(--go);color:var(--wt);background:var(--go2)}
 
-/* ── footer ── */
-.footer{
-  text-align:center;font-size:10px;color:var(--wt3);
-  position:relative;z-index:1;line-height:1.6;
-}
+/* success */
+.lead-ok{display:none;text-align:center;padding:8px 0}
+.lead-ok-icon{font-size:46px;display:block;margin-bottom:14px}
+.lead-ok-title{font-size:16px;font-weight:700;color:var(--wt);margin-bottom:8px}
+.lead-ok-text{font-size:12px;color:var(--wt2);line-height:1.65;margin-bottom:20px}
 
-/* ── result panel ── */
-.result-panel{
-  display:none;position:relative;z-index:1;
-  background:linear-gradient(135deg,rgba(76,175,118,.12),rgba(76,175,118,.04));
-  border:1px solid rgba(76,175,118,.3);border-radius:16px;
-  padding:18px 20px;margin-bottom:16px;text-align:center;
-}
-.result-panel.show{display:block}
-.result-title{font-size:14px;font-weight:600;color:var(--wt);margin-bottom:6px}
-.result-text{font-size:12px;color:var(--wt2);line-height:1.55;margin-bottom:14px}
-.result-cta{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:11px 20px;border-radius:12px;
-  background:var(--go);color:#0D0C0A;
-  font-size:12px;font-weight:700;text-decoration:none;transition:all .2s;
-}
-.result-cta:hover{transform:translateY(-1px)}
+/* carousel */
+.car-wrap{position:relative;z-index:1;margin-bottom:8px}
+.car-outer{margin:0 -20px;overflow:hidden;padding:14px 0 20px}
+.car-track{display:flex;gap:14px;padding:10px 0;transition:transform .55s cubic-bezier(.25,.46,.45,.94);will-change:transform}
+.cc{flex-shrink:0;width:195px;height:244px;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;transform:scale(.82) translateY(5px);opacity:.5;transition:transform .5s cubic-bezier(.25,.46,.45,.94),opacity .5s ease;text-decoration:none;display:block}
+.cc.adj{transform:scale(.91) translateY(2px);opacity:.75}
+.cc.act{transform:scale(1) translateY(0);opacity:1;box-shadow:0 20px 60px rgba(0,0,0,.55),0 4px 24px rgba(199,161,106,.18)}
+.cc-bg{position:absolute;inset:0;transition:transform .4s ease}
+.cc.act .cc-bg{transform:scale(1.03)}
+.cc-num{position:absolute;top:12px;left:14px;font-size:9px;font-weight:700;letter-spacing:.2em;color:rgba(245,240,232,.25)}
+.cc-icon{position:absolute;top:0;left:0;right:0;bottom:70px;display:flex;align-items:center;justify-content:center;font-size:44px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
+.cc-ov{position:absolute;bottom:0;left:0;right:0;padding:44px 14px 15px;background:linear-gradient(to top,rgba(13,12,10,.96) 0%,rgba(13,12,10,.55) 60%,transparent 100%)}
+.cc-badge{font-size:7px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:3px 9px;border-radius:100px;display:inline-block;margin-bottom:7px}
+.cc-badge.gn{background:rgba(76,175,118,.2);color:#4CAF76;border:1px solid rgba(76,175,118,.32)}
+.cc-badge.go{background:rgba(199,161,106,.2);color:var(--go);border:1px solid rgba(199,161,106,.32)}
+.cc-badge.pr{background:rgba(255,216,141,.15);color:#FFD88D;border:1px solid rgba(255,216,141,.35)}
+.cc-name{font-size:12px;font-weight:700;color:var(--wt);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cc-sub{font-size:10px;color:var(--wt2);margin-top:4px}
+.car-ctrl{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:14px;position:relative;z-index:1}
+.car-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--wt2);cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center}
+.car-btn:hover{border-color:var(--go);color:var(--go);background:var(--go2)}
+.car-dots{display:flex;gap:6px;align-items:center}
+.cdot{width:5px;height:5px;border-radius:50%;background:rgba(245,240,232,.2);transition:all .3s;cursor:pointer;border:none;padding:0}
+.cdot.act{background:var(--go);width:16px;border-radius:3px}
+
+/* newsletter */
+.nl-card{position:relative;z-index:1;background:linear-gradient(145deg,rgba(141,168,140,.08),rgba(141,168,140,.02));border:1px solid rgba(141,168,140,.2);border-radius:20px;padding:22px 20px;margin-bottom:22px;text-align:center}
+.nl-icon{font-size:24px;display:block;margin-bottom:10px}
+.nl-title{font-size:15px;font-weight:700;color:var(--wt);margin-bottom:6px}
+.nl-sub{font-size:12px;color:var(--wt2);line-height:1.6;margin-bottom:18px}
+.nl-ok{display:none;font-size:13px;color:var(--sage-lt);font-weight:500;padding:8px 0}
+
+/* socials */
+.socials{display:flex;justify-content:center;gap:10px;position:relative;z-index:1;margin-bottom:28px}
+.soc{width:48px;height:48px;border-radius:14px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .25s;color:var(--wt2)}
+.soc:hover{border-color:var(--go);color:var(--go);background:var(--go2);transform:translateY(-3px)}
+
+/* whatsapp bottom */
+.wa-sec{position:relative;z-index:1;background:linear-gradient(145deg,rgba(37,211,102,.08),rgba(37,211,102,.02));border:1px solid rgba(37,211,102,.2);border-radius:20px;padding:24px 20px;margin-bottom:28px;text-align:center}
+.wa-lbl{font-size:8px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(37,211,102,.7);margin-bottom:8px}
+.wa-title{font-size:15px;font-weight:700;color:var(--wt);margin-bottom:7px}
+.wa-sub{font-size:12px;color:var(--wt2);line-height:1.6;margin-bottom:18px}
+.wa-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 28px;border-radius:14px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-size:14px;font-weight:700;letter-spacing:.02em;text-decoration:none;transition:all .25s;box-shadow:0 8px 30px rgba(37,211,102,.22);font-family:inherit}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(37,211,102,.33)}
+.wa-btn svg{width:20px;height:20px;flex-shrink:0}
+
+/* footer */
+.footer{text-align:center;font-size:10px;color:var(--wt3);position:relative;z-index:1;line-height:1.75}
+
+/* entrance animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.profile{animation:fadeUp .7s .05s cubic-bezier(.25,.46,.45,.94) both}
+.lead-card{animation:fadeUp .7s .15s cubic-bezier(.25,.46,.45,.94) both}
+.divider{animation:fadeUp .6s .2s cubic-bezier(.25,.46,.45,.94) both}
+.car-wrap{animation:fadeUp .7s .25s cubic-bezier(.25,.46,.45,.94) both}
+.car-ctrl{animation:fadeUp .6s .3s cubic-bezier(.25,.46,.45,.94) both}
+.nl-card{animation:fadeUp .6s .35s cubic-bezier(.25,.46,.45,.94) both}
+.wa-sec{animation:fadeUp .6s .4s cubic-bezier(.25,.46,.45,.94) both}
 </style>
 </head>
 <body>
 
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
 <div class="page">
 
   <!-- PROFILE -->
   <div class="profile">
     <div class="avatar-wrap">
+      <div class="avatar-ring2"></div>
       <div class="avatar-ring"></div>
-      <div class="avatar">PL</div>
-      <div class="badge-verified">✓</div>
+      <div class="avatar">
+        <svg viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 16C44 8 26 9 20 23 14 35 17 52 28 58 33 61 38 63 44 65L50 67Z" fill="rgba(198,218,191,0.13)" stroke="#C6DABF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M50 16C56 8 74 9 80 23 86 35 83 52 72 58 67 61 62 63 56 65L50 67Z" fill="rgba(198,218,191,0.13)" stroke="#C6DABF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M26 33C21 37 22 45 28 48" stroke="#C6DABF" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+          <path d="M35 19C29 24 30 32 35 34" stroke="#C6DABF" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+          <path d="M74 33C79 37 78 45 72 48" stroke="#C6DABF" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+          <path d="M65 19C71 24 70 32 65 34" stroke="#C6DABF" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+          <line x1="50" y1="16" x2="50" y2="67" stroke="#C6DABF" stroke-width=".8" opacity=".18"/>
+          <text x="50" y="55" text-anchor="middle" fill="#C7A16A" font-size="29" font-weight="700" font-family="Satoshi,system-ui,sans-serif">4</text>
+        </svg>
+      </div>
+      <div class="badge-v">✓</div>
     </div>
-    <p class="profile-tag">Nutricionista • CRN-3 Ativo</p>
+    <p class="profile-tag">Nutricionista · CRN-3 Ativo</p>
     <h1 class="profile-name">Priscila Leite</h1>
     <p class="profile-bio">Especialista em nutrição infantil e terapia alimentar. Ajudo nutricionistas a transformarem consultórios com método clínico comprovado.</p>
     <div class="profile-stats">
@@ -293,216 +231,331 @@ body{
     </div>
   </div>
 
-  <!-- CONCIERGE QUIZ -->
-  <div class="quiz-card" id="quizCard">
-    <div class="quiz-icon">🎯</div>
-    <div class="quiz-title">Qual é o seu momento agora?</div>
-    <div class="quiz-sub">Me conta para eu te direcionar para o conteúdo certo.</div>
-    <div class="quiz-opts">
-      <button class="quiz-opt" onclick="selectMomento(this,'iniciante')" data-tipo="iniciante">
-        <span class="quiz-opt-icon">🌱</span>
-        Estou começando na nutrição infantil
+  <!-- LEAD CAPTURE MULTI-STEP -->
+  <div class="lead-card">
+    <div class="lead-hd" id="leadHd">
+      <span class="lead-icon">🎯</span>
+      <div class="lead-title">Pesquisa de Audiência</div>
+      <div class="lead-sub">3 perguntas rápidas para te mostrar os conteúdos certos</div>
+    </div>
+    <div class="prog-bar" id="leadProg"><div class="prog-fill" id="progFill" style="width:25%"></div></div>
+    <div class="step-dots" id="leadDots">
+      <div class="sdot active" id="sd1"></div>
+      <div class="sdot" id="sd2"></div>
+      <div class="sdot" id="sd3"></div>
+      <div class="sdot" id="sd4"></div>
+    </div>
+
+    <!-- Step 1: contact -->
+    <div class="step on" id="st1">
+      <input class="fi" type="text" id="f-nome" placeholder="Seu nome completo" autocomplete="name">
+      <input class="fi" type="email" id="f-email" placeholder="Seu melhor e-mail" autocomplete="email">
+      <input class="fi" type="tel" id="f-tel" placeholder="WhatsApp com DDD (opcional)" autocomplete="tel">
+      <button class="btn-p" onclick="stepNext(1)">
+        Continuar
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
-      <button class="quiz-opt" onclick="selectMomento(this,'crescer')" data-tipo="crescer">
-        <span class="quiz-opt-icon">📈</span>
-        Já atendo crianças e quero me especializar
-      </button>
-      <button class="quiz-opt" onclick="selectMomento(this,'escalar')" data-tipo="escalar">
-        <span class="quiz-opt-icon">🚀</span>
-        Quero escalar meu consultório com mentoria
-      </button>
+    </div>
+
+    <!-- Step 2: momento -->
+    <div class="step" id="st2">
+      <div class="q-title">Qual é o seu momento profissional?</div>
+      <div class="q-sub">Escolha a opção que melhor te descreve agora</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="pickOpt(this,'q1','iniciante')"><em>🌱</em><span>Estou começando na nutrição infantil</span></button>
+        <button class="q-opt" onclick="pickOpt(this,'q1','especializar')"><em>📈</em><span>Já atendo crianças e quero me especializar</span></button>
+        <button class="q-opt" onclick="pickOpt(this,'q1','escalar')"><em>🚀</em><span>Quero escalar meu consultório e faturamento</span></button>
+      </div>
+      <button class="btn-p" id="btn2" onclick="stepNext(2)" disabled>Continuar <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      <button class="btn-s" onclick="stepPrev(2)">← Voltar</button>
+    </div>
+
+    <!-- Step 3: dificuldade -->
+    <div class="step" id="st3">
+      <div class="q-title">Qual é sua maior dificuldade hoje?</div>
+      <div class="q-sub">Seja honesta — isso me ajuda a te ajudar melhor</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="pickOpt(this,'q2','seletividade')"><em>🍽️</em><span>Atender pacientes com seletividade alimentar severa</span></button>
+        <button class="q-opt" onclick="pickOpt(this,'q2','comunicacao')"><em>💬</em><span>Comunicar diagnóstico e devolutiva para as famílias</span></button>
+        <button class="q-opt" onclick="pickOpt(this,'q2','negocios')"><em>💼</em><span>Estruturar meu consultório e atrair mais pacientes</span></button>
+      </div>
+      <button class="btn-p" id="btn3" onclick="stepNext(3)" disabled>Continuar <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+      <button class="btn-s" onclick="stepPrev(3)">← Voltar</button>
+    </div>
+
+    <!-- Step 4: objetivo + livre -->
+    <div class="step" id="st4">
+      <div class="q-title">O que você mais quer aprender?</div>
+      <div class="q-sub">Escolha seu principal objetivo</div>
+      <div class="q-opts">
+        <button class="q-opt" onclick="pickOpt(this,'q3','terapia-alimentar')"><em>🧠</em><span>Terapia alimentar e abordagem clínica infantil</span></button>
+        <button class="q-opt" onclick="pickOpt(this,'q3','introducao-alimentar')"><em>👶</em><span>Introdução alimentar e primeiros anos de vida</span></button>
+        <button class="q-opt" onclick="pickOpt(this,'q3','crescimento')"><em>📱</em><span>Crescimento do consultório e presença digital</span></button>
+      </div>
+      <textarea class="fi" id="f-livre" placeholder="Conta mais sobre você (opcional) — seu maior desafio ou o que você espera aprender…"></textarea>
+      <button class="btn-p" id="btn4" onclick="submitLead()" disabled>✨ Enviar e ver conteúdos personalizados</button>
+      <button class="btn-s" onclick="stepPrev(4)">← Voltar</button>
+    </div>
+
+    <!-- Success -->
+    <div class="lead-ok" id="leadOk">
+      <span class="lead-ok-icon">🎉</span>
+      <div class="lead-ok-title">Incrível! Respostas recebidas.</div>
+      <div class="lead-ok-text">Obrigada por compartilhar seu momento. Em breve você vai receber conteúdos personalizados direto no seu e-mail.</div>
+      <a class="btn-p" href="cursos.html" style="text-decoration:none">
+        Ver cursos para você
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </div>
 
-  <!-- RESULT PANELS -->
-  <div class="result-panel" id="res-iniciante">
-    <div class="result-title">Perfeito para você! 🌱</div>
-    <div class="result-text">A <strong>Comunidade Nutri For Nutri</strong> é gratuita e o ponto de partida ideal. Lá você vai encontrar a base que precisa.</div>
-    <a class="result-cta" href="cursos.html">Entrar na comunidade grátis →</a>
-  </div>
-  <div class="result-panel" id="res-crescer">
-    <div class="result-title">Você está no lugar certo! 📈</div>
-    <div class="result-text">A <strong>Formação em Terapia Alimentar — Método Mesa Leve™</strong> foi feita para você elevar sua clínica a outro patamar.</div>
-    <a class="result-cta" href="cursos.html">Ver a formação →</a>
-  </div>
-  <div class="result-panel" id="res-escalar">
-    <div class="result-title">Você quer resultados de verdade! 🚀</div>
-    <div class="result-text">A <strong>Mentoria Nutri For Nutri</strong> é o programa premium com acompanhamento direto. Vagas limitadas.</div>
-    <a class="result-cta" href="cursos.html">Conhecer a mentoria →</a>
-  </div>
+  <!-- CAROUSEL -->
+  <div class="divider"><span>Formações &amp; Cursos</span></div>
 
-  <!-- MAIN CTA -->
-  <a class="cta-main" href="cursos.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-    Acessar todos os cursos
-  </a>
+  <div class="car-wrap">
+    <div class="car-outer" id="carOuter">
+      <div class="car-track" id="carTrack">
 
-  <!-- WHATSAPP CTA -->
-  <a class="cta-sec" href="https://wa.me/5524992476272" target="_blank" rel="noopener">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    Falar no WhatsApp
-  </a>
+        <a class="cc" href="cursos.html" data-i="0">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#111c12,#0c1609)"></div>
+          <div class="cc-num">01</div>
+          <div class="cc-icon">🌿</div>
+          <div class="cc-ov"><span class="cc-badge gn">Grátis</span><div class="cc-name">Comunidade Nutri For Nutri</div><div class="cc-sub">Conteúdo gratuito para nutricionistas</div></div>
+        </a>
 
-  <!-- PRODUCTS -->
-  <p class="sec-label">Conteúdos & Formações</p>
-  <div class="products">
+        <a class="cc" href="cursos.html" data-i="1">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#1c1810,#17130b)"></div>
+          <div class="cc-num">02</div>
+          <div class="cc-icon">⚡</div>
+          <div class="cc-ov"><span class="cc-badge go">Evento</span><div class="cc-name">Workshop Prático</div><div class="cc-sub">Aplicação clínica intensiva</div></div>
+        </a>
 
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon gn">🌿</div>
-      <div class="prod-info">
-        <div class="prod-tag gn">01 — Comunidade</div>
-        <div class="prod-name">Comunidade Nutri For Nutri</div>
-        <div class="prod-desc">Conteúdo gratuito para nutricionistas</div>
+        <a class="cc" href="cursos.html" data-i="2">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#1a1510,#161210)"></div>
+          <div class="cc-num">03</div>
+          <div class="cc-icon">🍽️</div>
+          <div class="cc-ov"><span class="cc-badge go">Formação</span><div class="cc-name">Terapia Alimentar Infantil</div><div class="cc-sub">Método Mesa Leve™</div></div>
+        </a>
+
+        <a class="cc" href="cursos.html" data-i="3">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#1b1510,#181208)"></div>
+          <div class="cc-num">04</div>
+          <div class="cc-icon">🧩</div>
+          <div class="cc-ov"><span class="cc-badge go">Especialização</span><div class="cc-name">Seletividade Alimentar</div><div class="cc-sub">Abordagem especializada</div></div>
+        </a>
+
+        <a class="cc" href="cursos.html" data-i="4">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#121813,#0f150e)"></div>
+          <div class="cc-num">05</div>
+          <div class="cc-icon">👶</div>
+          <div class="cc-ov"><span class="cc-badge gn">Especialização</span><div class="cc-name">Introdução Alimentar</div><div class="cc-sub">Do início ao crescimento saudável</div></div>
+        </a>
+
+        <a class="cc" href="cursos.html" data-i="5">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#181512,#151210)"></div>
+          <div class="cc-num">06</div>
+          <div class="cc-icon">💬</div>
+          <div class="cc-ov"><span class="cc-badge go">Formação</span><div class="cc-name">Devolutiva Nutricional</div><div class="cc-sub">Consultas que transformam</div></div>
+        </a>
+
+        <a class="cc" href="cursos.html" data-i="6">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#141814,#111511)"></div>
+          <div class="cc-num">07</div>
+          <div class="cc-icon">🎨</div>
+          <div class="cc-ov"><span class="cc-badge gn">Formação</span><div class="cc-name">Educação Alimentar Lúdica</div><div class="cc-sub">Técnicas lúdicas para crianças</div></div>
+        </a>
+
+        <a class="cc" href="cursos.html" data-i="7">
+          <div class="cc-bg" style="background:linear-gradient(155deg,#1e1808,#1a1406)"></div>
+          <div class="cc-num">08</div>
+          <div class="cc-icon">⭐</div>
+          <div class="cc-ov"><span class="cc-badge pr">Premium</span><div class="cc-name">Mentoria Nutri For Nutri</div><div class="cc-sub">Acompanhamento individual</div></div>
+        </a>
+
       </div>
-      <span class="prod-badge gratis">Grátis</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon go">🎓</div>
-      <div class="prod-info">
-        <div class="prod-tag">02 — Evento Online</div>
-        <div class="prod-name">Workshop Prático</div>
-        <div class="prod-desc">Aplicação clínica intensiva</div>
-      </div>
-      <span class="prod-badge pago">Entrada</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon go">🍽️</div>
-      <div class="prod-info">
-        <div class="prod-tag">03 — Formação Completa</div>
-        <div class="prod-name">Terapia Alimentar Infantil</div>
-        <div class="prod-desc">Método Mesa Leve™</div>
-      </div>
-      <span class="prod-badge pago">Formação</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon go">🧠</div>
-      <div class="prod-info">
-        <div class="prod-tag">04 — Especialização</div>
-        <div class="prod-name">Seletividade Alimentar</div>
-        <div class="prod-desc">Abordagem especializada</div>
-      </div>
-      <span class="prod-badge pago">Formação</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon wt">👶</div>
-      <div class="prod-info">
-        <div class="prod-tag">05 — Especialização</div>
-        <div class="prod-name">Introdução Alimentar</div>
-        <div class="prod-desc">Do início ao crescimento saudável</div>
-      </div>
-      <span class="prod-badge pago">Formação</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon wt">💬</div>
-      <div class="prod-info">
-        <div class="prod-tag">06 — Comunicação Clínica</div>
-        <div class="prod-name">Devolutiva Nutricional</div>
-        <div class="prod-desc">Consultas que transformam</div>
-      </div>
-      <span class="prod-badge pago">Formação</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon wt">🎮</div>
-      <div class="prod-info">
-        <div class="prod-tag">07 — Estratégias Lúdicas</div>
-        <div class="prod-name">Educação Alimentar</div>
-        <div class="prod-desc">Técnicas lúdicas para crianças</div>
-      </div>
-      <span class="prod-badge pago">Formação</span>
-    </a>
-
-    <a class="prod-card" href="cursos.html">
-      <div class="prod-icon go">⭐</div>
-      <div class="prod-info">
-        <div class="prod-tag">08 — Programa Premium</div>
-        <div class="prod-name">Mentoria Nutri For Nutri</div>
-        <div class="prod-desc">Acompanhamento individual</div>
-      </div>
-      <span class="prod-badge premium">Premium</span>
-    </a>
-
-  </div>
-
-  <!-- LEAD CAPTURE -->
-  <div class="form-card" id="leadForm">
-    <div class="form-title">Receba conteúdo exclusivo 📬</div>
-    <div class="form-sub">Deixa seu contato e te mando materiais gratuitos sobre nutrição infantil.</div>
-    <div class="form-row">
-      <input class="form-input" type="text" placeholder="Seu nome" id="leadName" required>
-      <input class="form-input" type="tel" placeholder="WhatsApp (com DDD)" id="leadWa">
-      <input class="form-input" type="email" placeholder="Seu melhor e-mail" id="leadEmail" required>
-      <button class="form-btn" onclick="submitLead()">Quero receber →</button>
     </div>
-    <div class="form-success" id="leadSuccess">✓ Recebido! Em breve você receberá novidades.</div>
+    <div class="car-ctrl">
+      <button class="car-btn" id="carPrev" aria-label="Anterior"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <div class="car-dots" id="carDots"></div>
+      <button class="car-btn" id="carNext" aria-label="Próximo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
   </div>
 
-  <!-- SOCIAL LINKS -->
-  <p class="sec-label">Redes & Canais</p>
+  <!-- NEWSLETTER -->
+  <div class="divider" style="margin-top:10px"><span>Newsletter</span></div>
+  <div class="nl-card">
+    <span class="nl-icon">📬</span>
+    <div class="nl-title">Receba conteúdo exclusivo</div>
+    <div class="nl-sub">Materiais gratuitos sobre nutrição infantil e estratégias de consultório direto no seu e-mail.</div>
+    <div id="nlForm">
+      <input class="fi" type="email" id="nl-email" placeholder="Seu melhor e-mail" autocomplete="email">
+      <button class="btn-p" onclick="submitNl()">Quero receber →</button>
+    </div>
+    <div class="nl-ok" id="nlOk">✓ Você está na lista! Em breve receberá novidades.</div>
+  </div>
+
+  <!-- SOCIALS -->
+  <div class="divider"><span>Redes Sociais</span></div>
   <div class="socials">
-    <a class="social-btn" href="https://www.instagram.com/nutri4nutri/" target="_blank" title="Instagram" rel="noopener">
+    <a class="soc" href="https://www.instagram.com/nutri4nutri/" target="_blank" rel="noopener" title="Instagram">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
     </a>
-    <a class="social-btn" href="https://youtube.com/" target="_blank" title="YouTube" rel="noopener">
+    <a class="soc" href="https://youtube.com/" target="_blank" rel="noopener" title="YouTube">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
     </a>
-    <a class="social-btn" href="https://wa.me/5524992476272" target="_blank" title="WhatsApp" rel="noopener">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    </a>
-    <a class="social-btn" href="mailto:contato@priscilanutri.com" title="E-mail" rel="noopener">
+    <a class="soc" href="mailto:contato@priscilanutri.com" title="E-mail">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
     </a>
-    <a class="social-btn" href="https://open.spotify.com/" target="_blank" title="Spotify" rel="noopener">
+    <a class="soc" href="https://open.spotify.com/" target="_blank" rel="noopener" title="Spotify">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
     </a>
   </div>
 
-  <!-- FOOTER -->
+  <!-- WHATSAPP BOTTOM -->
+  <div class="divider"><span>Suporte</span></div>
+  <div class="wa-sec">
+    <div class="wa-lbl">Atendimento Direto</div>
+    <div class="wa-title">Fale comigo no WhatsApp</div>
+    <div class="wa-sub">Dúvidas sobre os cursos, formações ou mentoria? Te respondo pessoalmente.</div>
+    <a class="wa-btn" href="https://wa.me/5524992476272" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Falar no WhatsApp
+    </a>
+  </div>
+
   <div class="footer">
     <p>© 2025 Priscila Leite — Nutricionista</p>
-    <p style="margin-top:4px">Feito com ♥ para nutrir vidas</p>
+    <p style="margin-top:4px">CRN-3 Ativo · Nutrição Infantil Especializada</p>
   </div>
 
 </div>
 
 <script>
-function selectMomento(el, tipo) {
-  document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  document.querySelectorAll('.result-panel').forEach(p => p.classList.remove('show'));
-  var panel = document.getElementById('res-' + tipo);
-  if (panel) {
-    panel.classList.add('show');
-    panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+// ── WEBHOOK ──
+const WH = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
+function send(data) {
+  try { fetch(WH,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); } catch(e) {}
+}
+
+// ── MULTI-STEP FORM ──
+const fd = {nome:'',email:'',tel:'',q1:'',q2:'',q3:'',livre:''};
+
+function pickOpt(el, field, val) {
+  el.closest('.q-opts').querySelectorAll('.q-opt').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  fd[field] = val;
+  const map = {q1:'btn2',q2:'btn3',q3:'btn4'};
+  const btn = document.getElementById(map[field]);
+  if (btn) btn.removeAttribute('disabled');
+}
+
+function stepNext(from) {
+  if (from===1) {
+    const n=document.getElementById('f-nome').value.trim();
+    const e=document.getElementById('f-email').value.trim();
+    if (!n||!e) { document.getElementById(n?'f-email':'f-nome').focus(); return; }
+    fd.nome=n; fd.email=e; fd.tel=document.getElementById('f-tel').value.trim();
   }
+  goStep(from+1);
+}
+function stepPrev(from) { goStep(from-1); }
+
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s=>s.classList.remove('on'));
+  const t=document.getElementById('st'+n);
+  if(t) t.classList.add('on');
+  for(let i=1;i<=4;i++){
+    const d=document.getElementById('sd'+i);
+    d.classList.remove('active','done');
+    if(i<n) d.classList.add('done');
+    else if(i===n) d.classList.add('active');
+  }
+  document.getElementById('progFill').style.width=(n*25)+'%';
 }
 
 function submitLead() {
-  var name = document.getElementById('leadName').value.trim();
-  var wa   = document.getElementById('leadWa').value.trim();
-  var email = document.getElementById('leadEmail').value.trim();
-  if (!name || !email) { alert('Preencha nome e e-mail para continuar.'); return; }
+  fd.livre = document.getElementById('f-livre').value.trim();
+  const courseMap = {'terapia-alimentar':'Terapia Alimentar — Mesa Leve','introducao-alimentar':'Introdução Alimentar','crescimento':'Mentoria Nutri For Nutri'};
+  send({nome:fd.nome,email:fd.email,telefone:fd.tel,tag:'quiz',pergunta1:fd.q1,pergunta2:fd.q2,pergunta3:fd.q3,textoLivre:fd.livre,cursoSugerido:courseMap[fd.q3]||'Comunidade Nutri For Nutri'});
+  ['leadHd','leadProg','leadDots','st4'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  document.getElementById('leadOk').style.display='block';
+}
 
-  try {
-    localStorage.setItem('nfn_name', name);
-    localStorage.setItem('nfn_email', email);
-    localStorage.setItem('nfn_wa', wa);
-  } catch(e) {}
+function submitNl() {
+  const email=document.getElementById('nl-email').value.trim();
+  if(!email){document.getElementById('nl-email').focus();return;}
+  send({email,tag:'newsletter',nome:fd.nome||'',telefone:''});
+  document.getElementById('nlForm').style.display='none';
+  document.getElementById('nlOk').style.display='block';
+}
 
-  var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec';
-  if (WS_URL !== 'COLE_SUA_URL_AQUI') {
-    var payload = new URLSearchParams({name:name, email:email, course:'biolink', type:'form'});
-    try { navigator.sendBeacon(WS_URL, payload); } catch(ex) { fetch(WS_URL,{method:'POST',mode:'no-cors',body:payload}); }
+// ── CAROUSEL ──
+(function(){
+  const outer=document.getElementById('carOuter');
+  const track=document.getElementById('carTrack');
+  const cards=[...track.querySelectorAll('.cc')];
+  const dotsEl=document.getElementById('carDots');
+  const N=cards.length;
+  let cur=0, timer=null;
+
+  // dots
+  cards.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.className='cdot'+(i===0?' act':'');
+    d.setAttribute('aria-label','Slide '+(i+1));
+    d.onclick=()=>go(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update(){
+    const cw=cards[0].offsetWidth;
+    const gap=14;
+    const ow=outer.offsetWidth;
+    const unit=cw+gap;
+    // offset so active card is centered
+    const offset=cur*unit-(ow/2-cw/2)+20;
+    track.style.transform='translateX('+(-Math.max(0,offset))+'px)';
+    cards.forEach((c,i)=>{
+      c.classList.remove('act','adj');
+      const d=Math.abs(i-cur);
+      if(d===0) c.classList.add('act');
+      else if(d===1) c.classList.add('adj');
+    });
+    dotsEl.querySelectorAll('.cdot').forEach((d,i)=>d.classList.toggle('act',i===cur));
   }
 
-  document.getElementById('leadForm').querySelector('.form-row').style.display = 'none';
-  document.getElementById('leadSuccess').style.display = 'block';
-}
+  function go(i){
+    cur=((i%N)+N)%N;
+    update();
+  }
+
+  function startAuto(){
+    clearInterval(timer);
+    timer=setInterval(()=>go(cur+1),3800);
+  }
+
+  document.getElementById('carNext').onclick=()=>{go(cur+1);startAuto();};
+  document.getElementById('carPrev').onclick=()=>{go(cur-1);startAuto();};
+
+  // click non-active → focus
+  cards.forEach((c,i)=>{
+    c.addEventListener('click',e=>{
+      if(i!==cur){e.preventDefault();go(i);startAuto();}
+    });
+  });
+
+  // touch swipe
+  let tx=0;
+  outer.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;clearInterval(timer);},{passive:true});
+  outer.addEventListener('touchend',e=>{
+    const d=tx-e.changedTouches[0].clientX;
+    if(Math.abs(d)>40){d>0?go(cur+1):go(cur-1);}
+    startAuto();
+  },{passive:true});
+
+  setTimeout(()=>{update();startAuto();},80);
+  window.addEventListener('resize',update);
+})();
 </script>
 </body>
 </html>
