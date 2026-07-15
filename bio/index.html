@@ -968,7 +968,7 @@ footer{padding:32px 24px 52px;text-align:center;}
       <div class="res-slbl">Seus próximos passos</div>
       <div class="res-steps" id="rS"></div>
       <div class="res-clbl">Recomendação para você</div>
-      <a href="cursos.html" class="res-curso" id="rC">
+      <a href="../cursos.html" class="res-curso" id="rC">
         <div class="res-cicon" id="rI"></div>
         <div class="res-cinfo"><div class="res-cname" id="rN"></div><div class="res-cbadge" id="rB"></div></div>
         <div class="res-carrow">→</div>
@@ -1229,7 +1229,7 @@ function buildCar(){
   tr.innerHTML='';dt.innerHTML='';
   CARDS.forEach((c,i)=>{
     const el=document.createElement('a');
-    el.href='cursos.html';
+    el.href='../cursos.html';
     el.className='cc'+(i===0?' act':i===1?' adj adj-r':'');
     el.innerHTML=`<div class="cc-bg">${c.e}</div><div class="cc-cnt"><span class="cc-badge ${c.bc}">${c.b}</span><div class="cc-title">${c.t}</div><div class="cc-desc">${c.d}</div></div><div class="cc-arrow"><svg viewBox="0 0 12 12"><path d="M3 9l4-4-4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
     // 3D tilt on active card
