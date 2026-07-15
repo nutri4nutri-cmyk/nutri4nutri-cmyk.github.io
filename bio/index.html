@@ -1,12 +1,1341 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="refresh" content="0; url=../biolink.html">
-<title>Nutri4Nutri Bio</title>
-<link rel="canonical" href="https://nutri4nutri.com.br/biolink.html">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JVFMDT7HF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-JVFMDT7HF8');
+</script>
+<meta name="facebook-domain-verification" content="tl72r81wni8dqir1yxlb5jkr60vwzb" />
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1017324754333197');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1017324754333197&ev=PageView&noscript=1"/></noscript>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Priscila Leite — Nutricionista Infantil</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════════════════
+   TOKENS — TEMA CLARO
+══════════════════════════════════════════════════════ */
+:root{
+  --bg:#FAF7F0;
+  --bg2:#F2EDE4;
+  --card:#FFFFFF;
+  --card2:#F8F4EC;
+  --go:#B8904F;
+  --go-light:#C7A16A;
+  --go2:rgba(184,144,79,.09);
+  --go3:rgba(184,144,79,.2);
+  --sage:#5A7052;
+  --sage2:rgba(90,112,82,.08);
+  --sage-lt:#7A9870;
+  --dk:#0D0C0A;
+  --dk2:rgba(13,12,10,.62);
+  --dk3:rgba(13,12,10,.36);
+  --dk4:rgba(13,12,10,.10);
+  --gn:#3C9258;
+  --gn2:rgba(60,146,88,.09);
+  --border:rgba(13,12,10,.08);
+  --border-go:rgba(184,144,79,.18);
+  --shadow-sm:0 2px 12px rgba(13,12,10,.06);
+  --shadow-md:0 8px 32px rgba(13,12,10,.10);
+  --shadow-lg:0 20px 60px rgba(13,12,10,.14);
+  --shadow-go:0 8px 32px rgba(184,144,79,.20);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;font-weight:300;
+  background:var(--bg);color:var(--dk);
+  overflow-x:hidden;min-height:100vh;cursor:none;
+}
+a{text-decoration:none;color:inherit;}
+
+/* ── CURSOR ── */
+#cur{
+  position:fixed;width:8px;height:8px;
+  background:var(--go);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .2s,height .2s,background .2s,transform .08s;
+}
+#cur2{
+  position:fixed;width:40px;height:40px;
+  border:1.5px solid rgba(184,144,79,.45);border-radius:50%;
+  pointer-events:none;z-index:9997;
+  transform:translate(-50%,-50%);
+  transition:width .4s cubic-bezier(.25,.46,.45,.94),
+              height .4s cubic-bezier(.25,.46,.45,.94),
+              border-color .3s,
+              transform .08s;
+}
+body.hov #cur{width:5px;height:5px;}
+body.hov #cur2{width:60px;height:60px;border-color:var(--go);}
+@media(hover:none){#cur,#cur2{display:none;}body{cursor:auto;}}
+
+/* ── CURTAIN ── */
+#curtain{
+  position:fixed;inset:0;background:var(--bg);
+  z-index:8000;pointer-events:none;
+  transition:opacity 1s cubic-bezier(.76,0,.24,1);
+}
+#curtain.gone{opacity:0;}
+
+/* ── AMBIENT BLOBS ── */
+.blob{
+  position:fixed;border-radius:50%;
+  filter:blur(90px);pointer-events:none;z-index:0;
+  will-change:transform;
+}
+.blob-1{
+  width:420px;height:420px;
+  background:radial-gradient(circle,rgba(199,161,106,.13) 0%,transparent 70%);
+  top:-80px;left:-100px;
+  animation:blob-drift 12s ease-in-out infinite;
+}
+.blob-2{
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(122,140,114,.10) 0%,transparent 70%);
+  top:40%;right:-120px;
+  animation:blob-drift 15s ease-in-out infinite reverse;
+}
+.blob-3{
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(199,161,106,.08) 0%,transparent 70%);
+  bottom:10%;left:10%;
+  animation:blob-drift 10s ease-in-out 3s infinite;
+}
+@keyframes blob-drift{
+  0%,100%{transform:translate(0,0) scale(1);}
+  33%{transform:translate(24px,-36px) scale(1.06);}
+  66%{transform:translate(-18px,24px) scale(0.94);}
+}
+
+/* ── GRAIN OVERLAY ── */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9000;opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--sage),var(--go));border-radius:2px;}
+
+/* ── LAYOUT ── */
+.page{
+  position:relative;z-index:1;
+  max-width:480px;margin:0 auto;
+}
+@media(min-width:680px){.page{max-width:620px;}}
+@media(min-width:900px){.page{max-width:680px;}}
+
+/* ══════════════════════════════════════════════════════
+   SCROLL REVEAL — PREMIUM
+══════════════════════════════════════════════════════ */
+.sr{
+  opacity:0;
+  transform:translateY(44px) scale(0.97);
+  filter:blur(6px);
+  transition:opacity .9s cubic-bezier(.22,1,.36,1),
+              transform .9s cubic-bezier(.22,1,.36,1),
+              filter .7s cubic-bezier(.22,1,.36,1);
+}
+.sr.vis{opacity:1;transform:none;filter:blur(0);}
+.sr[data-d="1"]{transition-delay:.08s;}
+.sr[data-d="2"]{transition-delay:.18s;}
+.sr[data-d="3"]{transition-delay:.28s;}
+.sr[data-d="4"]{transition-delay:.38s;}
+
+/* Word reveal */
+.word-reveal .wr{
+  display:inline-block;overflow:hidden;vertical-align:bottom;
+}
+.word-reveal .wr-inner{
+  display:inline-block;
+  transform:translateY(110%);opacity:0;
+  transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .5s ease;
+}
+.word-reveal.vis .wr-inner{transform:none;opacity:1;}
+.word-reveal .wr-inner:nth-child(1){transition-delay:.05s;}
+.word-reveal .wr-inner:nth-child(2){transition-delay:.12s;}
+.word-reveal .wr-inner:nth-child(3){transition-delay:.19s;}
+.word-reveal .wr-inner:nth-child(4){transition-delay:.26s;}
+.word-reveal .wr-inner:nth-child(5){transition-delay:.33s;}
+.word-reveal .wr-inner:nth-child(6){transition-delay:.40s;}
+.word-reveal .wr-inner:nth-child(7){transition-delay:.47s;}
+
+/* ══════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════ */
+.hero{padding:64px 24px 40px;text-align:center;}
+
+/* Avatar */
+.av-wrap{position:relative;display:inline-block;margin-bottom:28px;}
+
+.av-halo{
+  position:absolute;inset:-28px;border-radius:50%;
+  background:radial-gradient(circle,rgba(184,144,79,.15) 0%,transparent 72%);
+  animation:halo-pulse 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes halo-pulse{0%,100%{transform:scale(.92);opacity:.4;}50%{transform:scale(1.08);opacity:1;}}
+
+.av-ring-outer{
+  position:relative;width:116px;height:116px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.av-ring-outer::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,#B8904F 0%,#C6DABF 20%,#7A9870 40%,#C6DABF 60%,#B8904F 80%,#D4B87A 100%);
+  animation:conic-spin 7s linear infinite;
+  mask:radial-gradient(circle at center,transparent 47px,black 49px);
+  -webkit-mask:radial-gradient(circle at center,transparent 47px,black 49px);
+}
+@keyframes conic-spin{to{transform:rotate(360deg);}}
+.av-ring-outer::after{
+  content:'';position:absolute;inset:3px;border-radius:50%;background:var(--bg);
+}
+.av-img{
+  position:relative;z-index:2;
+  width:104px;height:104px;border-radius:50%;object-fit:cover;display:block;
+  transition:transform .7s cubic-bezier(.34,1.56,.64,1);
+}
+.av-img:hover{transform:scale(1.08);}
+.av-badge{
+  position:absolute;bottom:4px;right:4px;z-index:3;
+  width:26px;height:26px;background:var(--go);border-radius:50%;
+  border:3px solid var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  animation:badge-pop .5s 1.4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes badge-pop{from{transform:scale(0) rotate(-45deg);}to{transform:scale(1) rotate(0deg);}}
+.av-badge svg{width:11px;height:11px;}
+
+/* Hero text */
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.2rem;font-weight:500;
+  letter-spacing:.02em;color:var(--dk);
+  margin-bottom:7px;overflow:hidden;
+  line-height:1.1;
+}
+.hero-name .char{
+  display:inline-block;
+  animation:char-rise .065s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes char-rise{from{opacity:0;transform:translateY(100%) skewX(6deg);}to{opacity:1;transform:none;}}
+
+.hero-eyebrow{
+  font-size:.62rem;font-weight:500;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--go);margin-bottom:7px;
+  animation:fade-up .7s 1s ease both;
+}
+.hero-bio{
+  font-size:.88rem;font-weight:300;color:var(--dk2);
+  line-height:1.78;margin-bottom:28px;
+  max-width:360px;margin-left:auto;margin-right:auto;
+  animation:fade-up .7s 1.15s ease both;
+}
+@keyframes fade-up{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+.hero-stats{
+  display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
+  animation:fade-up .7s 1.3s ease both;
+}
+.stat{
+  background:var(--card);border:1px solid var(--border);border-radius:40px;
+  padding:10px 18px;text-align:center;
+  box-shadow:var(--shadow-sm);
+  transition:border-color .3s,transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  position:relative;overflow:hidden;
+}
+.stat:hover{border-color:var(--border-go);transform:translateY(-3px);box-shadow:var(--shadow-go);}
+.stat-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.15rem;font-weight:500;color:var(--go);
+  display:block;line-height:1.2;
+}
+.stat-l{font-size:.58rem;font-weight:400;letter-spacing:.14em;text-transform:uppercase;color:var(--dk3);}
+
+/* ══════════════════════════════════════════════════════
+   SECTION HEADER
+══════════════════════════════════════════════════════ */
+.sec-hdr{padding:52px 24px 24px;text-align:center;}
+.sec-ey{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.6rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--go);margin-bottom:12px;
+}
+.sec-ey::before,.sec-ey::after{content:'';width:16px;height:1px;background:var(--go);opacity:.5;}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.7rem;font-weight:500;
+  color:var(--dk);letter-spacing:.02em;margin-bottom:8px;
+}
+.sec-sub{font-size:.84rem;color:var(--dk2);line-height:1.65;}
+
+/* ══════════════════════════════════════════════════════
+   QUIZ CARD
+══════════════════════════════════════════════════════ */
+.quiz-wrap{padding:0 16px;margin-bottom:12px;}
+.quiz-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;overflow:hidden;position:relative;
+  box-shadow:var(--shadow-md);
+  transition:box-shadow .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1);
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.quiz-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage));
+  background-size:300%;animation:border-flow 4s linear infinite;
+}
+@keyframes border-flow{to{background-position:-300% 0;}}
+@keyframes border-flow-dual{
+  from{background-position:0% top,0% bottom;}
+  to{background-position:-300% top,-300% bottom;}
+}
+/* ── Border-flow em todos os cards — topo E base ── */
+.quiz-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage));
+  background-size:300%;animation:border-flow 4s linear infinite;
+}
+.cc::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:
+    linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage)) top/300% 2.5px no-repeat,
+    linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage)) bottom/300% 2.5px no-repeat;
+  animation:border-flow-dual 4s linear infinite;
+}
+.cc.act::after{animation:none;}
+.wa-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:
+    linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage)) top/300% 2.5px no-repeat,
+    linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage)) bottom/300% 2.5px no-repeat;
+  animation:border-flow-dual 4s linear infinite;
+}
+.slink::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage));
+  background-size:300%;animation:border-flow 4s linear infinite;
+}
+.slink::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage));
+  background-size:300%;animation:border-flow 4s linear infinite;
+}
+.stat::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage));
+  background-size:300%;animation:border-flow 4s linear infinite;
+}
+.stat::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage),var(--go-light),#C6DABF,var(--go-light),var(--sage));
+  background-size:300%;animation:border-flow 4s linear infinite;
+}
+/* ── Ticker shimmer — faixo dourada deslizando ── */
+.ticker-wrap{position:relative;}
+.ticker-wrap::before{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,transparent 30%,rgba(255,215,80,.45) 44%,rgba(255,248,200,.65) 50%,rgba(255,215,80,.45) 56%,transparent 70%,transparent 100%);
+  background-size:200% 100%;
+  mix-blend-mode:screen;
+  animation:ticker-shimmer 5s linear infinite;
+}
+@keyframes ticker-shimmer{
+  from{background-position:200% 0;}
+  to{background-position:-200% 0;}
+}
+.glare{
+  position:absolute;inset:0;border-radius:24px;pointer-events:none;z-index:1;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0) 0%,transparent 60%);
+  transition:background .1s;
+}
+
+.quiz-hook{padding:32px 28px 28px;text-align:center;position:relative;z-index:3;}
+.hook-ey{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.58rem;font-weight:500;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--go);background:var(--go2);
+  border:1px solid var(--border-go);border-radius:30px;
+  padding:5px 15px;margin-bottom:20px;
+}
+.hook-ey::before{content:'✦';font-size:.48rem;}
+.quiz-hook h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:500;
+  line-height:1.2;color:var(--dk);margin-bottom:14px;letter-spacing:.01em;
+}
+.quiz-hook h2 em{font-style:italic;color:var(--go);}
+.quiz-hook p{font-size:.84rem;color:var(--dk2);line-height:1.7;margin-bottom:24px;}
+.quiz-benefits{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;text-align:left;}
+.qb{display:flex;align-items:flex-start;gap:10px;font-size:.83rem;color:var(--dk2);line-height:1.52;}
+.qb-ic{
+  width:20px;height:20px;min-width:20px;border-radius:6px;
+  background:linear-gradient(135deg,var(--sage-lt),var(--go));
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.qb-ic svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;}
+
+/* CTA button */
+.btn-cta{
+  position:relative;display:block;width:100%;
+  padding:17px 28px;overflow:hidden;
+  background:var(--dk);color:#FAF7F0;
+  font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;
+  border:none;border-radius:50px;cursor:none;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .4s,background .3s;
+  box-shadow:0 6px 28px rgba(13,12,10,.22);
+  will-change:transform;
+}
+.btn-cta::after{
+  content:'';position:absolute;inset:0;border-radius:50px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  transform:translateX(-100%);transition:transform .55s ease;pointer-events:none;
+}
+.btn-cta:hover::after{transform:translateX(100%);}
+.btn-cta:hover{background:var(--go);box-shadow:0 10px 40px rgba(184,144,79,.35);}
+.btn-cta:active{transform:scale(.97);}
+
+/* Progress */
+.qprog{display:none;padding:18px 28px 0;position:relative;z-index:3;}
+.qprog.on{display:block;}
+.prog-track{height:2px;background:var(--dk4);border-radius:2px;margin-bottom:7px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--sage-lt),var(--go));border-radius:2px;transition:width .6s cubic-bezier(.65,0,.35,1);}
+.prog-lbl{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dk3);text-align:right;}
+
+/* Steps */
+.qstep{display:none;padding:24px 28px 32px;position:relative;z-index:3;animation:step-in .4s cubic-bezier(.22,1,.36,1) both;}
+.qstep.on{display:block;}
+@keyframes step-in{from{opacity:0;transform:translateX(18px);}to{opacity:1;transform:none;}}
+.step-lbl{font-size:.57rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;}
+.step-q{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.3rem;font-weight:500;
+  color:var(--dk);line-height:1.28;margin-bottom:22px;letter-spacing:.01em;
+}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.field label{font-size:.62rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--dk3);}
+.field input,.field textarea{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:13px;padding:14px 17px;
+  font-family:'Inter',sans-serif;font-size:.87rem;font-weight:300;
+  color:var(--dk);outline:none;-webkit-appearance:none;
+  transition:border-color .3s,box-shadow .3s,transform .2s;
+}
+.field input:focus,.field textarea:focus{
+  border-color:var(--go);
+  box-shadow:0 0 0 3px rgba(184,144,79,.10);
+  transform:translateY(-1px);background:var(--card);
+}
+.field textarea{resize:none;height:88px;line-height:1.6;}
+.field input::placeholder,.field textarea::placeholder{color:var(--dk3);}
+
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.opt{
+  display:flex;align-items:flex-start;gap:13px;padding:14px 16px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:14px;cursor:none;
+  transition:border-color .25s,background .25s,transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
+  -webkit-tap-highlight-color:transparent;
+}
+.opt:hover{border-color:var(--border-go);transform:translateX(4px);background:var(--card);}
+.opt.sel{border-color:var(--go);background:var(--go2);transform:translateX(4px);box-shadow:0 2px 12px rgba(184,144,79,.12);}
+.opt-dot{
+  width:19px;height:19px;min-width:19px;border-radius:50%;
+  border:1.5px solid var(--dk3);margin-top:2px;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .25s,transform .3s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;
+}
+.opt.sel .opt-dot{border-color:var(--go);transform:scale(1.1);}
+.opt-dot::after{
+  content:'';width:8px;height:8px;border-radius:50%;background:var(--go);
+  opacity:0;transform:scale(0);transition:opacity .25s,transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.opt.sel .opt-dot::after{opacity:1;transform:scale(1);}
+.opt-txt{font-size:.83rem;font-weight:300;color:var(--dk2);line-height:1.52;}
+.opt.sel .opt-txt{color:var(--dk);}
+
+.step-nav{display:flex;gap:10px;}
+.btn-back{
+  width:44px;height:44px;background:var(--bg2);border:1px solid var(--border);
+  border-radius:50%;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .25s,transform .3s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;
+}
+.btn-back:hover{border-color:var(--dk3);transform:translateX(-3px);}
+.btn-back svg{width:15px;height:15px;stroke:var(--dk2);fill:none;stroke-width:2;}
+.btn-next{
+  flex:1;padding:14px 20px;background:var(--dk);color:#FAF7F0;
+  font-family:'Inter',sans-serif;font-size:.8rem;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;
+  border:none;border-radius:50px;cursor:none;
+  transition:opacity .25s,transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s,background .3s;
+  box-shadow:0 4px 20px rgba(13,12,10,.18);will-change:transform;
+}
+.btn-next:disabled{opacity:.3;cursor:not-allowed;box-shadow:none;}
+.btn-next:not(:disabled):hover{background:var(--go);transform:translateY(-2px);box-shadow:0 8px 32px rgba(184,144,79,.35);}
+
+/* Result */
+.qresult{display:none;padding:28px 28px 32px;position:relative;z-index:3;animation:step-in .5s cubic-bezier(.22,1,.36,1) both;}
+.qresult.on{display:block;}
+.res-ey{
+  display:flex;align-items:center;gap:9px;
+  font-size:.58rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--sage);margin-bottom:13px;
+}
+.res-ey::before{content:'';width:22px;height:1px;background:var(--sage);}
+.res-title{
+  font-family:'Cormorant Garamond',serif;font-size:1.38rem;font-weight:500;
+  color:var(--dk);line-height:1.22;margin-bottom:18px;letter-spacing:.01em;
+}
+.res-diag{
+  position:relative;background:var(--bg2);
+  border-left:2.5px solid var(--go);border-radius:0 13px 13px 0;
+  padding:17px 19px;font-size:.84rem;color:var(--dk2);line-height:1.7;margin-bottom:24px;
+}
+.res-diag::before{
+  content:'';position:absolute;top:0;left:-2.5px;width:2.5px;height:100%;
+  background:linear-gradient(var(--sage-lt),var(--go));
+}
+.res-slbl{
+  display:flex;align-items:center;gap:9px;
+  font-size:.58rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--go);margin-bottom:13px;
+}
+.res-slbl::after{content:'';flex:1;height:1px;background:var(--border-go);}
+.res-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.res-step{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:.84rem;color:var(--dk2);line-height:1.52;
+  animation:slide-in .4s ease both;
+}
+.res-step:nth-child(2){animation-delay:.09s;}
+.res-step:nth-child(3){animation-delay:.18s;}
+@keyframes slide-in{from{opacity:0;transform:translateX(-12px);}to{opacity:1;transform:none;}}
+.res-n{
+  min-width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sage-lt),var(--go));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.63rem;font-weight:600;color:#fff;flex-shrink:0;margin-top:1px;
+  box-shadow:0 2px 10px rgba(184,144,79,.28);
+}
+.res-clbl{font-size:.58rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--dk3);margin-bottom:11px;}
+.res-curso{
+  display:flex;align-items:center;gap:15px;
+  background:linear-gradient(135deg,var(--go2),var(--sage2));
+  border:1px solid var(--border-go);border-radius:17px;
+  padding:18px;margin-bottom:18px;
+  transition:border-color .3s,transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  text-decoration:none;
+}
+.res-curso:hover{border-color:var(--go);transform:translateY(-3px);box-shadow:var(--shadow-go);}
+.res-cicon{
+  width:46px;height:46px;border-radius:13px;
+  background:var(--go2);border:1px solid var(--border-go);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;
+}
+.res-cinfo{flex:1;}
+.res-cname{font-family:'Cormorant Garamond',serif;font-size:1.07rem;font-weight:500;color:var(--dk);margin-bottom:4px;}
+.res-cbadge{font-size:.58rem;font-weight:500;letter-spacing:.13em;text-transform:uppercase;color:var(--go);}
+.res-carrow{color:var(--go);font-size:1.1rem;transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
+.res-curso:hover .res-carrow{transform:translateX(5px);}
+.btn-wa-res{
+  display:block;width:100%;padding:14px;
+  background:transparent;border:1.5px solid var(--border);
+  border-radius:50px;font-size:.78rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dk3);
+  text-align:center;cursor:none;
+  transition:border-color .25s,color .25s,transform .3s cubic-bezier(.34,1.56,.64,1);text-decoration:none;
+}
+.btn-wa-res:hover{border-color:var(--go);color:var(--go);transform:translateY(-2px);}
+
+/* ══════════════════════════════════════════════════════
+   CAROUSEL
+══════════════════════════════════════════════════════ */
+.car-outer{overflow:hidden;padding:10px 0 24px;position:relative;}
+.car-outer::before,.car-outer::after{
+  content:'';position:absolute;top:0;bottom:0;width:70px;z-index:2;pointer-events:none;
+}
+.car-outer::before{left:0;background:linear-gradient(90deg,var(--bg),transparent);}
+.car-outer::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent);}
+.car-track{
+  display:flex;align-items:center;gap:14px;padding:14px 24px;
+  transition:transform .55s cubic-bezier(.65,0,.35,1);will-change:transform;
+}
+
+/* Card base */
+.cc{
+  flex-shrink:0;width:195px;height:244px;border-radius:20px;
+  background:var(--card2);border:1px solid var(--border);
+  overflow:hidden;position:relative;cursor:none;
+  transition:transform .5s cubic-bezier(.65,0,.35,1),border-color .35s,box-shadow .5s,opacity .5s;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  transform:scale(0.80) perspective(600px) rotateY(8deg);
+  opacity:.4;text-decoration:none;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.cc.act{
+  transform:scale(1) perspective(800px) rotateY(0deg);
+  opacity:1;border-color:rgba(184,144,79,.22);
+  box-shadow:0 20px 60px rgba(13,12,10,.12),0 0 0 1px rgba(184,144,79,.14);
+}
+.cc.adj{transform:scale(0.88) perspective(600px) rotateY(5deg);opacity:.65;}
+.cc.adj-l{transform:scale(0.88) perspective(600px) rotateY(-5deg);opacity:.65;}
+
+/* Card overlay — light */
+.cc::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to bottom,transparent 20%,rgba(248,244,236,.96) 100%);
+}
+/* Card shimmer on active */
+.cc.act::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at var(--mx,50%) var(--my,50%),rgba(255,255,255,.25) 0%,transparent 55%);
+  transition:background .15s;
+}
+.cc-bg{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4.5rem;background:var(--card2);
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+}
+.cc.act:hover .cc-bg{transform:scale(1.1) rotate(-3deg);}
+.cc-cnt{position:relative;z-index:2;padding:15px;}
+.cc-badge{
+  display:inline-block;font-size:.54rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;margin-bottom:9px;
+}
+.cc-badge.go{background:rgba(184,144,79,.1);color:var(--go);border:1px solid var(--border-go);}
+.cc-badge.gn{background:rgba(60,146,88,.08);color:var(--gn);border:1px solid rgba(60,146,88,.18);}
+.cc-badge.pr{background:rgba(148,103,189,.08);color:#8A5CB8;border:1px solid rgba(148,103,189,.18);}
+.cc-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-weight:500;color:var(--dk);
+  line-height:1.2;margin-bottom:6px;
+}
+.cc-desc{font-size:.7rem;color:var(--dk2);line-height:1.46;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.cc-arrow{
+  position:absolute;bottom:15px;right:15px;z-index:2;
+  width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sage-lt),var(--go));
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(0) rotate(-30deg);
+  transition:opacity .35s,transform .45s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 4px 14px rgba(184,144,79,.3);
+}
+.cc.act .cc-arrow{opacity:1;transform:scale(1) rotate(0deg);}
+.cc-arrow svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:2.5;}
+
+.car-ctrl{display:flex;align-items:center;justify-content:center;gap:18px;padding:0 24px;}
+.cbtn{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--card);border:1px solid var(--border);cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm);
+  transition:background .25s,border-color .25s,transform .35s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+}
+.cbtn:hover{background:var(--go2);border-color:var(--border-go);transform:scale(1.12);box-shadow:var(--shadow-go);}
+.cbtn svg{width:14px;height:14px;stroke:var(--dk2);fill:none;stroke-width:2;}
+.cdots{display:flex;gap:6px;align-items:center;}
+.cdot{
+  width:5px;height:5px;border-radius:50%;background:var(--dk4);cursor:none;
+  transition:width .35s cubic-bezier(.34,1.56,.64,1),background .3s,border-radius .35s;
+}
+.cdot.on{width:22px;border-radius:3px;background:var(--go);}
+
+/* ══════════════════════════════════════════════════════
+   NEWSLETTER
+══════════════════════════════════════════════════════ */
+.nl-wrap{margin:18px 16px 12px;}
+.nl-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;padding:32px 28px;text-align:center;
+  overflow:hidden;position:relative;
+  box-shadow:var(--shadow-md);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .4s;
+  transform-style:preserve-3d;will-change:transform;
+}
+.nl-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2.5px;
+  background:linear-gradient(90deg,var(--sage-lt),var(--go),#C6DABF);
+  background-size:200%;animation:border-flow 3s linear infinite;
+}
+.nl-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;z-index:2;
+  background:linear-gradient(90deg,var(--sage-lt),var(--go),#C6DABF);
+  background-size:200%;animation:border-flow 3s linear infinite;
+  pointer-events:none;
+}
+.nl-ico{font-size:2rem;margin-bottom:15px;display:block;}
+.nl-title{font-family:'Cormorant Garamond',serif;font-size:1.38rem;font-weight:500;color:var(--dk);margin-bottom:10px;}
+.nl-sub{font-size:.84rem;color:var(--dk2);line-height:1.68;margin-bottom:24px;}
+.nl-form{display:flex;flex-direction:column;gap:10px;}
+.nl-input{
+  background:var(--bg2);border:1px solid var(--border);border-radius:50px;
+  padding:14px 22px;font-family:'Inter',sans-serif;font-size:.87rem;
+  color:var(--dk);outline:none;-webkit-appearance:none;text-align:center;
+  transition:border-color .3s,box-shadow .3s,background .2s;
+}
+.nl-input:focus{border-color:var(--go);box-shadow:0 0 0 3px rgba(184,144,79,.1);background:var(--card);}
+.nl-input::placeholder{color:var(--dk3);}
+.nl-ok{display:none;font-size:.85rem;color:var(--gn);padding:12px;background:var(--gn2);border-radius:10px;margin-top:8px;animation:fade-up .4s ease both;border:1px solid rgba(60,146,88,.15);}
+
+/* ══════════════════════════════════════════════════════
+   SOCIAL
+══════════════════════════════════════════════════════ */
+.soc-wrap{padding:18px 16px 12px;}
+.soc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.slink{
+  display:flex;align-items:center;gap:13px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:17px;padding:15px 16px;cursor:none;
+  box-shadow:var(--shadow-sm);
+  transition:border-color .25s,transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  text-decoration:none;transform-style:preserve-3d;
+  position:relative;overflow:hidden;
+}
+.slink:hover{
+  border-color:var(--border-go);
+  transform:translateY(-4px) perspective(400px) rotateX(4deg);
+  box-shadow:0 14px 38px rgba(13,12,10,.12);
+}
+.sic{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.slink:hover .sic{transform:scale(1.15) rotate(-5deg);}
+.sic.ig{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);}
+.sic.yt{background:#FF0000;}
+.sic.sp{background:#1DB954;}
+.sic.em{background:var(--go2);border:1px solid var(--border-go);}
+.sin{flex:1;min-width:0;}
+.sn{font-size:.78rem;font-weight:500;color:var(--dk);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sh{font-size:.67rem;color:var(--dk3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ══════════════════════════════════════════════════════
+   WHATSAPP
+══════════════════════════════════════════════════════ */
+.wa-wrap{margin:12px 16px 12px;}
+.wa-card{
+  background:linear-gradient(135deg,#F0F8F2,#EAF5EE);
+  border:1px solid rgba(60,146,88,.15);
+  border-radius:24px;padding:32px 28px;text-align:center;
+  position:relative;overflow:hidden;
+  box-shadow:0 4px 24px rgba(60,146,88,.08);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .4s;
+  transform-style:preserve-3d;
+}
+.wa-card:hover{transform:translateY(-3px);box-shadow:0 18px 50px rgba(60,146,88,.14);}
+.wa-card::before{
+  content:'';position:absolute;
+  top:-70px;left:-70px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(60,146,88,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.wa-ic{
+  width:56px;height:56px;background:rgba(60,146,88,.12);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;font-size:1.9rem;
+  animation:halo-pulse 3s ease-in-out infinite;
+}
+.wa-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:500;color:var(--dk);margin-bottom:10px;}
+.wa-sub{font-size:.84rem;color:var(--dk2);margin-bottom:24px;line-height:1.68;}
+.btn-wa{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:17px 20px;background:#25D366;color:#0D0C0A;
+  font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;
+  border:none;border-radius:50px;cursor:none;text-decoration:none;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1),box-shadow .3s;
+  box-shadow:0 6px 24px rgba(37,211,102,.3);will-change:transform;
+}
+.btn-wa:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(37,211,102,.42);}
+.btn-wa svg{width:18px;height:18px;fill:#0D0C0A;}
+
+/* ══════════════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════════════ */
+footer{padding:32px 24px 52px;text-align:center;}
+.ft-logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;color:var(--go);letter-spacing:.07em;margin-bottom:12px;}
+.ft-div{width:44px;height:1px;background:linear-gradient(90deg,transparent,var(--border-go),transparent);margin:16px auto;}
+.ft-copy{font-size:.63rem;color:var(--dk3);letter-spacing:.09em;line-height:1.8;}
+
+/* ══════════════════════════════════════════════════════
+   MARQUEE TICKER
+══════════════════════════════════════════════════════ */
+.ticker-wrap{
+  overflow:hidden;background:var(--dk);
+  padding:10px 0;margin:8px 0;
+}
+.ticker{
+  display:flex;white-space:nowrap;
+  animation:ticker-scroll 22s linear infinite;
+}
+.ticker-item{
+  display:inline-flex;align-items:center;gap:16px;
+  font-size:.6rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--go);padding:0 32px;
+}
+.ticker-item::after{content:'✦';color:var(--sage-lt);}
+@keyframes ticker-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — tablet + desktop
+══════════════════════════════════════════════════════ */
+@media(min-width:680px){
+  .hero{padding:72px 40px 48px;}
+  .hero-name{font-size:2.7rem;}
+  .hero-bio{max-width:460px;}
+  .quiz-wrap{padding:0 24px;}
+  .quiz-hook{padding:40px 36px 32px;}
+  .qstep,.qresult{padding:28px 36px 36px;}
+  .sec-hdr{padding:60px 40px 28px;}
+  .nl-wrap{margin:20px 24px 14px;}
+  .soc-wrap{padding:20px 24px 14px;}
+  .wa-wrap{margin:14px 24px 14px;}
+  .soc-grid{grid-template-columns:1fr 1fr;}
+  .car-ctrl{padding:0 40px;}
+  footer{padding:36px 40px 60px;}
+}
+@media(min-width:900px){
+  .hero{padding:80px 48px 52px;}
+  .hero-name{font-size:3rem;}
+  .av-ring-outer{width:130px;height:130px;}
+  .av-img{width:118px;height:118px;}
+  .quiz-wrap{padding:0 32px;}
+  .nl-wrap{margin:22px 32px 16px;}
+  .wa-wrap{margin:16px 32px 16px;}
+  .soc-wrap{padding:22px 32px 16px;}
+}
+</style>
 </head>
 <body>
-<script>window.location.replace('../biolink.html');</script>
+
+<!-- Ambient blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Custom cursor -->
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<!-- Page curtain -->
+<div id="curtain"></div>
+
+
+<div class="page">
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="av-wrap">
+    <div class="av-halo"></div>
+    <div class="av-ring-outer">
+      <img src="assets/logo.jpg" alt="Nutri for Nutri" class="av-img" id="avImg"
+        onerror="this.style.display='none';document.getElementById('avFb').style.display='flex';"/>
+      <div id="avFb" style="display:none;position:relative;z-index:2;width:104px;height:104px;border-radius:50%;background:linear-gradient(135deg,#7A9870,#C7A16A);align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#fff;">N</div>
+    </div>
+    <div class="av-badge">
+      <svg viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#FAF7F0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <div class="hero-eyebrow">Nutricionista Infantil &bull; Terapia Alimentar</div>
+  <h1 class="hero-name" id="heroName">Priscila Leite</h1>
+  <p class="hero-bio">Especialista em seletividade alimentar e nutrição infantil. Formando nutricionistas para atender crianças com confiança, método e olhar clínico.</p>
+  <div class="hero-stats">
+    <div class="stat sr" data-d="1"><span class="stat-n" data-count="8" data-suffix="+">8+</span><span class="stat-l">Cursos</span></div>
+    <div class="stat sr" data-d="2"><span class="stat-n" data-count="2000" data-suffix="+" data-k="true">2k+</span><span class="stat-l">Nutricionistas</span></div>
+    <div class="stat sr" data-d="3"><span class="stat-n" data-count="10" data-suffix="+">10+</span><span class="stat-l">Anos</span></div>
+  </div>
+</section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker-wrap sr">
+  <div class="ticker">
+    <span class="ticker-item">Seletividade Alimentar</span>
+    <span class="ticker-item">Terapia Alimentar Infantil</span>
+    <span class="ticker-item">Método Escalada do Comer</span>
+    <span class="ticker-item">Nutrição Pediátrica</span>
+    <span class="ticker-item">TEA &amp; Neurodivergências</span>
+    <span class="ticker-item">Devolutiva Nutricional</span>
+    <span class="ticker-item">Seletividade Alimentar</span>
+    <span class="ticker-item">Terapia Alimentar Infantil</span>
+    <span class="ticker-item">Método Escalada do Comer</span>
+    <span class="ticker-item">Nutrição Pediátrica</span>
+    <span class="ticker-item">TEA &amp; Neurodivergências</span>
+    <span class="ticker-item">Devolutiva Nutricional</span>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quiz-section" class="quiz-wrap sr" data-d="1">
+  <div class="quiz-card" id="quizCard">
+    <div class="glare" id="cardGlare"></div>
+    <div id="qHook" class="quiz-hook">
+      <span class="hook-ey">Diagnóstico Gratuito</span>
+      <h2>Descubra o que está <em>travando</em> sua evolução clínica com crianças</h2>
+      <p>3 perguntas. 1 minuto. Um diagnóstico personalizado do seu momento profissional — com os passos exatos para você avançar agora.</p>
+      <div class="quiz-benefits">
+        <div class="qb"><div class="qb-ic"><svg viewBox="0 0 10 10"><path d="M1.5 5.5l2.5 2.5 4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Identificação do seu gargalo clínico atual</div>
+        <div class="qb"><div class="qb-ic"><svg viewBox="0 0 10 10"><path d="M1.5 5.5l2.5 2.5 4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>3 próximos passos específicos para o seu momento</div>
+        <div class="qb"><div class="qb-ic"><svg viewBox="0 0 10 10"><path d="M1.5 5.5l2.5 2.5 4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Recomendação personalizada do caminho mais curto até o resultado</div>
+      </div>
+      <button class="btn-cta" id="startBtn" onclick="startQ()">Fazer meu diagnóstico gratuito</button>
+    </div>
+    <div id="qProg" class="qprog">
+      <div class="prog-track"><div class="prog-fill" id="pFill" style="width:0%"></div></div>
+      <div class="prog-lbl" id="pLbl">Passo 1 de 4</div>
+    </div>
+    <div id="s1" class="qstep">
+      <div class="step-lbl">Passo 1 de 4 — Identificação</div>
+      <div class="step-q">Antes do diagnóstico, me conta quem é você</div>
+      <div class="field"><label>Nome completo</label><input type="text" id="fN" placeholder="Seu nome" autocomplete="name"/></div>
+      <div class="field"><label>E-mail profissional</label><input type="email" id="fE" placeholder="nutricionista@email.com" autocomplete="email"/></div>
+      <div class="field"><label>WhatsApp</label><input type="tel" id="fT" placeholder="(00) 00000-0000" autocomplete="tel"/></div>
+      <div class="step-nav"><button class="btn-next" onclick="go(2)">Continuar →</button></div>
+    </div>
+    <div id="s2" class="qstep">
+      <div class="step-lbl">Passo 2 de 4 — Momento atual</div>
+      <div class="step-q">Como você descreveria seu momento com nutrição infantil hoje?</div>
+      <div class="opts">
+        <div class="opt" data-s="2" data-v="comecar" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Ainda não atendo crianças, mas quero começar com segurança e com um método claro</div></div>
+        <div class="opt" data-s="2" data-v="atendo-trava" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Já atendo, mas topo com inseguranças e não sei sempre o que fazer no próximo passo</div></div>
+        <div class="opt" data-s="2" data-v="aprofundar" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Atendo com segurança e quero me aprofundar para me tornar referência na minha região</div></div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="go(1)"><svg viewBox="0 0 16 16"><path d="M10 12L6 8l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn-next" id="n2" onclick="go(3)" disabled>Continuar →</button>
+      </div>
+    </div>
+    <div id="s3" class="qstep">
+      <div class="step-lbl">Passo 3 de 4 — Seu maior gargalo</div>
+      <div class="step-q">Onde você sente que trava mais no atendimento de crianças?</div>
+      <div class="opts">
+        <div class="opt" data-s="3" data-v="proximo-passo" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Não sei qual é o próximo passo — falta de protocolo me deixa insegura durante as sessões</div></div>
+        <div class="opt" data-s="3" data-v="suplementacao" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Insegurança com suplementação — tenho medo de errar na prescrição</div></div>
+        <div class="opt" data-s="3" data-v="devolutiva" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Trava na devolutiva — não sei conduzir e orientar os pais com clareza e confiança</div></div>
+        <div class="opt" data-s="3" data-v="neurodivergentes" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Casos de seletividade severa e crianças neurodivergentes me assustam</div></div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="go(2)"><svg viewBox="0 0 16 16"><path d="M10 12L6 8l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn-next" id="n3" onclick="go(4)" disabled>Continuar →</button>
+      </div>
+    </div>
+    <div id="s4" class="qstep">
+      <div class="step-lbl">Passo 4 de 4 — Seu objetivo</div>
+      <div class="step-q">O que você quer conquistar nos próximos 3 meses?</div>
+      <div class="opts">
+        <div class="opt" data-s="4" data-v="comecar-atender" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Começar a atender crianças com um método estruturado e seguro</div></div>
+        <div class="opt" data-s="4" data-v="aumentar-carteira" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Aumentar minha carteira de pacientes infantis com confiança</div></div>
+        <div class="opt" data-s="4" data-v="dominar-seletividade" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Dominar casos de seletividade alimentar e terapia alimentar</div></div>
+        <div class="opt" data-s="4" data-v="ser-referencia" onclick="pick(this)"><div class="opt-dot"></div><div class="opt-txt">Me tornar referência em nutrição infantil na minha cidade</div></div>
+      </div>
+      <div class="field" style="margin-top:4px;"><label>Me conta um pouco mais (opcional)</label><textarea id="fTx" placeholder="Sua situação atual, suas dúvidas, o que mais te preocupa..."></textarea></div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="go(3)"><svg viewBox="0 0 16 16"><path d="M10 12L6 8l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="btn-next" id="n4" onclick="finish()" disabled>Ver meu diagnóstico →</button>
+      </div>
+    </div>
+    <div id="qRes" class="qresult">
+      <div class="res-ey">Seu diagnóstico personalizado</div>
+      <div class="res-title" id="rT"></div>
+      <div class="res-diag" id="rD"></div>
+      <div class="res-slbl">Seus próximos passos</div>
+      <div class="res-steps" id="rS"></div>
+      <div class="res-clbl">Recomendação para você</div>
+      <a href="cursos.html" class="res-curso" id="rC">
+        <div class="res-cicon" id="rI"></div>
+        <div class="res-cinfo"><div class="res-cname" id="rN"></div><div class="res-cbadge" id="rB"></div></div>
+        <div class="res-carrow">→</div>
+      </a>
+      <a href="https://wa.me/5524992476272?text=Olá+Priscila!+Fiz+o+diagnóstico+no+seu+site+e+quero+conversar+sobre+meu+perfil." class="btn-wa-res" target="_blank">Falar com a Priscila sobre meu diagnóstico</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAROUSEL ═══ -->
+<section>
+  <div class="sec-hdr sr">
+    <div class="sec-ey">Formação Profissional</div>
+    <div class="sec-title">Cursos &amp; Programas</div>
+    <div class="sec-sub">Do primeiro passo à especialização completa em nutrição infantil</div>
+  </div>
+  <div class="car-outer" id="carO">
+    <div class="car-track" id="carT"></div>
+  </div>
+  <div class="car-ctrl sr">
+    <button class="cbtn" id="cPrev"><svg viewBox="0 0 14 14"><path d="M9 11L5 7l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="cdots" id="cDts"></div>
+    <button class="cbtn" id="cNext"><svg viewBox="0 0 14 14"><path d="M5 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER ═══ -->
+<div class="nl-wrap sr">
+  <div class="nl-card" id="nlCard">
+    <div class="glare" id="nlGlare"></div>
+    <span class="nl-ico">📩</span>
+    <div class="nl-title">Conteúdo clínico toda semana</div>
+    <div class="nl-sub">Casos práticos, protocolos e insights sobre nutrição infantil direto no seu e-mail — sem enrolação.</div>
+    <form class="nl-form" onsubmit="doNl(event)">
+      <input type="email" class="nl-input" id="nlE" placeholder="Seu melhor e-mail" required/>
+      <button type="submit" class="btn-cta">Quero receber</button>
+    </form>
+    <div class="nl-ok" id="nlOk">✓ Cadastro confirmado! Até a próxima semana.</div>
+  </div>
+</div>
+
+<!-- ═══ SOCIAL ═══ -->
+<div class="soc-wrap sr">
+  <div class="soc-grid">
+    <a href="https://www.instagram.com/nutrifornutri" target="_blank" class="slink" style="animation-delay:.05s">
+      <div class="sic ig"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="white" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="white" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="white"/></svg></div>
+      <div class="sin"><div class="sn">Instagram</div><div class="sh">@nutrifornutri</div></div>
+    </a>
+    <a href="https://www.youtube.com/@nutrifornutri" target="_blank" class="slink" style="animation-delay:.12s">
+      <div class="sic yt"><svg width="17" height="17" viewBox="0 0 24 24"><path d="M22.5 6.5a2.8 2.8 0 00-2-2C19 4 12 4 12 4s-7 0-8.5.5a2.8 2.8 0 00-2 2C1 8 1 12 1 12s0 4 .5 5.5a2.8 2.8 0 002 2C5 20 12 20 12 20s7 0 8.5-.5a2.8 2.8 0 002-2C23 16 23 12 23 12s0-4-.5-5.5z" fill="white"/><polygon points="10,15 15.5,12 10,9" fill="#FF0000"/></svg></div>
+      <div class="sin"><div class="sn">YouTube</div><div class="sh">Nutri for Nutri</div></div>
+    </a>
+    <a href="https://open.spotify.com" target="_blank" class="slink" style="animation-delay:.19s">
+      <div class="sic sp"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="1.5"/><path d="M7 15c2.5-1 5.5-1.2 9 .5" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M6.5 12c3-1.2 6.5-1.4 10.5.6" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M7 9c3.5-1.4 7.5-1.5 11 .5" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      <div class="sin"><div class="sn">Podcast</div><div class="sh">Spotify</div></div>
+    </a>
+    <a href="mailto:contato@nutrifornutri.com.br" class="slink" style="animation-delay:.26s">
+      <div class="sic em"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B8904F" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6" stroke-linecap="round"/></svg></div>
+      <div class="sin"><div class="sn">E-mail</div><div class="sh">Fale conosco</div></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══ WHATSAPP ═══ -->
+<div class="wa-wrap sr">
+  <div class="wa-card">
+    <div class="wa-ic">💬</div>
+    <div class="wa-title">Fale direto com a Priscila</div>
+    <div class="wa-sub">Tire suas dúvidas, conheça os programas disponíveis ou descubra qual é o melhor caminho para você agora.</div>
+    <a href="https://wa.me/5524992476272?text=Olá+Priscila!+Vim+pelo+seu+biolink+e+quero+saber+mais+sobre+seus+cursos." class="btn-wa" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1-.2.2-.3.2-.6.1-1.6-.8-2.7-1.4-3.8-3.2-.3-.5.3-.5.8-1.5.1-.2.1-.4 0-.5-.1-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3z"/><path d="M20.5 3.5A11.9 11.9 0 0012 0a12 12 0 00-10.4 18L0 24l6.3-1.6A12 12 0 0020.5 3.5zM12 22a9.9 9.9 0 01-5.1-1.4l-.4-.2-3.7 1 1-3.7-.2-.4A9.9 9.9 0 112 12 9.9 9.9 0 0112 22z"/></svg>
+      Abrir WhatsApp
+    </a>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="sr">
+  <div class="ft-logo">Nutri for Nutri</div>
+  <div class="ft-div"></div>
+  <div class="ft-copy">© 2025 Priscila Leite — Nutricionista Infantil<br/>Todos os direitos reservados</div>
+</footer>
+
+</div><!-- /.page -->
+
+<script>
+// ─── CURSOR ──────────────────────────────────────────────
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=window.innerWidth/2,my=window.innerHeight/2,cx=mx,cy=my;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cx+=(mx-cx)*.14;cy+=(my-cy)*.14;cur2.style.left=cx+'px';cur2.style.top=cy+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.opt,.stat,.slink,.cbtn,.cdot,.cc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+// ─── HERO NAME CHAR ANIM ─────────────────────────────────
+function animName(){
+  const el=document.getElementById('heroName');
+  const txt=el.textContent;
+  el.innerHTML='';
+  [...txt].forEach((c,i)=>{
+    const s=document.createElement('span');
+    s.className='char';s.textContent=c===' '?' ':c;
+    s.style.animationDelay=(0.9+i*.052)+'s';
+    el.appendChild(s);
+  });
+}
+
+// ─── 3D TILT + GLARE ─────────────────────────────────────
+function initTilt(card,glare){
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width;
+    const y=(e.clientY-r.top)/r.height;
+    const rx=(y-.5)*-18;
+    const ry=(x-.5)*18;
+    card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+    card.style.boxShadow=`${-ry*.8}px ${rx*.8}px 48px rgba(13,12,10,.16),0 0 0 1px rgba(184,144,79,.18)`;
+    if(glare){
+      glare.style.background=`radial-gradient(circle at ${x*100}% ${y*100}%,rgba(255,255,255,.28) 0%,rgba(255,255,255,.06) 40%,transparent 60%)`;
+    }
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+    card.style.boxShadow='';
+    if(glare)glare.style.background='';
+  });
+}
+// Init tilt on quiz and newsletter cards
+initTilt(document.getElementById('quizCard'),document.getElementById('cardGlare'));
+initTilt(document.getElementById('nlCard'),document.getElementById('nlGlare'));
+
+// ─── MAGNETIC BUTTONS ─────────────────────────────────────
+function initMag(btn){
+  btn.addEventListener('mousemove',e=>{
+    const r=btn.getBoundingClientRect();
+    const x=e.clientX-r.left-r.width/2;
+    const y=e.clientY-r.top-r.height/2;
+    btn.style.transform=`translate(${x*.14}px,${y*.14}px)`;
+  });
+  btn.addEventListener('mouseleave',()=>{btn.style.transform='';});
+}
+document.querySelectorAll('.btn-cta,.btn-next,.btn-wa').forEach(initMag);
+// Re-init after quiz interactions
+setTimeout(()=>document.querySelectorAll('.btn-cta,.btn-next,.btn-wa').forEach(initMag),2000);
+
+// ─── RIPPLE ON CLICK ─────────────────────────────────────
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('.btn-cta,.btn-next,.cbtn');
+  if(!btn)return;
+  const r=document.createElement('span');
+  const rect=btn.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height)*2;
+  r.style.cssText=`position:absolute;border-radius:50%;background:rgba(255,255,255,.25);width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;transform:scale(0);animation:ripple .55s ease-out forwards;pointer-events:none;z-index:10;`;
+  const style=document.createElement('style');
+  style.textContent='@keyframes ripple{to{transform:scale(1);opacity:0;}}';
+  document.head.appendChild(style);
+  btn.style.position='relative';btn.style.overflow='hidden';
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(),600);
+});
+
+// ─── WEBHOOK ─────────────────────────────────────────────
+const WH='https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
+function post(d){fetch(WH,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});}
+
+// ─── PROFILES ────────────────────────────────────────────
+const PROF={
+  comecar:{title:'Pronta para o primeiro passo — falta estrutura de método',diag:'Você tem a formação, mas ainda não encontrou o caminho seguro para entrar na nutrição infantil com confiança. O problema não é falta de vontade — é falta de um método claro que te dê segurança para agir.',steps:['Aprenda a Escalada do Comer — o método que organiza como conduzir cada sessão do zero','Domine a anamnese infantil completa: o que perguntar, o que observar e o que registrar','Entre em uma comunidade de nutricionistas que já passaram pelo mesmo momento e avançaram'],curso:'Comunidade Nutri For Nutri',icon:'🌿',badge:'Grátis — Comece aqui'},
+  'atendo-trava':{title:'Você está no meio do caminho — aqui é onde a virada acontece',diag:'Você já atende, mas cada caso novo vira uma fonte de ansiedade. Sem um protocolo claro, você improvisa — e o medo de errar começa a limitar os pacientes que você aceita. Isso não é falta de capacidade. É falta de método.',steps:['Aprenda a mapear os fatores que impactam a seletividade alimentar antes de qualquer intervenção','Estruture seu plano terapêutico individualizado com base na Escalada do Comer','Desenvolva um raciocínio clínico que te dê segurança mesmo nos casos mais complexos'],curso:'Seletividade Alimentar',icon:'🧩',badge:'Especialização'},
+  suplementacao:{title:'A suplementação está sendo seu maior gargalo clínico',diag:'Medo de prescrever errado faz você ser mais conservadora do que precisa ser. Seus pacientes sentem essa insegurança — e isso impacta diretamente nos resultados.',steps:['Aprenda a interpretar exames laboratoriais específicos da clínica infantil','Entenda indicações e contraindicações de suplementação em crianças e neurodivergentes','Crie protocolos de prescrição seguros que te deem confiança para indicar quando necessário'],curso:'Terapia Alimentar Infantil',icon:'🍽️',badge:'Formação Completa'},
+  devolutiva:{title:'Você atende bem — mas trava na hora de comunicar',diag:'Orientar os pais com clareza e assertividade é uma habilidade clínica tão importante quanto a intervenção em si. Quando a família não entende o processo, o tratamento perde força.',steps:['Aprenda a estruturar devolutivas claras que gerem adesão real da família','Desenvolva linguagem acessível para explicar conceitos técnicos sem perder autoridade','Aprenda a conduzir reuniões familiares com segurança mesmo sob pressão e cobrança'],curso:'Devolutiva Nutricional',icon:'💬',badge:'Formação'},
+  neurodivergentes:{title:'Casos complexos precisam de método — não de improviso',diag:'Atender crianças neurodivergentes sem protocolo é como navegar sem mapa. O impacto sensorial, o comportamento alimentar e as particularidades do TEA exigem um olhar clínico específico.',steps:['Entenda como o processamento sensorial impacta a alimentação em crianças neurodivergentes','Aplique a Escalada do Comer adaptada para casos com transtorno do espectro autista','Desenvolva abordagem multiprofissional: como integrar fono, T.O e psicólogos no tratamento'],curso:'Terapia Alimentar Infantil',icon:'🍽️',badge:'Especialização'},
+  aprofundar:{title:'Você já tem a prática — agora é hora de ser referência',diag:'Você atende com segurança, mas ainda não se posicionou como especialista na sua região. Nutricionistas nesse estágio, com o direcionamento certo, triplicam a carteira e passam a receber indicações de pediatras.',steps:['Aprofunde seu olhar clínico em casos complexos: seletividade severa, TEA e comorbidades','Desenvolva autoridade profissional — como se tornar referência para outros especialistas','Estruture seu atendimento para crescimento: mais indicações, reconhecimento e valor de consulta'],curso:'Mentoria Nutri For Nutri',icon:'⭐',badge:'Premium'}
+};
+function getProf(p1,p2){
+  if(p1==='comecar')return PROF.comecar;
+  if(p1==='aprofundar')return PROF.aprofundar;
+  if(p2==='suplementacao')return PROF.suplementacao;
+  if(p2==='devolutiva')return PROF.devolutiva;
+  if(p2==='neurodivergentes')return PROF.neurodivergentes;
+  return PROF['atendo-trava'];
+}
+
+// ─── QUIZ ────────────────────────────────────────────────
+const A={p1:'',p2:'',p3:''};
+function startQ(){document.getElementById('qHook').style.display='none';document.getElementById('qProg').classList.add('on');go(1);}
+function go(n){
+  [1,2,3,4].forEach(i=>document.getElementById('s'+i).classList.remove('on'));
+  document.getElementById('qRes').classList.remove('on');
+  if(n>=1&&n<=4){
+    document.getElementById('s'+n).classList.add('on');
+    document.getElementById('pFill').style.width=((n-1)/4*100)+'%';
+    document.getElementById('pLbl').textContent='Passo '+n+' de 4';
+    // re-init mag buttons after step change
+    setTimeout(()=>document.querySelectorAll('.btn-next,.btn-back').forEach(initMag),50);
+  }
+}
+function pick(el){
+  const s=el.dataset.s;
+  document.querySelectorAll('[data-s="'+s+'"]').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  const v=el.dataset.v;
+  if(s==='2'){A.p1=v;document.getElementById('n2').disabled=false;}
+  if(s==='3'){A.p2=v;document.getElementById('n3').disabled=false;}
+  if(s==='4'){A.p3=v;document.getElementById('n4').disabled=false;}
+}
+function finish(){
+  const nome=document.getElementById('fN').value.trim();
+  const email=document.getElementById('fE').value.trim();
+  const tel=document.getElementById('fT').value.trim();
+  const texto=document.getElementById('fTx').value.trim();
+  const pr=getProf(A.p1,A.p2);
+  post({nome,email,telefone:tel,tag:'quiz',pergunta1:A.p1,pergunta2:A.p2,pergunta3:A.p3,textoLivre:texto,cursoSugerido:pr.curso});
+  document.getElementById('s4').classList.remove('on');
+  document.getElementById('pFill').style.width='100%';
+  document.getElementById('pLbl').textContent='Diagnóstico pronto ✦';
+  document.getElementById('qRes').classList.add('on');
+  document.getElementById('rT').textContent=pr.title;
+  document.getElementById('rD').textContent=pr.diag;
+  const sl=document.getElementById('rS');sl.innerHTML='';
+  pr.steps.forEach((s,i)=>{sl.innerHTML+=`<div class="res-step"><div class="res-n">${i+1}</div><div>${s}</div></div>`;});
+  document.getElementById('rI').textContent=pr.icon;
+  document.getElementById('rN').textContent=pr.curso;
+  document.getElementById('rB').textContent=pr.badge;
+  if(typeof fbq!=='undefined')fbq('track','Lead',{content_name:'quiz_diagnostico',content_category:A.p1});
+  if(typeof gtag!=='undefined')gtag('event','quiz_completo',{perfil:A.p1,gargalo:A.p2});
+}
+
+// ─── NEWSLETTER ──────────────────────────────────────────
+function doNl(e){
+  e.preventDefault();
+  const email=document.getElementById('nlE').value.trim();
+  if(!email)return;
+  post({email,tag:'newsletter',nome:'',telefone:'',pergunta1:'',pergunta2:'',pergunta3:'',textoLivre:'',cursoSugerido:''});
+  document.getElementById('nlE').style.display='none';
+  e.target.querySelector('.btn-cta').style.display='none';
+  document.getElementById('nlOk').style.display='block';
+  if(typeof fbq!=='undefined')fbq('track','Lead',{content_name:'newsletter'});
+}
+
+// ─── CAROUSEL ────────────────────────────────────────────
+const CARDS=[
+  {t:'Comunidade Nutri For Nutri',e:'🌿',b:'Grátis',bc:'gn',d:'Conexão, troca e suporte com nutricionistas especializadas em pediatria'},
+  {t:'Workshop Prático',e:'⚡',b:'Evento',bc:'go',d:'Vivência clínica intensiva para acelerar seu desenvolvimento profissional'},
+  {t:'Terapia Alimentar Infantil',e:'🍽️',b:'Formação',bc:'go',d:'Método completo para conduzir terapia alimentar em crianças com segurança'},
+  {t:'Seletividade Alimentar',e:'🧩',b:'Especialização',bc:'go',d:'Protocolo clínico para casos de seletividade severa e neurodivergências'},
+  {t:'Introdução Alimentar',e:'👶',b:'Especialização',bc:'gn',d:'Base sólida para conduzir a introdução alimentar com confiança'},
+  {t:'Devolutiva Nutricional',e:'💬',b:'Formação',bc:'go',d:'Aprenda a comunicar resultados com clareza e gerar adesão das famílias'},
+  {t:'Educação Alimentar Lúdica',e:'🎨',b:'Formação',bc:'gn',d:'Ferramentas lúdicas para tornar o atendimento mais efetivo e envolvente'},
+  {t:'Mentoria Nutri For Nutri',e:'⭐',b:'Premium',bc:'pr',d:'Acompanhamento individual para nutricionistas prontas para ser referência'},
+];
+let ci=0,cauto=null;
+
+function buildCar(){
+  const tr=document.getElementById('carT'),dt=document.getElementById('cDts');
+  tr.innerHTML='';dt.innerHTML='';
+  CARDS.forEach((c,i)=>{
+    const el=document.createElement('a');
+    el.href='cursos.html';
+    el.className='cc'+(i===0?' act':i===1?' adj adj-r':'');
+    el.innerHTML=`<div class="cc-bg">${c.e}</div><div class="cc-cnt"><span class="cc-badge ${c.bc}">${c.b}</span><div class="cc-title">${c.t}</div><div class="cc-desc">${c.d}</div></div><div class="cc-arrow"><svg viewBox="0 0 12 12"><path d="M3 9l4-4-4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+    // 3D tilt on active card
+    el.addEventListener('mousemove',function(ev){
+      if(!this.classList.contains('act'))return;
+      const r=this.getBoundingClientRect();
+      const x=(ev.clientX-r.left)/r.width;
+      const y=(ev.clientY-r.top)/r.height;
+      const rx=(y-.5)*-20;
+      const ry=(x-.5)*20;
+      this.style.transform=`scale(1.04) perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      this.style.setProperty('--mx',x*100+'%');
+      this.style.setProperty('--my',y*100+'%');
+      this.style.boxShadow=`${-ry}px ${-rx*.5}px 60px rgba(13,12,10,.18),0 0 0 1.5px rgba(184,144,79,.25)`;
+    });
+    el.addEventListener('mouseleave',function(){
+      if(!this.classList.contains('act'))return;
+      this.style.transform='scale(1) perspective(800px) rotateY(0deg)';
+      this.style.boxShadow='';
+    });
+    tr.appendChild(el);
+    const d=document.createElement('div');
+    d.className='cdot'+(i===0?' on':'');d.onclick=()=>setC(i);dt.appendChild(d);
+  });
+  updCar();
+  cauto=setInterval(()=>setC(ci+1),4000);
+}
+function setC(n){
+  ci=(n+CARDS.length)%CARDS.length;
+  updCar();clearInterval(cauto);cauto=setInterval(()=>setC(ci+1),4000);
+}
+function updCar(){
+  const cards=document.querySelectorAll('.cc'),dots=document.querySelectorAll('.cdot');
+  cards.forEach((c,i)=>{
+    c.classList.remove('act','adj','adj-l','adj-r');
+    const d=Math.min(Math.abs(i-ci),Math.abs(i-ci+CARDS.length),Math.abs(i-ci-CARDS.length));
+    if(d===0)c.classList.add('act');
+    else if(d===1){
+      c.classList.add('adj');
+      if(((i-ci+CARDS.length)%CARDS.length)===1)c.classList.add('adj-r');
+      else c.classList.add('adj-l');
+    }
+  });
+  dots.forEach((d,i)=>d.classList.toggle('on',i===ci));
+  const ow=document.getElementById('carO').offsetWidth;
+  document.getElementById('carT').style.transform='translateX('+((ow/2)-(ci*(195+14))-(195/2)-24)+'px)';
+}
+document.getElementById('cNext').onclick=()=>setC(ci+1);
+document.getElementById('cPrev').onclick=()=>setC(ci-1);
+let ds=0;
+document.getElementById('carO').addEventListener('touchstart',e=>{ds=e.touches[0].clientX;},{passive:true});
+document.getElementById('carO').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-ds;if(Math.abs(dx)>40)setC(ci+(dx<0?1:-1));});
+
+// ─── SCROLL REVEAL ───────────────────────────────────────
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      // count-up for stats
+      e.target.querySelectorAll('.stat-n[data-count]').forEach(el=>{
+        const target=parseInt(el.dataset.count);
+        const suffix=el.dataset.suffix||'';
+        const isK=el.dataset.k==='true';
+        countUp(el,target,suffix,isK);
+      });
+    }
+  });
+},{threshold:.07});
+document.querySelectorAll('.sr').forEach(el=>io.observe(el));
+
+// Count-up animation
+function countUp(el,target,suffix,isK){
+  const dur=1400;let start=null;
+  function step(ts){
+    if(!start)start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    const ease=1-Math.pow(1-p,4);
+    const val=Math.floor(ease*target);
+    el.textContent=isK&&val>=1000?(val/1000).toFixed(1).replace('.0','')+'k'+suffix:val+suffix;
+    if(p<1)requestAnimationFrame(step);
+    else el.textContent=isK&&target>=1000?(target/1000).toFixed(1).replace('.0','')+'k'+suffix:target+suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+
+// ─── PARALLAX HERO ───────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY;
+  const av=document.querySelector('.av-wrap');
+  const name=document.getElementById('heroName');
+  if(av)av.style.transform=`translateY(${sy*.18}px)`;
+  if(name)name.style.transform=`translateY(${sy*.08}px)`;
+},{passive:true});
+
+// ─── INIT ────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  animName();
+  setTimeout(()=>document.getElementById('curtain').classList.add('gone'),180);
+  buildCar();
+  window.addEventListener('resize',updCar);
+  // observe stats immediately if in view
+  document.querySelectorAll('.stat-n[data-count]').forEach(el=>{
+    io.observe(el.closest('.sr')||el);
+  });
+});
+</script>
 </body>
 </html>
