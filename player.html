@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <!-- Google tag (gtag.js) -->
@@ -196,6 +196,14 @@ a{text-decoration:none;color:inherit;}
 #lesson-body ul{padding-left:20px;margin-bottom:14px;}
 #lesson-body li{margin-bottom:6px;}
 
+/* DRIP LOCK */
+.module-hd.locked{opacity:.5;cursor:default;}
+.module-hd.locked:hover{background:transparent;}
+.lesson-item.locked{opacity:.38;cursor:default;pointer-events:none;}
+.lesson-item.locked:hover{background:transparent;}
+.drip-tag{font-size:9px;color:var(--go);white-space:nowrap;background:rgba(201,162,87,.1);border:1px solid rgba(201,162,87,.28);padding:3px 8px;border-radius:10px;flex-shrink:0;}
+.lesson-lock{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(13,12,10,.12);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:rgba(13,12,10,.28);}
+
 /* NAV BUTTONS */
 .lesson-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid rgba(13,12,10,.08);}
 .nav-btn{
@@ -292,8 +300,9 @@ a{text-decoration:none;color:inherit;}
 
 <script>
 /* ─── TRACKING DE ACESSO → PLANILHA ─── */
+var WS_VERIFY_URL = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
 (function(){
-  var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec'; // mesma URL do cursos.html
+  var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec';
   if(WS_URL === 'COLE_SUA_URL_AQUI') return;
   try {
     var slug  = (location.search.match(/[?&]c=([^&]+)/)||[])[1]||'';
@@ -411,6 +420,21 @@ var COURSES = {
         { name: 'Exposição gradual e dessensibilização', dur: '30min', body: '<p>O protocolo completo de exposição gradual para crianças seletivas, passo a passo, com exemplos práticos e adaptações para diferentes perfis.</p>' },
         { name: 'Manejo comportamental no consultório', dur: '26min', body: '<p>Técnicas de manejo comportamental durante as sessões, como lidar com resistência, como usar reforços positivos e como estruturar a sessão para maximizar a adesão da criança.</p>' },
         { name: 'Documentação e monitoramento', dur: '14min', body: '<p>Como documentar o progresso de forma sistemática, monitorar a evolução e adaptar o plano conforme necessário.</p>' }
+      ]},
+      { title: 'Módulo 4 — Casos Clínicos Reais', drip: 7, lessons: [
+        { name: 'Caso 1 — Seletividade severa em pré-escolar', dur: '38min', body: '<p>Análise detalhada de um caso real de seletividade severa em uma criança de 3 anos, desde a avaliação inicial até a alta, incluindo os desafios de manejo familiar e as estratégias que funcionaram.</p><ul><li>Apresentação do caso e histórico alimentar</li><li>Avaliação sensorial e diagnóstico</li><li>Plano de intervenção estruturado</li><li>Evolução sessão a sessão</li><li>Desfecho clínico e alta</li></ul>' },
+        { name: 'Caso 2 — Seletividade por hipersensibilidade sensorial', dur: '32min', body: '<p>Caso de uma criança com hipersensibilidade tátil e gustativa intensa, sem diagnóstico formal de TEA ou TDAH, mas com um perfil sensorial atípico que impactava severamente a alimentação.</p><p>Aprenda como adaptar as estratégias de exposição para perfis sensoriais extremos e como trabalhar a co-regulação familiar.</p>' },
+        { name: 'Caso 3 — Recusa pós-episódio traumático', dur: '28min', body: '<p>Como conduzir um caso de recusa alimentar severa desencadeada por um engasgo traumático em uma criança de 5 anos. O trabalho envolveu dessensibilização da ansiedade antecipatória e reconstrução progressiva da relação com os alimentos.</p>' }
+      ]},
+      { title: 'Módulo 5 — TEA, TDAH e Seletividade', drip: 7, lessons: [
+        { name: 'Seletividade no TEA — especificidades clínicas', dur: '35min', body: '<p>Crianças com TEA apresentam padrões de seletividade com características únicas: a rigidez é maior, a janela de tolerância é mais estreita e o processo de dessensibilização exige adaptações específicas.</p><p>Nesta aula você aprende a modificar o protocolo de intervenção para o perfil do TEA, respeitando as necessidades sensoriais e comunicativas de cada criança.</p><ul><li>Por que a seletividade no TEA é diferente</li><li>Adaptações no protocolo de exposição gradual</li><li>O papel do suporte visual e de rotinas</li><li>Trabalho com a família e equipe interdisciplinar</li></ul>' },
+        { name: 'TDAH e a relação com o alimento', dur: '24min', body: '<p>A criança com TDAH tem uma relação com o alimento moldada pela impulsividade, pelo desinteresse por textura/aparência e pelo impacto da medicação no apetite. Entenda como esses fatores se cruzam com a seletividade e como adaptar a conduta.</p>' },
+        { name: 'Adaptações clínicas para crianças neuroatípicas', dur: '28min', body: '<p>Um guia prático de adaptações que você pode fazer no ambiente, na linguagem, na estrutura das sessões e nas orientações para a família quando atende crianças neuroatípicas com seletividade alimentar.</p>' }
+      ]},
+      { title: 'Módulo 6 — Alta e Pós-Tratamento', drip: 7, lessons: [
+        { name: 'Critérios de alta — quando e como', dur: '20min', body: '<p>Como definir com clareza os critérios de alta para casos de seletividade alimentar. Quais indicadores sinalizam que a criança atingiu um nível de funcionamento alimentar sustentável — e como conduzir este momento com a família.</p>' },
+        { name: 'Prevenção de recaída e manejo doméstico', dur: '18min', body: '<p>Estratégias para consolidar os ganhos do tratamento no ambiente doméstico e orientar a família sobre como manter a evolução após a alta. O que fazer (e o que evitar) nos meses seguintes.</p>' },
+        { name: 'Encerramento e acompanhamento pós-alta', dur: '16min', body: '<p>Como estruturar o encerramento do processo terapêutico de forma clínica e emocionalmente cuidadosa, e como organizar o acompanhamento pós-alta para consolidar os resultados a longo prazo.</p>' }
       ]}
     ]
   },
@@ -509,7 +533,8 @@ var slug = (location.search.match(/[?&]c=([^&]+)/) || [])[1] || 'terapia-aliment
 var course = COURSES[slug] || COURSES['terapia-alimentar'];
 var currentMod = 0;
 var currentLes = 0;
-var done = {};   // { "0-0": true, "0-1": true, ... }
+var done = {};
+var diasDesdeCompra = 999; // atualizado pela API para cursos com drip
 
 /* flat list of all lessons */
 var allLessons = [];
@@ -522,35 +547,63 @@ document.title = course.title + ' — Nutri For Nutri';
 document.getElementById('tb-course-name').textContent = course.title;
 document.getElementById('sb-badge').textContent = course.badge;
 document.getElementById('sb-name').textContent = course.title;
-buildSidebar();
-loadLesson(0, 0);
+
+if (slug === 'seletividade') {
+  document.getElementById('sb-modules').innerHTML = '<p style="padding:24px 20px;font-size:12px;color:rgba(13,12,10,.4);">Verificando acesso…</p>';
+  var email = localStorage.getItem('nfn_email') || '';
+  if (email) {
+    fetch(WS_VERIFY_URL + '?action=verificar&email=' + encodeURIComponent(email) + '&curso=seletividade')
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (typeof data.diasDesdeCompra === 'number') diasDesdeCompra = data.diasDesdeCompra;
+        buildSidebar(); loadLesson(0, 0);
+      })
+      .catch(function(){ buildSidebar(); loadLesson(0, 0); });
+  } else {
+    buildSidebar(); loadLesson(0, 0);
+  }
+} else {
+  buildSidebar();
+  loadLesson(0, 0);
+}
 
 /* ── BUILD SIDEBAR ── */
 function buildSidebar(){
   var sb = document.getElementById('sb-modules');
   sb.innerHTML = '';
   course.modules.forEach(function(m, mi){
+    var isLocked = m.drip && diasDesdeCompra < m.drip;
+    var daysLeft = isLocked ? (m.drip - diasDesdeCompra) : 0;
+
     var mod = document.createElement('div');
     mod.className = 'module';
 
     var hd = document.createElement('div');
-    hd.className = 'module-hd' + (mi===0?' open':'');
-    hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
-    hd.addEventListener('click', function(){
-      this.classList.toggle('open');
-      lessons.classList.toggle('open');
-    });
+    hd.className = 'module-hd' + (mi===0&&!isLocked?' open':'') + (isLocked?' locked':'');
+    if (isLocked) {
+      hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="drip-tag">🔒 em '+daysLeft+'d</span>';
+    } else {
+      hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
+      hd.addEventListener('click', function(){
+        this.classList.toggle('open');
+        lessons.classList.toggle('open');
+      });
+    }
 
     var lessons = document.createElement('div');
-    lessons.className = 'module-lessons' + (mi===0?' open':'');
+    lessons.className = 'module-lessons' + (mi===0&&!isLocked?' open':'');
     lessons.id = 'mod-'+mi;
 
     m.lessons.forEach(function(l, li){
       var item = document.createElement('div');
-      item.className = 'lesson-item';
+      item.className = 'lesson-item' + (isLocked?' locked':'');
       item.id = 'lesson-'+mi+'-'+li;
-      item.innerHTML = '<div class="lesson-check"></div><span class="lesson-name">'+l.name+'</span><span class="lesson-dur">'+l.dur+'</span>';
-      item.addEventListener('click', function(){ loadLesson(mi, li); });
+      if (isLocked) {
+        item.innerHTML = '<div class="lesson-lock">🔒</div><span class="lesson-name">'+l.name+'</span><span class="lesson-dur">'+l.dur+'</span>';
+      } else {
+        item.innerHTML = '<div class="lesson-check"></div><span class="lesson-name">'+l.name+'</span><span class="lesson-dur">'+l.dur+'</span>';
+        item.addEventListener('click', function(){ loadLesson(mi, li); });
+      }
       lessons.appendChild(item);
     });
 
