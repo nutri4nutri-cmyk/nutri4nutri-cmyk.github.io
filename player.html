@@ -435,6 +435,11 @@ var COURSES = {
         { name: 'Critérios de alta — quando e como', dur: '20min', body: '<p>Como definir com clareza os critérios de alta para casos de seletividade alimentar. Quais indicadores sinalizam que a criança atingiu um nível de funcionamento alimentar sustentável — e como conduzir este momento com a família.</p>' },
         { name: 'Prevenção de recaída e manejo doméstico', dur: '18min', body: '<p>Estratégias para consolidar os ganhos do tratamento no ambiente doméstico e orientar a família sobre como manter a evolução após a alta. O que fazer (e o que evitar) nos meses seguintes.</p>' },
         { name: 'Encerramento e acompanhamento pós-alta', dur: '16min', body: '<p>Como estruturar o encerramento do processo terapêutico de forma clínica e emocionalmente cuidadosa, e como organizar o acompanhamento pós-alta para consolidar os resultados a longo prazo.</p>' }
+      ]},
+      { title: 'Bônus — Materiais Extras', bonus: true, lessons: [
+        { name: 'Material do Módulo 1', dur: 'PDF', body: '<div style="padding:32px 0;text-align:center;"><div style="font-size:48px;margin-bottom:16px;">📄</div><h2 style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;">Entendendo a Seletividade Alimentar</h2><p style="color:rgba(13,12,10,.5);font-size:13px;margin-bottom:28px;">Material de apoio completo do Módulo 1 em PDF</p><a href="materiais/Modulo_1_Entendendo_a_Seletividade_Alimentar.pdf" download style="display:inline-flex;align-items:center;gap:8px;background:#0D0C0A;color:#F7F4ED;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;">⬇ Baixar PDF</a></div>' },
+        { name: 'Material do Módulo 2', dur: 'PDF', body: '<div style="padding:32px 0;text-align:center;"><div style="font-size:48px;margin-bottom:16px;">📄</div><h2 style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;">A Ciência do Comportamento Alimentar</h2><p style="color:rgba(13,12,10,.5);font-size:13px;margin-bottom:28px;">Material de apoio completo do Módulo 2 em PDF</p><a href="materiais/Modulo_2_A_Ciencia_do_Comportamento_Alimentar.pdf" download style="display:inline-flex;align-items:center;gap:8px;background:#0D0C0A;color:#F7F4ED;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;">⬇ Baixar PDF</a></div>' },
+        { name: 'Material do Módulo 3', dur: 'PDF', body: '<div style="padding:32px 0;text-align:center;"><div style="font-size:48px;margin-bottom:16px;">📄</div><h2 style="font-family:\'Cormorant Garamond\',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;">Desenvolvimento Oral</h2><p style="color:rgba(13,12,10,.5);font-size:13px;margin-bottom:28px;">Material de apoio completo do Módulo 3 em PDF</p><a href="materiais/Modulo_3_Desenvolvimento_Oral.pdf" download style="display:inline-flex;align-items:center;gap:8px;background:#0D0C0A;color:#F7F4ED;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;">⬇ Baixar PDF</a></div>' }
       ]}
     ]
   },
@@ -579,9 +584,11 @@ function buildSidebar(){
     mod.className = 'module';
 
     var hd = document.createElement('div');
-    hd.className = 'module-hd' + (mi===0&&!isLocked?' open':'') + (isLocked?' locked':'');
+    hd.className = 'module-hd' + (mi===0&&!isLocked?' open':'') + (isLocked?' locked':'') + (m.bonus?' bonus-hd':'');
     if (isLocked) {
       hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="drip-tag">🔒 em '+daysLeft+'d</span>';
+    } else if (m.bonus) {
+      hd.innerHTML = '<span class="module-num" style="background:rgba(199,161,106,.18);color:var(--go);">★</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
     } else {
       hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
       hd.addEventListener('click', function(){
