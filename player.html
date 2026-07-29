@@ -589,6 +589,10 @@ function buildSidebar(){
       hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="drip-tag">🔒 em '+daysLeft+'d</span>';
     } else if (m.bonus) {
       hd.innerHTML = '<span class="module-num" style="background:rgba(199,161,106,.18);color:var(--go);">★</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
+      hd.addEventListener('click', function(){
+        this.classList.toggle('open');
+        lessons.classList.toggle('open');
+      });
     } else {
       hd.innerHTML = '<span class="module-num">M'+(mi+1)+'</span><span class="module-title">'+m.title+'</span><span class="module-arr">▾</span>';
       hd.addEventListener('click', function(){
