@@ -406,9 +406,13 @@ var COURSES = {
     title: 'Seletividade Alimentar',
     badge: 'Formação Especializada',
     modules: [
+      { title: 'Introdução', lessons: [
+        { name: 'Boas-vindas', dur: '3min', vid: 'yQd6X2MhJY4', body: '<p>Seja bem-vinda à <strong>Formação em Seletividade Alimentar</strong>. Aqui você vai aprender a identificar, avaliar e conduzir casos de seletividade com segurança e método.</p>' },
+        { name: 'Como aproveitar o curso', dur: '3min', vid: 'tbzp8AMsrt0', body: '<p>Entenda como o curso está organizado, a melhor forma de navegar pelos módulos e como tirar o máximo proveito de cada aula e material de apoio.</p>' }
+      ]},
       { title: 'Módulo 1 — Avaliação e Diagnóstico', lessons: [
-        { name: 'Entendendo a seletividade alimentar', dur: '20min', body: '<p>O que é seletividade alimentar, como diferenciá-la de outros quadros de recusa e por que ela exige uma abordagem especializada.</p>' },
-        { name: 'Diagnóstico diferencial', dur: '28min', body: '<p>Como diferenciar seletividade alimentar de ARFID, neofobia, recusa condicionada e quadros associados a condições como TEA, TDAH e transtornos sensoriais.</p>' },
+        { name: 'Entendendo a seletividade alimentar', dur: '20min', vid: '6eKNRV7_BfI', body: '<p>O que é seletividade alimentar, como diferenciá-la de outros quadros de recusa e por que ela exige uma abordagem especializada.</p>' },
+        { name: 'Diagnóstico diferencial', dur: '28min', vid: 'InNHjO49wrA', body: '<p>Como diferenciar seletividade alimentar de ARFID, neofobia, recusa condicionada e quadros associados a condições como TEA, TDAH e transtornos sensoriais.</p>' },
         { name: 'Instrumentos e escalas de avaliação', dur: '22min', body: '<p>Ferramentas validadas para quantificar a severidade da seletividade e monitorar a evolução clínica ao longo do tratamento.</p>' }
       ]},
       { title: 'Módulo 2 — Planejamento', lessons: [
@@ -636,10 +640,17 @@ function loadLesson(mi, li){
   var el = document.getElementById('lesson-'+mi+'-'+li);
   if(el){ el.classList.add('active'); /* open parent module */ el.closest('.module-lessons').classList.add('open'); el.closest('.module-lessons').previousElementSibling.classList.add('open'); }
 
+  /* video area */
+  var vi = document.getElementById('video-inner');
+  if (l.vid) {
+    vi.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+l.vid+'?rel=0&modestbranding=1&color=white" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>';
+  } else {
+    vi.innerHTML = '<div id="video-placeholder"><div class="vid-play-btn" onclick="playVideo()"><div class="vid-play-tri"></div></div><span class="vid-label" id="vid-label">'+l.name+'</span></div>';
+  }
+
   /* content */
   document.getElementById('lesson-breadcrumb').textContent = m.title;
   document.getElementById('lesson-title').textContent = l.name;
-  document.getElementById('vid-label').textContent = l.name;
   document.getElementById('lesson-body').innerHTML = l.body || '';
 
   /* concluir btn */
