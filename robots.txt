@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nutri4nutri.com.br/sitemap.xml
