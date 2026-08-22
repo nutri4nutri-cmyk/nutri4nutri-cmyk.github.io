@@ -150,10 +150,10 @@ a{text-decoration:none;color:inherit;}
   display:flex;align-items:center;justify-content:center;
 }
 /* YT SHIELD — camadas invisíveis que bloqueiam botões do YouTube */
-.yt-shield{position:absolute;z-index:9;pointer-events:all;cursor:default;}
-.yt-shield-bottom{bottom:0;left:0;right:0;height:42px;}
-.yt-shield-logo{bottom:6px;right:6px;width:90px;height:32px;}
-.yt-shield-share{bottom:6px;right:100px;width:44px;height:32px;}
+.yt-shield{position:absolute;z-index:99;pointer-events:all;cursor:default;}
+.yt-shield-bottom{bottom:0;left:0;right:0;height:55px;}
+.yt-shield-top-right{top:0;right:0;width:220px;height:48px;}
+.yt-shield-logo{bottom:5px;right:5px;width:200px;height:48px;}
 /* TOAST */
 #yt-toast{
   position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
@@ -659,9 +659,9 @@ function loadLesson(mi, li){
   var vi = document.getElementById('video-inner');
   if (l.vid) {
     vi.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+l.vid+'?rel=0&modestbranding=1&iv_load_policy=3&color=white" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>'
-      + '<div class="yt-shield yt-shield-bottom" onclick="ytShieldClick()"></div>'
-      + '<div class="yt-shield yt-shield-logo"   onclick="ytShieldClick()"></div>'
-      + '<div class="yt-shield yt-shield-share"  onclick="ytShieldClick()"></div>';
+      + '<div class="yt-shield yt-shield-bottom"    onclick="ytShieldClick()"></div>'
+      + '<div class="yt-shield yt-shield-top-right" onclick="ytShieldClick()"></div>'
+      + '<div class="yt-shield yt-shield-logo"      onclick="ytShieldClick()"></div>';
   } else {
     vi.innerHTML = '<div id="video-placeholder"><div class="vid-play-btn" onclick="playVideo()"><div class="vid-play-tri"></div></div><span class="vid-label" id="vid-label">'+l.name+'</span></div>';
   }
