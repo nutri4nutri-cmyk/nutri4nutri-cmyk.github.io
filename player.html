@@ -149,6 +149,20 @@ a{text-decoration:none;color:inherit;}
   aspect-ratio:16/9;position:relative;
   display:flex;align-items:center;justify-content:center;
 }
+/* YT SHIELD — camadas invisíveis que bloqueiam botões do YouTube */
+.yt-shield{position:absolute;z-index:9;pointer-events:all;cursor:default;}
+.yt-shield-bottom{bottom:0;left:0;right:0;height:42px;}
+.yt-shield-logo{bottom:6px;right:6px;width:90px;height:32px;}
+.yt-shield-share{bottom:6px;right:100px;width:44px;height:32px;}
+/* TOAST */
+#yt-toast{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:#1a1a1a;color:#f0ede8;padding:11px 22px;border-radius:9px;
+  font-size:13px;font-family:inherit;z-index:9999;opacity:0;
+  transition:opacity .25s,transform .25s;pointer-events:none;
+  white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.4);
+}
+#yt-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #video-placeholder{
   position:absolute;inset:0;
   background:radial-gradient(ellipse at center,#1e1c18 0%,#0D0C0A 70%);
@@ -644,7 +658,10 @@ function loadLesson(mi, li){
   /* video area */
   var vi = document.getElementById('video-inner');
   if (l.vid) {
-    vi.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+l.vid+'?rel=0&modestbranding=1&color=white" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>';
+    vi.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+l.vid+'?rel=0&modestbranding=1&iv_load_policy=3&color=white" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>'
+      + '<div class="yt-shield yt-shield-bottom" onclick="ytShieldClick()"></div>'
+      + '<div class="yt-shield yt-shield-logo"   onclick="ytShieldClick()"></div>'
+      + '<div class="yt-shield yt-shield-share"  onclick="ytShieldClick()"></div>';
   } else {
     vi.innerHTML = '<div id="video-placeholder"><div class="vid-play-btn" onclick="playVideo()"><div class="vid-play-tri"></div></div><span class="vid-label" id="vid-label">'+l.name+'</span></div>';
   }
@@ -715,6 +732,16 @@ function playVideo(){
   var vp = document.getElementById('video-placeholder');
   vp.innerHTML = '<p style="color:rgba(248,245,239,.3);font-size:13px;">Vídeo desta aula em breve.</p>';
 }
+
+/* ── YT SHIELD TOAST ── */
+function ytShieldClick(){
+  var t = document.getElementById('yt-toast');
+  if(!t) return;
+  t.classList.add('show');
+  clearTimeout(window._ytToastTimer);
+  window._ytToastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
 </script>
+<div id="yt-toast">🔒 Conteúdo exclusivo — compartilhamento desativado</div>
 </body>
 </html>
