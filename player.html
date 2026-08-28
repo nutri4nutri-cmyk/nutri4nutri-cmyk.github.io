@@ -316,7 +316,7 @@ a{text-decoration:none;color:inherit;}
 /* ─── TRACKING DE ACESSO → PLANILHA ─── */
 var WS_VERIFY_URL = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
 (function(){
-  var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec';
+  var WS_URL = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
   if(WS_URL === 'COLE_SUA_URL_AQUI') return;
   try {
     var slug  = (location.search.match(/[?&]c=([^&]+)/)||[])[1]||'';
@@ -338,21 +338,8 @@ var COURSES = {
     title: 'Comunidade Nutri For Nutri',
     badge: 'Grátis · Porta de Entrada',
     modules: [
-      { title: 'Módulo 1 — Boas-vindas', lessons: [
-        { name: 'Bem-vinda à Comunidade', dur: '5min', body: '<p>Olá! Seja bem-vinda à <strong>Comunidade Nutri For Nutri</strong>. Este é o seu espaço de aprendizado, troca e crescimento profissional.</p><p>Aqui você vai encontrar conteúdos científicos e práticos sobre terapia alimentar infantil, além de um grupo de nutricionistas comprometidas com a excelência clínica.</p><p>Vamos juntas construir uma prática mais segura, mais confiante e mais impactante.</p>' },
-        { name: 'Como aproveitar a comunidade', dur: '8min', body: '<p>Nesta aula você vai aprender como navegar pelos conteúdos, participar dos encontros ao vivo e aproveitar ao máximo tudo que a comunidade oferece.</p><ul><li>Acesso aos módulos de conteúdo</li><li>Calendário de aulas ao vivo</li><li>Grupo de discussão de casos</li><li>Biblioteca de materiais de apoio</li></ul>' },
-        { name: 'Compromisso de aprendizado', dur: '4min', body: '<p>Para tirar o máximo proveito da comunidade, recomendamos que você acesse os conteúdos com frequência e participe ativamente das discussões.</p><p>A consistência é o diferencial das nutricionistas que mais evoluem na terapia alimentar infantil.</p>' },
-        { name: 'Material de Apoio — Checklist Terapia Alimentar', dur: 'PDF', body: '<p>Baixe agora o <strong>Checklist de Terapia Alimentar</strong>, um material prático desenvolvido pela Priscila Leite para apoiar a sua conduta clínica no dia a dia do consultório.</p><p>Use como guia de avaliação, planejamento e acompanhamento dos seus casos de terapia alimentar infantil.</p><p style="margin-top:16px;"><a href="/materiais/checklist_terapia_alimentar.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--go,#c7a16a);color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">📄 Baixar Checklist (PDF)</a></p>' }
-      ]},
-      { title: 'Módulo 2 — Fundamentos', lessons: [
-        { name: 'O que é terapia alimentar infantil', dur: '18min', body: '<p>A terapia alimentar infantil é uma abordagem clínica especializada para crianças com dificuldades alimentares, sejam elas relacionadas a recusa, seletividade, fobias ou condições associadas como TEA e TDAH.</p><p><strong>Diferente da consulta nutricional tradicional</strong>, a terapia alimentar trabalha com a relação da criança com o alimento de forma progressiva, respeitando seu desenvolvimento e seu tempo.</p>' },
-        { name: 'Evidências científicas atuais', dur: '22min', body: '<p>Nesta aula exploramos as bases científicas que sustentam a terapia alimentar infantil, incluindo estudos recentes sobre neofobia, seletividade e desenvolvimento sensorial.</p><ul><li>Revisões sistemáticas sobre intervenção em seletividade alimentar</li><li>Modelos baseados em exposição gradual</li><li>Abordagem interdisciplinar na literatura</li></ul>' },
-        { name: 'Quando encaminhar e quando conduzir', dur: '15min', body: '<p>Uma das competências mais importantes da nutricionista especializada é saber identificar o que é da sua alçada e quando o caso exige uma equipe interdisciplinar.</p><p>Nesta aula você vai aprender os critérios de triagem e os sinais de alerta que indicam necessidade de encaminhamento.</p>' }
-      ]},
-      { title: 'Módulo 3 — Encontros Gravados', lessons: [
-        { name: 'Gravação: Discussão de Casos Clínicos', dur: '52min', body: '<p>Gravação do encontro ao vivo onde a Priscila conduziu a discussão de três casos reais de seletividade alimentar, com estratégias práticas de intervenção.</p>' },
-        { name: 'Gravação: Aula Prática — Escalada do Comer', dur: '48min', body: '<p>Aula prática demonstrando como estruturar a escalada do comer em consultório, com exemplos de como apresentar novos alimentos de forma progressiva e sem pressão.</p>' },
-        { name: 'Gravação: Perguntas e Respostas', dur: '35min', body: '<p>Sessão de perguntas e respostas respondendo as principais dúvidas das alunas sobre condução clínica, comunicação com a família e casos complexos.</p>' }
+      { title: 'Material de Apoio', lessons: [
+        { name: 'Checklist Terapia Alimentar — PDF', dur: 'PDF', body: '<p>Baixe agora o <strong>Checklist de Terapia Alimentar</strong>, um material prático desenvolvido pela Priscila Leite para apoiar a sua conduta clínica no dia a dia do consultório.</p><p>Use como guia de avaliação, planejamento e acompanhamento dos seus casos de terapia alimentar infantil.</p><p style="margin-top:16px;"><a href="/materiais/checklist_terapia_alimentar.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--go,#c7a16a);color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">📄 Baixar Checklist (PDF)</a></p>' }
       ]}
     ]
   },
