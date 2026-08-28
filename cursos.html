@@ -314,7 +314,17 @@ body.hov #co{width:62px;height:62px;border-color:var(--go);}
         </ul>
         <div class="card-divider"></div>
         <a href="https://www.asaas.com/c/lreonttfy8mnzycj" class="cf-btn go" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-bottom:14px;">Comprar — R$ 47,00 →</a>
-        <a href="workshop-seletividade.html" class="card-link" data-slug="workshop" style="font-size:12px;opacity:.65;">Já comprei → Acessar o workshop <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <a href="#" class="card-link" data-form="form-ws" data-slug="workshop" style="font-size:12px;opacity:.65;">Já comprei → Acessar o workshop <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        <div class="card-form" id="form-ws" style="display:none;">
+          <h3 class="cf-tit">Verificar Acesso</h3>
+          <p class="cf-sub">Digite o e-mail usado na compra para liberar o acesso.</p>
+          <div id="ws-error" style="display:none;color:#e57373;font-size:13px;margin-bottom:10px;padding:8px 12px;background:rgba(229,115,115,.1);border-radius:6px;"></div>
+          <form onsubmit="verifyWorkshop(event)">
+            <label class="cf-label" for="ws-email">E-mail da compra</label>
+            <input class="cf-input" id="ws-email" type="email" placeholder="seu@email.com" required/>
+            <button class="cf-btn go" type="submit" id="ws-btn">Verificar acesso →</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -842,6 +852,50 @@ document.querySelectorAll('.card-link[data-form]').forEach(function(link){
    Após criar o Apps Script (veja instruções), cole a URL aqui:
 ─────────────────────────────────────────────────────────────────────── */
 var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec';
+
+/* URL do Apps Script que consulta Asaas API — configurar após deploy */
+var WS_ASAAS_VERIFY = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
+
+/* ─── VERIFICAÇÃO WORKSHOP (Asaas API via Apps Script) ─── */
+function verifyWorkshop(e) {
+  e.preventDefault();
+  var email = document.getElementById('ws-email').value.trim();
+  var btn = document.getElementById('ws-btn');
+  var errDiv = document.getElementById('ws-error');
+
+  btn.textContent = 'Verificando...';
+  btn.disabled = true;
+  errDiv.style.display = 'none';
+
+  if (!WS_ASAAS_VERIFY) {
+    // Modo de desenvolvimento: acesso liberado sem verificação
+    try { localStorage.setItem('nfn_email', email); } catch(ex){}
+    window.location.href = 'workshop-seletividade.html';
+    return;
+  }
+
+  fetch(WS_ASAAS_VERIFY + '?action=verificar&email=' + encodeURIComponent(email) + '&curso=workshop')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data.acesso) {
+        try { localStorage.setItem('nfn_email', email); } catch(ex){}
+        var pl = new URLSearchParams({name:'', email:email, course:'workshop', type:'access'});
+        try { navigator.sendBeacon(WS_URL, pl); } catch(ex){}
+        window.location.href = 'workshop-seletividade.html';
+      } else {
+        errDiv.textContent = 'E-mail não encontrado. Verifique o e-mail usado na compra ou entre em contato pelo Instagram @nutri4nutri.';
+        errDiv.style.display = 'block';
+        btn.textContent = 'Verificar acesso →';
+        btn.disabled = false;
+      }
+    })
+    .catch(function(){
+      errDiv.textContent = 'Erro ao verificar. Aguarde alguns segundos e tente novamente.';
+      errDiv.style.display = 'block';
+      btn.textContent = 'Verificar acesso →';
+      btn.disabled = false;
+    });
+}
 
 /* ─── PLAYER REDIRECT + TRACKING ─── */
 function goPlayer(e, slug) {
