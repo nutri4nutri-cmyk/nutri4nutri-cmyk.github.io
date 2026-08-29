@@ -322,8 +322,9 @@ var WS_VERIFY_URL = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_
     var slug  = (location.search.match(/[?&]c=([^&]+)/)||[])[1]||'';
     var email = localStorage.getItem('nfn_email')||'';
     var name  = localStorage.getItem('nfn_name')||'';
+    var phone = localStorage.getItem('nfn_phone')||'';
     if(email && slug){
-      var payload = new URLSearchParams({name:name,email:email,course:slug,type:'access'});
+      var payload = new URLSearchParams({name:name,email:email,phone:phone,course:slug,type:'access'});
       try { navigator.sendBeacon(WS_URL, payload); }
       catch(ex){ fetch(WS_URL,{method:'POST',mode:'no-cors',body:payload}); }
     }

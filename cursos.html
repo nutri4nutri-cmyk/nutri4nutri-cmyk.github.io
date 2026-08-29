@@ -286,6 +286,7 @@ body.hov #co{width:62px;height:62px;border-color:var(--go);}
           <form onsubmit="goPlayer(event,'comunidade')">
             <label class="cf-label" for="n1">Nome</label><input class="cf-input" id="n1" type="text" placeholder="Seu nome" required/>
             <label class="cf-label" for="e1">E-mail</label><input class="cf-input" id="e1" type="email" placeholder="seu@email.com" required/>
+            <label class="cf-label" for="t1">Telefone / WhatsApp</label><input class="cf-input" id="t1" type="tel" inputmode="tel" autocomplete="tel" placeholder="(24) 99999-9999" required/>
             <button class="cf-btn gn" type="submit">Acessar agora →</button>
           </form>
         </div>
@@ -851,7 +852,7 @@ document.querySelectorAll('.card-link[data-form]').forEach(function(link){
 /* ─── GOOGLE SHEETS ENDPOINT ─────────────────────────────────────────
    Após criar o Apps Script (veja instruções), cole a URL aqui:
 ─────────────────────────────────────────────────────────────────────── */
-var WS_URL = 'https://script.google.com/macros/s/AKfycbzFP5pKsF-dCu0SJGyX1ODKEmJnGgIuLIHa2dJMTu4iNcOcH6YDxr4f1jRRWkOoUN_a/exec';
+var WS_URL = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
 
 /* URL do Apps Script que consulta Asaas API — configurar após deploy */
 var WS_ASAAS_VERIFY = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
@@ -903,15 +904,21 @@ function goPlayer(e, slug) {
   var form = e.target;
   var name  = (form.querySelector('input[type="text"]')  || {}).value || '';
   var email = (form.querySelector('input[type="email"]') || {}).value || '';
+  var phone = (form.querySelector('input[type="tel"]')   || {}).value || '';
   name  = name.trim();
   email = email.trim();
+  phone = phone.trim();
 
   // Persiste para o player rastrear acessos futuros
-  try { localStorage.setItem('nfn_name', name); localStorage.setItem('nfn_email', email); } catch(ex){}
+  try {
+    localStorage.setItem('nfn_name', name);
+    localStorage.setItem('nfn_email', email);
+    if (phone) localStorage.setItem('nfn_phone', phone);
+  } catch(ex){}
 
   // Envia dados para a planilha (fire-and-forget)
   if (WS_URL !== 'COLE_SUA_URL_AQUI') {
-    var payload = new URLSearchParams({name:name, email:email, course:slug, type:'form'});
+    var payload = new URLSearchParams({name:name, email:email, phone:phone, course:slug, type:'form'});
     try { navigator.sendBeacon(WS_URL, payload); }
     catch(ex) { fetch(WS_URL,{method:'POST',mode:'no-cors',body:payload}); }
   }
