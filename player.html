@@ -231,6 +231,8 @@ a{text-decoration:none;color:inherit;}
 .nav-btn.next{background:#0D0C0A;color:#F7F4ED;border-color:#0D0C0A;}
 .nav-btn.next:hover{background:var(--go);border-color:var(--go);color:#0D0C0A;}
 </style>
+<style id="workshop-player-gate">html.workshop-checking body{visibility:hidden!important}</style>
+<script>if((location.search.match(/[?&]c=([^&]+)/)||[])[1]==='workshop'){document.documentElement.classList.add('workshop-checking');}</script>
 </head>
 <body>
 
@@ -313,6 +315,28 @@ a{text-decoration:none;color:inherit;}
 </div>
 
 <script>
+/* ─── PROTEÇÃO DO WORKSHOP PAGO ─── */
+var REQUESTED_COURSE=(location.search.match(/[?&]c=([^&]+)/)||[])[1]||'';
+if(REQUESTED_COURSE==='workshop'){
+  document.documentElement.classList.add('workshop-checking');
+  (function(){
+    var email='';
+    try{email=localStorage.getItem('nfn_email')||'';}catch(ex){}
+    function denyWorkshop(){
+      try{localStorage.removeItem('nfn_email');}catch(ex){}
+      location.replace('cursos.html?acesso=workshop-negado');
+    }
+    if(!email){denyWorkshop();return;}
+    fetch('https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec?action=verificar&email='+encodeURIComponent(email)+'&curso=workshop',{cache:'no-store'})
+      .then(function(response){if(!response.ok)throw new Error('verify');return response.json();})
+      .then(function(data){
+        if(data&&data.acesso){document.documentElement.classList.remove('workshop-checking');}
+        else{denyWorkshop();}
+      })
+      .catch(denyWorkshop);
+  })();
+}
+
 /* ─── TRACKING DE ACESSO → PLANILHA ─── */
 var WS_VERIFY_URL = 'https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
 (function(){

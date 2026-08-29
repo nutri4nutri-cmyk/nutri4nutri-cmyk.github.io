@@ -40,6 +40,23 @@ src="https://www.facebook.com/tr?id=1017324754333197&ev=PageView&noscript=1"
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Workshop Seletividade Alimentar — Priscila Leite"/>
 <meta name="twitter:description" content="Workshop online: seletividade alimentar infantil, TEA e TDAH. Com a especialista Priscila Leite."/>
+<style id="workshop-access-gate">html:not(.workshop-access-ok) body{visibility:hidden!important}</style>
+<script>
+(function(){
+  var VERIFY_URL='https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec';
+  var email='';
+  try{email=localStorage.getItem('nfn_email')||'';}catch(ex){}
+  function deny(){
+    try{localStorage.removeItem('nfn_email');}catch(ex){}
+    location.replace('cursos.html?acesso=workshop-negado');
+  }
+  if(!email){deny();return;}
+  fetch(VERIFY_URL+'?action=verificar&email='+encodeURIComponent(email)+'&curso=workshop',{cache:'no-store'})
+    .then(function(response){if(!response.ok)throw new Error('verify');return response.json();})
+    .then(function(data){if(data&&data.acesso){document.documentElement.classList.add('workshop-access-ok');}else{deny();}})
+    .catch(deny);
+})();
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
