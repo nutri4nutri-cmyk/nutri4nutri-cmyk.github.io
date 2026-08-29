@@ -179,24 +179,27 @@ function syncAsaasEvents() {
     const customerCache = {};
 
     payments.forEach(function(payment) {
-      const customer = getCustomer(payment.customer, customerCache);
-      const signature = [payment.status || '', payment.billingType || '', payment.paymentDate || ''].join('|');
-      const previous = eventState[payment.id];
       const workshop = isWorkshopPayment(payment);
+      if (!workshop) return;
+
+      const customer = getCustomer(payment.customer, customerCache);
+      const statusPt = translateStatus(payment.status);
+      const billingTypePt = translateBillingType(payment.billingType);
+      const signature = [statusPt, billingTypePt].join('|');
+      const previous = eventState[payment.id];
 
       if (previous !== signature) {
-        const eventName = previous ? 'STATUS_ATUALIZADO' : 'COBRANCA_IDENTIFICADA';
+        const eventName = previous ? 'Status atualizado' : 'Cobrança identificada';
         eventSheet.appendRow([
-          new Date(), payment.id || '', eventName, payment.status || '', payment.billingType || '',
+          new Date(), payment.id || '', eventName, statusPt, billingTypePt,
           payment.dateCreated || '', payment.paymentDate || payment.clientPaymentDate || '',
           customer.name || '', customer.email || '', customer.phone || customer.mobilePhone || '',
           payment.description || '', payment.externalReference || '', payment.value || 0,
-          workshop ? 'Workshop Seletividade Alimentar' : (payment.invoiceUrl || payment.bankSlipUrl || '')
+          'Workshop Seletividade Alimentar'
         ]);
         eventState[payment.id] = signature;
       }
 
-      if (!workshop) return;
       if (isPaidStatus(payment.status)) {
         upsertAlunaWorkshop(payment, customer);
         markLeadAsConverted(payment, customer);
@@ -270,7 +273,7 @@ function upsertAlunaWorkshop(payment, customer) {
   const values = [
     payment.paymentDate || payment.clientPaymentDate || payment.dateCreated || '',
     customer.name || '', normalizeEmail(customer.email), customer.phone || customer.mobilePhone || '',
-    payment.id || '', payment.billingType || '', payment.status || '', payment.value || 0,
+    payment.id || '', translateBillingType(payment.billingType), translateStatus(payment.status), payment.value || 0,
     payment.description || '', payment.externalReference || '', new Date()
   ];
   upsertById(sheet, 5, payment.id, values);
@@ -280,8 +283,8 @@ function upsertLeadQuente(payment, customer, situation) {
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(LEADS_QUENTE_SHEET);
   const values = [
     payment.dateCreated || new Date(), customer.name || '', normalizeEmail(customer.email),
-    customer.phone || customer.mobilePhone || '', payment.id || '', payment.billingType || '',
-    payment.status || '', payment.value || 0, payment.description || '', payment.externalReference || '',
+    customer.phone || customer.mobilePhone || '', payment.id || '', translateBillingType(payment.billingType),
+    translateStatus(payment.status), payment.value || 0, payment.description || '', payment.externalReference || '',
     situation, new Date()
   ];
   upsertById(sheet, 5, payment.id, values);
@@ -299,7 +302,7 @@ function buildEventState(sheet) {
   if (lastRow < 2) return state;
   const rows = sheet.getRange(2, 1, lastRow - 1, 7).getValues();
   rows.forEach(function(row) {
-    if (row[1]) state[String(row[1])] = [row[3] || '', row[4] || '', row[6] || ''].join('|');
+    if (row[1]) state[String(row[1])] = [row[3] || '', row[4] || ''].join('|');
   });
   return state;
 }
@@ -348,6 +351,31 @@ function asaasGet(path) {
 
 function isPaidStatus(status) {
   return ['CONFIRMED', 'RECEIVED', 'RECEIVED_IN_CASH'].indexOf(String(status || '').toUpperCase()) >= 0;
+}
+
+function translateStatus(status) {
+  const labels = {
+    PENDING: 'Pendente', RECEIVED: 'Recebido', CONFIRMED: 'Confirmado',
+    OVERDUE: 'Vencido', REFUNDED: 'Estornado', RECEIVED_IN_CASH: 'Recebido em dinheiro',
+    REFUND_REQUESTED: 'Estorno solicitado', REFUND_IN_PROGRESS: 'Estorno em andamento',
+    CHARGEBACK_REQUESTED: 'Contestação solicitada', CHARGEBACK_DISPUTE: 'Contestação em análise',
+    AWAITING_CHARGEBACK_REVERSAL: 'Aguardando reversão da contestação',
+    DUNNING_REQUESTED: 'Negativação solicitada', DUNNING_RECEIVED: 'Negativação recebida',
+    AWAITING_RISK_ANALYSIS: 'Aguardando análise de risco', CANCELED: 'Cancelado',
+    DELETED: 'Excluído'
+  };
+  const key = String(status || '').toUpperCase();
+  return labels[key] || key || 'Não informado';
+}
+
+function translateBillingType(type) {
+  const labels = {
+    PIX: 'Pix', BOLETO: 'Boleto', CREDIT_CARD: 'Cartão de crédito',
+    DEBIT_CARD: 'Cartão de débito', TRANSFER: 'Transferência',
+    DEPOSIT: 'Depósito', UNDEFINED: 'A definir'
+  };
+  const key = String(type || '').toUpperCase();
+  return labels[key] || key || 'Não informado';
 }
 
 function daysSince(dateValue) {
