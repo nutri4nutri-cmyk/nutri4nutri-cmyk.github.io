@@ -474,6 +474,11 @@ function requestAdminCode(email) {
   return {ok:true};
 }
 
+// Executar uma vez pelo editor para autorizar o serviço de e-mail do projeto.
+function autorizarEmailPainel() {
+  return MailApp.getRemainingDailyQuota();
+}
+
 function verifyAdminCode(email, code) {
   email = normalizeEmail(email);
   const cache = CacheService.getScriptCache();
