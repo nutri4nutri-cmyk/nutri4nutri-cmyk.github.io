@@ -209,6 +209,7 @@ a{text-decoration:none;color:inherit;}
 #lesson-body strong{font-weight:600;color:#0D0C0A;}
 #lesson-body ul{padding-left:20px;margin-bottom:14px;}
 #lesson-body li{margin-bottom:6px;}
+.admin-entry{display:none;margin:12px;padding:12px 14px;border-radius:9px;background:#0d0c0a;color:#c7a16a;font-size:12px;font-weight:700;text-align:center}.comments-box{margin-top:34px;padding-top:28px;border-top:1px solid rgba(13,12,10,.1)}.comments-box h3{margin:0 0 6px}.comment-form textarea{width:100%;min-height:90px;border:1px solid #ddd3c3;border-radius:9px;padding:12px;font:inherit;margin:10px 0}.comment-form button{background:#0d0c0a;color:white;border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer}.comment-card{background:#fff;border:1px solid #ece4d7;border-radius:10px;padding:14px;margin-top:10px}.comment-reply{margin-top:10px;padding:10px;background:#f3eee4;border-left:3px solid var(--go)}
 
 /* DRIP LOCK */
 .module-hd.locked{opacity:.5;cursor:default;}
@@ -264,6 +265,7 @@ a{text-decoration:none;color:inherit;}
       <div class="sb-course-name" id="sb-name">—</div>
     </div>
     <div class="sb-modules" id="sb-modules"></div>
+    <a class="admin-entry" id="admin-entry" href="admin.html">⚙ Painel administrativo</a>
   </aside>
 
   <!-- MAIN -->
@@ -299,6 +301,7 @@ a{text-decoration:none;color:inherit;}
       </div>
 
       <div id="lesson-body"></div>
+      <section id="comments-box" class="comments-box" style="display:none"><h3>Comentários da aula</h3><p style="color:#766f64;font-size:12px">Compartilhe sua dúvida. A Priscila poderá responder por aqui.</p><div class="comment-form"><textarea id="comment-text" maxlength="1200" placeholder="Escreva seu comentário..."></textarea><button onclick="sendLessonComment()">Publicar comentário</button></div><div id="comment-msg"></div><div id="comment-list"></div></section>
 
       <div class="lesson-nav">
         <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">
@@ -573,6 +576,8 @@ var currentMod = 0;
 var currentLes = 0;
 var done = {};
 var diasDesdeCompra = 999; // atualizado pela API para cursos com drip
+var ADMIN_EMAILS=['nutri4nutri@gmail.com','divarebel.on@gmail.com'];
+try{if(slug==='comunidade'&&ADMIN_EMAILS.indexOf((localStorage.getItem('nfn_email')||'').toLowerCase())>=0)document.getElementById('admin-entry').style.display='block';}catch(ex){}
 
 /* flat list of all lessons */
 var allLessons = [];
@@ -586,7 +591,10 @@ document.getElementById('tb-course-name').textContent = course.title;
 document.getElementById('sb-badge').textContent = course.badge;
 document.getElementById('sb-name').textContent = course.title;
 
-if (slug === 'seletividade') {
+if (slug === 'comunidade') {
+  document.getElementById('sb-modules').innerHTML='<p style="padding:24px 20px;font-size:12px;color:rgba(13,12,10,.4);">Carregando aulas…</p>';
+  loadCommunityContent();
+} else if (slug === 'seletividade') {
   document.getElementById('sb-modules').innerHTML = '<p style="padding:24px 20px;font-size:12px;color:rgba(13,12,10,.4);">Verificando acesso…</p>';
   var email = localStorage.getItem('nfn_email') || '';
   if (email) {
@@ -684,6 +692,10 @@ function loadLesson(mi, li){
   document.getElementById('lesson-breadcrumb').textContent = m.title;
   document.getElementById('lesson-title').textContent = l.name;
   document.getElementById('lesson-body').innerHTML = l.body || '';
+  if(slug==='comunidade'){
+    if(l.materialUrl) document.getElementById('lesson-body').innerHTML += '<p style="margin-top:18px"><a href="'+safeUrl(l.materialUrl)+'" target="_blank" style="display:inline-block;background:var(--go);color:#fff;padding:12px 20px;border-radius:8px;font-weight:600">📄 Baixar material</a></p>';
+    document.getElementById('comments-box').style.display='block'; loadLessonComments(l.id||key);
+  }else document.getElementById('comments-box').style.display='none';
 
   /* concluir btn */
   var btn = document.getElementById('btn-concluir');
@@ -755,6 +767,19 @@ function ytShieldClick(){
   clearTimeout(window._ytToastTimer);
   window._ytToastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
+
+function loadCommunityContent(){
+  var email='';try{email=localStorage.getItem('nfn_email')||'';}catch(ex){}
+  fetch(WS_VERIFY_URL+'?action=communityContent&email='+encodeURIComponent(email),{cache:'no-store'}).then(function(r){return r.json()}).then(function(data){
+    if(!data.ok||!data.lessons||!data.lessons.length)throw new Error('empty');
+    var groups={};data.lessons.forEach(function(l){(groups[l.module]||(groups[l.module]=[])).push(l)});
+    course.modules=Object.keys(groups).map(function(title){return {title:title,lessons:groups[title]}});allLessons=[];course.modules.forEach(function(m,mi){m.lessons.forEach(function(l,li){allLessons.push({mi:mi,li:li,lesson:l,mod:m})})});buildSidebar();loadLesson(0,0);
+  }).catch(function(){buildSidebar();loadLesson(0,0)});
+}
+function loadLessonComments(id){var box=document.getElementById('comment-list');box.innerHTML='<p style="color:#888">Carregando…</p>';fetch(WS_VERIFY_URL+'?action=lessonComments&lessonId='+encodeURIComponent(id),{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){box.innerHTML=d.comments&&d.comments.length?d.comments.map(function(c){return '<div class="comment-card"><b>'+escapeHtml(c.name)+'</b><p>'+escapeHtml(c.text)+'</p>'+(c.reply?'<div class="comment-reply"><b>Resposta da Priscila:</b><br>'+escapeHtml(c.reply)+'</div>':'')+'</div>'}).join(''):'<p style="color:#888;margin-top:15px">Seja a primeira a comentar nesta aula.</p>'}).catch(function(){box.innerHTML='<p style="color:#888">Não foi possível carregar os comentários.</p>'})}
+function sendLessonComment(){var l=course.modules[currentMod].lessons[currentLes],name='',email='';try{name=localStorage.getItem('nfn_name')||'';email=localStorage.getItem('nfn_email')||''}catch(ex){}var text=document.getElementById('comment-text').value.trim(),msg=document.getElementById('comment-msg');if(!name||!email||!text){msg.textContent='Preencha seu cadastro de acesso e escreva o comentário.';return}fetch(WS_VERIFY_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'addComment',lessonId:l.id||(currentMod+'-'+currentLes),name:name,email:email,comment:text})}).then(function(r){return r.json()}).then(function(d){if(!d.ok)throw Error(d.error);document.getElementById('comment-text').value='';msg.textContent='Comentário publicado.';loadLessonComments(l.id||(currentMod+'-'+currentLes))}).catch(function(e){msg.textContent=e.message||'Não foi possível publicar.'})}
+function escapeHtml(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function safeUrl(v){v=String(v||'');return /^(https?:\/\/|\/)/.test(v)?escapeHtml(v):'#'}
 </script>
 <div id="yt-toast">🔒 Conteúdo exclusivo — compartilhamento desativado</div>
 </body>

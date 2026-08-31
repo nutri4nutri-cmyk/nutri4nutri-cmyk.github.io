@@ -4,6 +4,9 @@ const COMU_FREE_SHEET = 'COMU FREE';
 const EVENTOS_SHEET = 'EVENTOS';
 const ALUNAS_WORK_SHEET = 'ALUNAS WORK';
 const LEADS_QUENTE_SHEET = 'LEADS QUENTE';
+const ADMIN_AULAS_SHEET = 'ADMIN AULAS';
+const ADMIN_COMENTARIOS_SHEET = 'ADMIN COMENTARIOS';
+const ADMIN_EMAILS = ['nutri4nutri@gmail.com', 'divarebel.on@gmail.com'];
 const PAGAMENTOS_SHEET = 'Pagamentos'; // compatibilidade com compras antigas
 const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
 const WORKSHOP_PUBLIC_LINK_SLUG = 'lreonttfy8mnzycj';
@@ -19,6 +22,8 @@ function doGet(e) {
     const curso = e.parameter.curso || '';
     return jsonOutput(verificarAcesso(email, curso));
   }
+  if (action === 'communityContent') return jsonOutput(getCommunityContent(e.parameter.email || ''));
+  if (action === 'lessonComments') return jsonOutput(getLessonComments(e.parameter.lessonId || ''));
   return jsonOutput({ status: 'ok' });
 }
 
@@ -36,6 +41,15 @@ function doPost(e) {
     }
 
     const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
+
+    if (data.action === 'requestAdminCode') return jsonOutput(requestAdminCode(data.email));
+    if (data.action === 'verifyAdminCode') return jsonOutput(verifyAdminCode(data.email, data.code));
+    if (data.action === 'listAdminData') return jsonOutput(listAdminData(data.token));
+    if (data.action === 'saveLesson') return jsonOutput(saveAdminLesson(data.token, data.lesson || {}));
+    if (data.action === 'archiveLesson') return jsonOutput(archiveAdminLesson(data.token, data.id));
+    if (data.action === 'replyComment') return jsonOutput(replyAdminComment(data.token, data.id, data.reply));
+    if (data.action === 'uploadPdf') return jsonOutput(uploadAdminPdf(data.token, data));
+    if (data.action === 'addComment') return jsonOutput(addLessonComment(data));
 
     // Webhooks antigos do Asaas podem continuar chegando. A sincronização financeira
     // é feita exclusivamente pela API e pelo acionador de tempo.
@@ -325,6 +339,7 @@ function ensureAllSheets() {
   ensureSheet(EVENTOS_SHEET, ['Data / Hora Sync','ID Pagamento','Evento Derivado','Status','Tipo Cobrança','Data Criação','Data Pagamento','Nome','Email','Telefone','Descrição','Referência','Valor','Link / Produto']);
   ensureSheet(ALUNAS_WORK_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
   ensureSheet(LEADS_QUENTE_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
+  ensureAdminSheets();
 }
 
 function ensureSheet(name, headers) {
@@ -400,3 +415,101 @@ function refreshDashboard() {
 function jsonOutput(value) {
   return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
 }
+
+/* ─── COMUNIDADE E PAINEL ADMINISTRATIVO ─── */
+function ensureAdminSheets() {
+  const lessons = ensureSheet(ADMIN_AULAS_SHEET, ['ID','Módulo','Título','Duração','Tipo','Conteúdo HTML','URL Material','Público','Email Específico','Ordem','Status','Criado Em','Atualizado Em','Atualizado Por']);
+  ensureSheet(ADMIN_COMENTARIOS_SHEET, ['ID','Aula ID','Data','Nome','Email','Comentário','Resposta','Respondido Em','Respondido Por','Status']);
+  if (lessons.getLastRow() < 2) {
+    const now = new Date();
+    lessons.getRange(2, 1, 2, 14).setValues([
+      ['aula-checklist-terapia','Material de Apoio','Checklist Terapia Alimentar — PDF','PDF','PDF','Baixe agora o <strong>Checklist de Terapia Alimentar</strong>, um material prático para apoiar sua conduta clínica.','/materiais/checklist_terapia_alimentar.pdf','TODAS','',1,'ATIVA',now,now,'sistema'],
+      ['aula-checklist-anamnese','Material de Apoio','Checklist de Anamnese e Raciocínio Clínico — PDF','PDF','PDF','Baixe o <strong>Checklist: Anamnese para Organizar o Raciocínio Clínico</strong>, com perguntas essenciais e sinais de alerta.','/materiais/checklist_anamnese_raciocinio_clinico.pdf','TODAS','',2,'ATIVA',now,now,'sistema']
+    ]);
+  }
+  [lessons, SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_COMENTARIOS_SHEET)].forEach(function(sheet) {
+    sheet.setFrozenRows(1);
+    sheet.getRange(1,1,1,sheet.getLastColumn()).setBackground('#0D0C0A').setFontColor('#C7A16A').setFontWeight('bold');
+  });
+}
+
+function getCommunityContent(email) {
+  ensureAdminSheets();
+  email = normalizeEmail(email);
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_AULAS_SHEET);
+  const rows = sheet.getLastRow() < 2 ? [] : sheet.getRange(2,1,sheet.getLastRow()-1,14).getValues();
+  const lessons = rows.filter(function(r) {
+    const audience = String(r[7] || 'TODAS').toUpperCase();
+    return String(r[10]).toUpperCase() === 'ATIVA' && (audience === 'TODAS' || (audience === 'ESPECÍFICA' && normalizeEmail(r[8]) === email));
+  }).sort(function(a,b){ return Number(a[9]||0)-Number(b[9]||0); }).map(function(r){
+    return {id:String(r[0]),module:String(r[1]),name:String(r[2]),dur:String(r[3]||''),type:String(r[4]||''),body:String(r[5]||''),materialUrl:String(r[6]||'')};
+  });
+  return {ok:true, lessons:lessons};
+}
+
+function getLessonComments(lessonId) {
+  ensureAdminSheets();
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_COMENTARIOS_SHEET);
+  const rows = sheet.getLastRow() < 2 ? [] : sheet.getRange(2,1,sheet.getLastRow()-1,10).getValues();
+  return {ok:true, comments:rows.filter(function(r){ return String(r[1]) === String(lessonId) && String(r[9]||'ATIVO').toUpperCase() === 'ATIVO'; }).map(function(r){
+    return {id:String(r[0]),date:r[2],name:String(r[3]),text:String(r[5]),reply:String(r[6]||'')};
+  })};
+}
+
+function addLessonComment(data) {
+  ensureAdminSheets();
+  const lessonId = cleanText(data.lessonId, 100), name = cleanText(data.name, 100), email = normalizeEmail(data.email), comment = cleanText(data.comment, 1200);
+  if (!lessonId || !name || !email || !comment) return {ok:false,error:'Preencha nome, e-mail e comentário.'};
+  const id = 'com-' + Utilities.getUuid();
+  SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_COMENTARIOS_SHEET).appendRow([id,lessonId,new Date(),name,email,comment,'','','','ATIVO']);
+  return {ok:true,id:id};
+}
+
+function requestAdminCode(email) {
+  email = normalizeEmail(email);
+  if (ADMIN_EMAILS.indexOf(email) < 0) return {ok:false,error:'E-mail sem permissão administrativa.'};
+  const code = String(Math.floor(100000 + Math.random()*900000));
+  CacheService.getScriptCache().put('admin-code:' + email, code, 600);
+  MailApp.sendEmail({to:email,subject:'Código de acesso — Nutri For Nutri',htmlBody:'<p>Seu código de acesso ao painel é:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px">'+code+'</p><p>Ele expira em 10 minutos.</p>'});
+  return {ok:true};
+}
+
+function verifyAdminCode(email, code) {
+  email = normalizeEmail(email);
+  const cache = CacheService.getScriptCache();
+  if (ADMIN_EMAILS.indexOf(email) < 0 || !code || cache.get('admin-code:' + email) !== String(code).trim()) return {ok:false,error:'Código inválido ou expirado.'};
+  cache.remove('admin-code:' + email);
+  const token = Utilities.getUuid() + Utilities.getUuid();
+  cache.put('admin-token:' + token, email, 21600);
+  return {ok:true,token:token,email:email};
+}
+
+function requireAdmin(token) {
+  const email = token && CacheService.getScriptCache().get('admin-token:' + token);
+  if (!email || ADMIN_EMAILS.indexOf(email) < 0) throw new Error('Sessão administrativa inválida ou expirada.');
+  return email;
+}
+
+function listAdminData(token) {
+  const admin = requireAdmin(token); ensureAdminSheets();
+  const ss = SpreadsheetApp.openById(SHEET_ID), ls = ss.getSheetByName(ADMIN_AULAS_SHEET), cs = ss.getSheetByName(ADMIN_COMENTARIOS_SHEET);
+  const lessons = ls.getLastRow()<2?[]:ls.getRange(2,1,ls.getLastRow()-1,14).getValues().map(function(r){return {id:r[0],module:r[1],title:r[2],duration:r[3],type:r[4],body:r[5],materialUrl:r[6],audience:r[7],specificEmail:r[8],order:r[9],status:r[10]};});
+  const comments = cs.getLastRow()<2?[]:cs.getRange(2,1,cs.getLastRow()-1,10).getValues().map(function(r){return {id:r[0],lessonId:r[1],date:r[2],name:r[3],email:r[4],text:r[5],reply:r[6],status:r[9]};});
+  return {ok:true,admin:admin,lessons:lessons,comments:comments};
+}
+
+function saveAdminLesson(token, lesson) {
+  const admin=requireAdmin(token); ensureAdminSheets();
+  const sheet=SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_AULAS_SHEET), now=new Date();
+  const id=cleanText(lesson.id,100)||('aula-'+Utilities.getUuid()), row=findRowByValue(sheet,1,id);
+  const values=[id,cleanText(lesson.module,100)||'Conteúdos',cleanText(lesson.title,180),cleanText(lesson.duration,30),cleanText(lesson.type,30)||'CONTEÚDO',String(lesson.body||'').slice(0,15000),cleanText(lesson.materialUrl,1000),String(lesson.audience||'TODAS').toUpperCase(),normalizeEmail(lesson.specificEmail),Number(lesson.order)||1,'ATIVA',now,now,admin];
+  if(!values[2]) return {ok:false,error:'Informe o título da aula.'};
+  if(row>1){values[11]=sheet.getRange(row,12).getValue()||now;sheet.getRange(row,1,1,14).setValues([values]);}else sheet.appendRow(values);
+  return {ok:true,id:id};
+}
+
+function archiveAdminLesson(token,id){const admin=requireAdmin(token),sheet=SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_AULAS_SHEET),row=findRowByValue(sheet,1,id);if(row<2)return {ok:false,error:'Aula não encontrada.'};sheet.getRange(row,11).setValue('ARQUIVADA');sheet.getRange(row,13,1,2).setValues([[new Date(),admin]]);return {ok:true};}
+function replyAdminComment(token,id,reply){const admin=requireAdmin(token),sheet=SpreadsheetApp.openById(SHEET_ID).getSheetByName(ADMIN_COMENTARIOS_SHEET),row=findRowByValue(sheet,1,id);if(row<2)return {ok:false,error:'Comentário não encontrado.'};sheet.getRange(row,7,1,3).setValues([[cleanText(reply,1200),new Date(),admin]]);return {ok:true};}
+
+function uploadAdminPdf(token,data){requireAdmin(token);if(String(data.mimeType)!=='application/pdf')return {ok:false,error:'Envie um arquivo PDF.'};const bytes=Utilities.base64Decode(String(data.base64||''));if(bytes.length>10*1024*1024)return {ok:false,error:'O PDF deve ter no máximo 10 MB.'};const props=PropertiesService.getScriptProperties();let folderId=props.getProperty('COMMUNITY_MATERIALS_FOLDER_ID'),folder;try{folder=folderId?DriveApp.getFolderById(folderId):null;}catch(e){folder=null;}if(!folder){folder=DriveApp.createFolder('Nutri4Nutri - Materiais da Comunidade');props.setProperty('COMMUNITY_MATERIALS_FOLDER_ID',folder.getId());}const file=folder.createFile(Utilities.newBlob(bytes,'application/pdf',cleanText(data.fileName,180)||'material.pdf'));file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);return {ok:true,url:'https://drive.google.com/uc?export=download&id='+file.getId()};}
+function cleanText(value,max){return String(value||'').replace(/[<>]/g,'').trim().slice(0,max||500);}
