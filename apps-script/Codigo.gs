@@ -469,8 +469,15 @@ function requestAdminCode(email) {
   email = normalizeEmail(email);
   if (ADMIN_EMAILS.indexOf(email) < 0) return {ok:false,error:'E-mail sem permissão administrativa.'};
   const code = String(Math.floor(100000 + Math.random()*900000));
-  CacheService.getScriptCache().put('admin-code:' + email, code, 600);
-  MailApp.sendEmail({to:email,subject:'Código de acesso — Nutri For Nutri',htmlBody:'<p>Seu código de acesso ao painel é:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px">'+code+'</p><p>Ele expira em 10 minutos.</p>'});
+  const record = {code:code, expiresAt:Date.now()+600000, attempts:0};
+  PropertiesService.getScriptProperties().setProperty(adminCodeKey(email), JSON.stringify(record));
+  MailApp.sendEmail({
+    to:email,
+    name:'Priscila Leite',
+    replyTo:'nutri4nutri@gmail.com',
+    subject:'Seu código de acesso — Nutri For Nutri',
+    htmlBody:'<div style="font-family:Arial,sans-serif;color:#17130f"><p>Olá!</p><p>Seu código de acesso ao painel da <strong>Priscila Leite</strong> é:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px;color:#a47855">'+code+'</p><p>Ele expira em 10 minutos e pode ser usado uma vez.</p><p>Nutri For Nutri · Priscila Leite</p></div>'
+  });
   return {ok:true};
 }
 
@@ -481,18 +488,40 @@ function autorizarEmailPainel() {
 
 function verifyAdminCode(email, code) {
   email = normalizeEmail(email);
-  const cache = CacheService.getScriptCache();
-  if (ADMIN_EMAILS.indexOf(email) < 0 || !code || cache.get('admin-code:' + email) !== String(code).trim()) return {ok:false,error:'Código inválido ou expirado.'};
-  cache.remove('admin-code:' + email);
+  if (ADMIN_EMAILS.indexOf(email) < 0 || !code) return {ok:false,error:'Código inválido ou expirado.'};
+  const props = PropertiesService.getScriptProperties();
+  const key = adminCodeKey(email);
+  const raw = props.getProperty(key);
+  if (!raw) return {ok:false,error:'Código inválido ou expirado.'};
+  let record;
+  try { record = JSON.parse(raw); } catch (err) { props.deleteProperty(key); return {ok:false,error:'Código inválido ou expirado.'}; }
+  if (Date.now() > Number(record.expiresAt || 0)) { props.deleteProperty(key); return {ok:false,error:'Código expirado. Solicite um novo.'}; }
+  if (String(record.code) !== String(code).trim()) {
+    record.attempts = Number(record.attempts || 0) + 1;
+    if (record.attempts >= 5) props.deleteProperty(key); else props.setProperty(key, JSON.stringify(record));
+    return {ok:false,error:'Código incorreto.'};
+  }
+  props.deleteProperty(key);
   const token = Utilities.getUuid() + Utilities.getUuid();
-  cache.put('admin-token:' + token, email, 21600);
+  props.setProperty('ADMIN_TOKEN_' + token, JSON.stringify({email:email,expiresAt:Date.now()+21600000}));
   return {ok:true,token:token,email:email};
 }
 
 function requireAdmin(token) {
-  const email = token && CacheService.getScriptCache().get('admin-token:' + token);
+  const props = PropertiesService.getScriptProperties();
+  const key = token ? 'ADMIN_TOKEN_' + token : '';
+  const raw = key && props.getProperty(key);
+  let session = null;
+  try { session = raw ? JSON.parse(raw) : null; } catch (err) {}
+  if (session && Date.now() > Number(session.expiresAt || 0)) { props.deleteProperty(key); session = null; }
+  const email = session && normalizeEmail(session.email);
   if (!email || ADMIN_EMAILS.indexOf(email) < 0) throw new Error('Sessão administrativa inválida ou expirada.');
   return email;
+}
+
+function adminCodeKey(email) {
+  const digest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, normalizeEmail(email));
+  return 'ADMIN_CODE_' + Utilities.base64EncodeWebSafe(digest).replace(/=+$/,'');
 }
 
 function listAdminData(token) {
