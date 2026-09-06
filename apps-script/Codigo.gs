@@ -4,12 +4,15 @@ const COMU_FREE_SHEET = 'COMU FREE';
 const EVENTOS_SHEET = 'EVENTOS';
 const ALUNAS_WORK_SHEET = 'ALUNAS WORK';
 const LEADS_QUENTE_SHEET = 'LEADS QUENTE';
+const ALUNAS_SELET_SHEET = 'ALUNAS SELET';
+const LEADS_SELET_SHEET = 'LEADS SELET';
 const ADMIN_AULAS_SHEET = 'ADMIN AULAS';
 const ADMIN_COMENTARIOS_SHEET = 'ADMIN COMENTARIOS';
 const ADMIN_EMAILS = ['nutri4nutri@gmail.com', 'divarebel.on@gmail.com'];
 const PAGAMENTOS_SHEET = 'Pagamentos'; // compatibilidade com compras antigas
 const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
 const WORKSHOP_PUBLIC_LINK_SLUG = 'lreonttfy8mnzycj';
+const SELETIVIDADE_PUBLIC_LINK_SLUG = '0gbq24ep6hqvqsh9';
 
 function getAsaasKey() {
   return PropertiesService.getScriptProperties().getProperty('ASAAS_API_KEY');
@@ -126,7 +129,8 @@ function upsertComuFree(now, name, email, phone, origem, evento) {
 function verificarAcesso(email, curso) {
   email = normalizeEmail(email);
   if (!email) return { acesso: false, diasDesdeCompra: 0 };
-  if (curso === 'workshop') return verificarWorkshopAPI(email);
+  if (curso === 'workshop') return verificarProdutoAPI(email, 'workshop');
+  if (curso === 'seletividade') return verificarProdutoAPI(email, 'seletividade');
 
   try {
     const ss = SpreadsheetApp.openById(SHEET_ID);
@@ -147,13 +151,17 @@ function verificarAcesso(email, curso) {
 }
 
 function verificarWorkshopAPI(email) {
+  return verificarProdutoAPI(email, 'workshop');
+}
+
+function verificarProdutoAPI(email, produto) {
   try {
     const customers = asaasGet('/customers?email=' + encodeURIComponent(email)).data || [];
     for (let i = 0; i < customers.length; i++) {
       const payments = asaasGet('/payments?limit=100&customer=' + encodeURIComponent(customers[i].id)).data || [];
       for (let j = 0; j < payments.length; j++) {
         const payment = payments[j];
-        if (isWorkshopPayment(payment) && isPaidStatus(payment.status)) {
+        if (isProductPayment(payment, produto) && isPaidStatus(payment.status)) {
           return {
             acesso: true,
             diasDesdeCompra: daysSince(payment.paymentDate || payment.clientPaymentDate || payment.dateCreated)
@@ -162,7 +170,7 @@ function verificarWorkshopAPI(email) {
       }
     }
   } catch (err) {
-    console.error('verificarWorkshopAPI:', err);
+    console.error('verificarProdutoAPI:', produto, err);
   }
   return { acesso: false, diasDesdeCompra: 0 };
 }
@@ -193,8 +201,8 @@ function syncAsaasEvents() {
     const customerCache = {};
 
     payments.forEach(function(payment) {
-      const workshop = isWorkshopPayment(payment);
-      if (!workshop) return;
+      const produto = identifyPaymentProduct(payment);
+      if (!produto) return;
 
       const customer = getCustomer(payment.customer, customerCache);
       const statusPt = translateStatus(payment.status);
@@ -203,22 +211,22 @@ function syncAsaasEvents() {
       const previous = eventState[payment.id];
 
       if (previous !== signature) {
-        const eventName = previous ? 'Status atualizado' : 'Cobrança identificada';
+        const eventName = deriveEventName(payment, previous);
         eventSheet.appendRow([
           new Date(), payment.id || '', eventName, statusPt, billingTypePt,
           payment.dateCreated || '', payment.paymentDate || payment.clientPaymentDate || '',
           customer.name || '', customer.email || '', customer.phone || customer.mobilePhone || '',
           payment.description || '', payment.externalReference || '', payment.value || 0,
-          'Workshop Seletividade Alimentar'
+          productLabel(produto)
         ]);
         eventState[payment.id] = signature;
       }
 
       if (isPaidStatus(payment.status)) {
-        upsertAlunaWorkshop(payment, customer);
-        markLeadAsConverted(payment, customer);
+        upsertAlunaProduto(payment, customer, produto);
+        markLeadAsConverted(payment, customer, produto);
       } else {
-        upsertLeadQuente(payment, customer, 'NÃO CONVERTIDO');
+        upsertLeadProduto(payment, customer, produto, 'NÃO CONVERTIDO');
       }
     });
   } finally {
@@ -260,6 +268,24 @@ function isWorkshopPayment(payment) {
   return text.indexOf('workshop') >= 0 && text.indexOf('seletividade') >= 0;
 }
 
+function isSeletividadePayment(payment) {
+  const linkId = getSeletividadePaymentLinkId();
+  const paymentLink = payment.paymentLink || payment.paymentLinkId || '';
+  if (linkId && paymentLink && String(paymentLink) === String(linkId)) return true;
+  const text = [payment.description, payment.externalReference].join(' ').toLowerCase();
+  return text.indexOf('seletividade') >= 0 && text.indexOf('workshop') < 0;
+}
+
+function isProductPayment(payment, produto) {
+  return produto === 'workshop' ? isWorkshopPayment(payment) : isSeletividadePayment(payment);
+}
+
+function identifyPaymentProduct(payment) {
+  if (isWorkshopPayment(payment)) return 'workshop';
+  if (isSeletividadePayment(payment)) return 'seletividade';
+  return '';
+}
+
 function getWorkshopPaymentLinkId() {
   const props = PropertiesService.getScriptProperties();
   const cached = props.getProperty('WORKSHOP_PAYMENT_LINK_ID');
@@ -282,8 +308,64 @@ function getWorkshopPaymentLinkId() {
   return '';
 }
 
+function getSeletividadePaymentLinkId() {
+  return getPaymentLinkId('SELETIVIDADE_PAYMENT_LINK_ID', SELETIVIDADE_PUBLIC_LINK_SLUG, function(text) {
+    return text.indexOf('seletividade') >= 0 && text.indexOf('workshop') < 0;
+  });
+}
+
+function testarIntegracaoSeletividade() {
+  const linkId = getSeletividadePaymentLinkId();
+  const payments = listAsaasPayments();
+  const matches = payments.filter(isSeletividadePayment).length;
+  const result = { linkId: linkId, linkEncontrado: !!linkId, pagamentosRelacionados: matches };
+  console.log(JSON.stringify(result));
+  return result;
+}
+
+function getPaymentLinkId(propertyName, publicSlug, nameMatcher) {
+  const props = PropertiesService.getScriptProperties();
+  const cached = props.getProperty(propertyName);
+  if (cached) return cached;
+  try {
+    const links = asaasGet('/paymentLinks?limit=100&active=true').data || [];
+    for (let i = 0; i < links.length; i++) {
+      const link = links[i];
+      const text = [link.name, link.description, link.url].join(' ').toLowerCase();
+      if (text.indexOf(String(publicSlug).toLowerCase()) >= 0 || nameMatcher(text)) {
+        props.setProperty(propertyName, String(link.id));
+        return String(link.id);
+      }
+    }
+  } catch (err) { console.error('getPaymentLinkId:', propertyName, err); }
+  return '';
+}
+
+function productLabel(produto) {
+  return produto === 'workshop' ? 'Workshop Seletividade Alimentar' : 'Curso Seletividade Alimentar';
+}
+
+function deriveEventName(payment, previous) {
+  const status = String(payment.status || '').toUpperCase();
+  if (isPaidStatus(status)) return 'Pagamento confirmado';
+  if (status === 'OVERDUE') return 'Pagamento vencido';
+  if (status === 'REFUNDED') return 'Pagamento estornado';
+  if (status === 'CANCELED' || status === 'DELETED') return 'Cobrança cancelada';
+  if (status === 'PENDING') {
+    if (String(payment.billingType || '').toUpperCase() === 'BOLETO') return 'Boleto emitido';
+    if (String(payment.billingType || '').toUpperCase() === 'PIX') return 'Pix gerado';
+    return 'Tentativa de compra / pagamento pendente';
+  }
+  return previous ? 'Status atualizado' : 'Cobrança identificada';
+}
+
 function upsertAlunaWorkshop(payment, customer) {
-  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ALUNAS_WORK_SHEET);
+  return upsertAlunaProduto(payment, customer, 'workshop');
+}
+
+function upsertAlunaProduto(payment, customer, produto) {
+  const sheetName = produto === 'workshop' ? ALUNAS_WORK_SHEET : ALUNAS_SELET_SHEET;
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(sheetName);
   const values = [
     payment.paymentDate || payment.clientPaymentDate || payment.dateCreated || '',
     customer.name || '', normalizeEmail(customer.email), customer.phone || customer.mobilePhone || '',
@@ -294,7 +376,12 @@ function upsertAlunaWorkshop(payment, customer) {
 }
 
 function upsertLeadQuente(payment, customer, situation) {
-  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(LEADS_QUENTE_SHEET);
+  return upsertLeadProduto(payment, customer, 'workshop', situation);
+}
+
+function upsertLeadProduto(payment, customer, produto, situation) {
+  const sheetName = produto === 'workshop' ? LEADS_QUENTE_SHEET : LEADS_SELET_SHEET;
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(sheetName);
   const values = [
     payment.dateCreated || new Date(), customer.name || '', normalizeEmail(customer.email),
     customer.phone || customer.mobilePhone || '', payment.id || '', translateBillingType(payment.billingType),
@@ -304,10 +391,11 @@ function upsertLeadQuente(payment, customer, situation) {
   upsertById(sheet, 5, payment.id, values);
 }
 
-function markLeadAsConverted(payment, customer) {
-  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(LEADS_QUENTE_SHEET);
+function markLeadAsConverted(payment, customer, produto) {
+  const sheetName = produto === 'seletividade' ? LEADS_SELET_SHEET : LEADS_QUENTE_SHEET;
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(sheetName);
   const row = findRowByValue(sheet, 5, payment.id);
-  if (row > 1) upsertLeadQuente(payment, customer, 'CONVERTIDO');
+  if (row > 1) upsertLeadProduto(payment, customer, produto || 'workshop', 'CONVERTIDO');
 }
 
 function buildEventState(sheet) {
@@ -339,6 +427,8 @@ function ensureAllSheets() {
   ensureSheet(EVENTOS_SHEET, ['Data / Hora Sync','ID Pagamento','Evento Derivado','Status','Tipo Cobrança','Data Criação','Data Pagamento','Nome','Email','Telefone','Descrição','Referência','Valor','Link / Produto']);
   ensureSheet(ALUNAS_WORK_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
   ensureSheet(LEADS_QUENTE_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
+  ensureSheet(ALUNAS_SELET_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
+  ensureSheet(LEADS_SELET_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
   ensureAdminSheets();
 }
 

@@ -232,8 +232,8 @@ a{text-decoration:none;color:inherit;}
 .nav-btn.next{background:#0D0C0A;color:#F7F4ED;border-color:#0D0C0A;}
 .nav-btn.next:hover{background:var(--go);border-color:var(--go);color:#0D0C0A;}
 </style>
-<style id="workshop-player-gate">html.workshop-checking body{visibility:hidden!important}</style>
-<script>if((location.search.match(/[?&]c=([^&]+)/)||[])[1]==='workshop'){document.documentElement.classList.add('workshop-checking');}</script>
+<style id="paid-player-gate">html.paid-checking body{visibility:hidden!important}</style>
+<script>if(['workshop','seletividade'].indexOf((location.search.match(/[?&]c=([^&]+)/)||[])[1])>=0){document.documentElement.classList.add('paid-checking');}</script>
 </head>
 <body>
 
@@ -318,25 +318,25 @@ a{text-decoration:none;color:inherit;}
 </div>
 
 <script>
-/* ─── PROTEÇÃO DO WORKSHOP PAGO ─── */
+/* ─── PROTEÇÃO DOS CONTEÚDOS PAGOS ─── */
 var REQUESTED_COURSE=(location.search.match(/[?&]c=([^&]+)/)||[])[1]||'';
-if(REQUESTED_COURSE==='workshop'){
-  document.documentElement.classList.add('workshop-checking');
+if(['workshop','seletividade'].indexOf(REQUESTED_COURSE)>=0){
+  document.documentElement.classList.add('paid-checking');
   (function(){
     var email='';
     try{email=localStorage.getItem('nfn_email')||'';}catch(ex){}
-    function denyWorkshop(){
+    function denyPaidCourse(){
       try{localStorage.removeItem('nfn_email');}catch(ex){}
-      location.replace('cursos.html?acesso=workshop-negado');
+      location.replace('cursos.html?acesso='+encodeURIComponent(REQUESTED_COURSE)+'-negado');
     }
-    if(!email){denyWorkshop();return;}
-    fetch('https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec?action=verificar&email='+encodeURIComponent(email)+'&curso=workshop',{cache:'no-store'})
+    if(!email){denyPaidCourse();return;}
+    fetch('https://script.google.com/macros/s/AKfycbxsOCNViKXjbDYT3vM_UBy0mem9TLPgyubTvWB6qWSO-4ja7HMZ0sFDuVlFE-_aHH9i/exec?action=verificar&email='+encodeURIComponent(email)+'&curso='+encodeURIComponent(REQUESTED_COURSE),{cache:'no-store'})
       .then(function(response){if(!response.ok)throw new Error('verify');return response.json();})
       .then(function(data){
-        if(data&&data.acesso){document.documentElement.classList.remove('workshop-checking');}
-        else{denyWorkshop();}
+        if(data&&data.acesso){document.documentElement.classList.remove('paid-checking');}
+        else{denyPaidCourse();}
       })
-      .catch(denyWorkshop);
+      .catch(denyPaidCourse);
   })();
 }
 
