@@ -6,6 +6,7 @@ const ALUNAS_WORK_SHEET = 'ALUNAS WORK';
 const LEADS_QUENTE_SHEET = 'LEADS QUENTE';
 const ALUNAS_SELET_SHEET = 'ALUNAS SELET';
 const LEADS_SELET_SHEET = 'LEADS SELET';
+const MONITORAMENTO_SHEET = 'MONITORAMENTO';
 const ADMIN_AULAS_SHEET = 'ADMIN AULAS';
 const ADMIN_COMENTARIOS_SHEET = 'ADMIN COMENTARIOS';
 const ADMIN_EMAILS = ['nutri4nutri@gmail.com', 'divarebel.on@gmail.com'];
@@ -179,6 +180,7 @@ function setupSistema() {
   ensureAllSheets();
   syncAsaasEvents();
   instalarSincronizacao();
+  instalarMonitoramentoDuasVezesAoDia();
 }
 
 function instalarSincronizacao() {
@@ -188,6 +190,88 @@ function instalarSincronizacao() {
   if (!exists) {
     ScriptApp.newTrigger('syncAsaasEvents').timeBased().everyMinutes(15).create();
   }
+}
+
+function instalarMonitoramentoDuasVezesAoDia() {
+  const handler = 'verificarSistemaCompleto';
+  ScriptApp.getProjectTriggers().forEach(function(trigger) {
+    if (trigger.getHandlerFunction() === handler) ScriptApp.deleteTrigger(trigger);
+  });
+  [8, 20].forEach(function(hour) {
+    ScriptApp.newTrigger(handler).timeBased().everyDays(1).atHour(hour).create();
+  });
+}
+
+function verificarSistemaCompleto() {
+  const startedAt = new Date();
+  const checks = [];
+  function check(name, fn) {
+    try {
+      const detail = fn();
+      checks.push({ name: name, ok: true, detail: detail == null ? 'OK' : String(detail) });
+    } catch (err) {
+      checks.push({ name: name, ok: false, detail: String(err && err.message ? err.message : err) });
+    }
+  }
+
+  check('API Asaas', function() {
+    const response = asaasGet('/payments?limit=1');
+    return 'Conectada; consulta concluída';
+  });
+  check('Link Workshop', function() {
+    const id = getWorkshopPaymentLinkId();
+    if (!id) throw new Error('Link de pagamento do Workshop não localizado');
+    return 'Link localizado';
+  });
+  check('Link Curso Seletividade', function() {
+    const id = getSeletividadePaymentLinkId();
+    if (!id) throw new Error('Link de pagamento do curso não localizado');
+    return 'Link localizado';
+  });
+  check('Planilha e abas', function() {
+    ensureAllSheets();
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+    const required = [SHEET_NAME, COMU_FREE_SHEET, EVENTOS_SHEET, ALUNAS_WORK_SHEET,
+      LEADS_QUENTE_SHEET, ALUNAS_SELET_SHEET, LEADS_SELET_SHEET,
+      ADMIN_AULAS_SHEET, ADMIN_COMENTARIOS_SHEET];
+    const missing = required.filter(function(name) { return !ss.getSheetByName(name); });
+    if (missing.length) throw new Error('Abas ausentes: ' + missing.join(', '));
+    return required.length + ' abas verificadas';
+  });
+  check('Sincronização financeira', function() {
+    syncAsaasEvents();
+    return 'Workshop e Seletividade sincronizados';
+  });
+  [
+    ['Site principal', 'https://nutri4nutri.com.br/'],
+    ['Página de cursos', 'https://nutri4nutri.com.br/cursos'],
+    ['Área de membros', 'https://nutri4nutri.com.br/player.html']
+  ].forEach(function(item) {
+    check(item[0], function() {
+      const response = UrlFetchApp.fetch(item[1], { muteHttpExceptions: true, followRedirects: true });
+      const code = response.getResponseCode();
+      if (code < 200 || code >= 400) throw new Error('HTTP ' + code);
+      return 'HTTP ' + code;
+    });
+  });
+
+  const failures = checks.filter(function(item) { return !item.ok; });
+  const status = failures.length ? 'FALHA' : 'TUDO CERTO';
+  const monitor = ensureSheet(MONITORAMENTO_SHEET, ['Data / Hora', 'Status Geral', 'Verificação', 'Resultado', 'Detalhes']);
+  checks.forEach(function(item) {
+    monitor.appendRow([startedAt, status, item.name, item.ok ? 'OK' : 'ERRO', item.detail]);
+  });
+
+  if (failures.length) {
+    const body = failures.map(function(item) { return item.name + ': ' + item.detail; }).join('\n');
+    MailApp.sendEmail({
+      to: ADMIN_EMAILS.join(','),
+      subject: 'Alerta técnico — Nutri4Nutri',
+      body: 'A verificação automática encontrou falhas:\n\n' + body + '\n\nHorário: ' + startedAt,
+      name: 'Priscila Leite'
+    });
+  }
+  return { ok: failures.length === 0, status: status, verificacoes: checks };
 }
 
 function syncAsaasEvents() {
@@ -429,6 +513,7 @@ function ensureAllSheets() {
   ensureSheet(LEADS_QUENTE_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
   ensureSheet(ALUNAS_SELET_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
   ensureSheet(LEADS_SELET_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
+  ensureSheet(MONITORAMENTO_SHEET, ['Data / Hora','Status Geral','Verificação','Resultado','Detalhes']);
   ensureAdminSheets();
 }
 
