@@ -9,11 +9,15 @@ const LEADS_SELET_SHEET = 'LEADS SELET';
 const MONITORAMENTO_SHEET = 'MONITORAMENTO';
 const ADMIN_AULAS_SHEET = 'ADMIN AULAS';
 const ADMIN_COMENTARIOS_SHEET = 'ADMIN COMENTARIOS';
+const ACESSOS_MANUAIS_SHEET = 'ACESSOS MANUAIS';
+const EMAILS_ENVIADOS_SHEET = 'EMAILS ENVIADOS';
 const ADMIN_EMAILS = ['nutri4nutri@gmail.com', 'divarebel.on@gmail.com'];
 const PAGAMENTOS_SHEET = 'Pagamentos'; // compatibilidade com compras antigas
 const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
 const WORKSHOP_PUBLIC_LINK_SLUG = 'lreonttfy8mnzycj';
 const SELETIVIDADE_PUBLIC_LINK_SLUG = '0gbq24ep6hqvqsh9';
+const WELCOME_EMAILS_START_PROPERTY = 'WELCOME_EMAILS_START_AT';
+const WORKSHOP_MEET_PROPERTY = 'WORKSHOP_MEET_URL';
 
 function getAsaasKey() {
   return PropertiesService.getScriptProperties().getProperty('ASAAS_API_KEY');
@@ -156,6 +160,12 @@ function verificarWorkshopAPI(email) {
 }
 
 function verificarProdutoAPI(email, produto) {
+  const manual = verificarControleManual(email, produto);
+  if (manual) return manual;
+
+  const manualRoster = verificarAlunaManualNaPlanilha(email, produto);
+  if (manualRoster) return manualRoster;
+
   try {
     const customers = asaasGet('/customers?email=' + encodeURIComponent(email)).data || [];
     for (let i = 0; i < customers.length; i++) {
@@ -165,15 +175,82 @@ function verificarProdutoAPI(email, produto) {
         if (isProductPayment(payment, produto) && isPaidStatus(payment.status)) {
           return {
             acesso: true,
-            diasDesdeCompra: daysSince(payment.paymentDate || payment.clientPaymentDate || payment.dateCreated)
+            diasDesdeCompra: daysSince(payment.paymentDate || payment.clientPaymentDate || payment.dateCreated),
+            fonte: 'asaas'
           };
         }
       }
     }
   } catch (err) {
     console.error('verificarProdutoAPI:', produto, err);
+    const fallback = verificarAlunaNaPlanilha(email, produto);
+    if (fallback) return fallback;
   }
   return { acesso: false, diasDesdeCompra: 0 };
+}
+
+function verificarControleManual(email, produto) {
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ACESSOS_MANUAIS_SHEET);
+  if (!sheet) return null;
+  if (sheet.getLastRow() < 2) return null;
+  const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, 7).getValues();
+  for (let i = rows.length - 1; i >= 0; i--) {
+    const rowEmail = normalizeEmail(rows[i][2]);
+    const rowProduct = normalizeProduct(rows[i][3]);
+    if (rowEmail !== email || rowProduct !== produto) continue;
+    const status = normalizeAccessStatus(rows[i][4]);
+    if (status === 'BLOQUEADO') return { acesso: false, diasDesdeCompra: 0, fonte: 'planilha-manual', bloqueioManual: true };
+    if (status === 'LIBERADO') return { acesso: true, diasDesdeCompra: daysSince(rows[i][0]), fonte: 'planilha-manual' };
+  }
+  return null;
+}
+
+function verificarAlunaManualNaPlanilha(email, produto) {
+  const record = findStudentSheetRecord(email, produto);
+  if (!record) return null;
+  const status = String(record.status || '').toUpperCase();
+  const manual = !record.paymentId || status.indexOf('MANUAL') >= 0 || status === 'LIBERADO';
+  if (!manual) return null;
+  if (isBlockedSheetStatus(status)) return { acesso: false, diasDesdeCompra: 0, fonte: 'planilha-alunas', bloqueioManual: true };
+  return { acesso: true, diasDesdeCompra: daysSince(record.date), fonte: 'planilha-alunas' };
+}
+
+function verificarAlunaNaPlanilha(email, produto) {
+  const record = findStudentSheetRecord(email, produto);
+  if (!record || isBlockedSheetStatus(record.status)) return null;
+  return { acesso: true, diasDesdeCompra: daysSince(record.date), fonte: 'planilha-contingencia', contingencia: true };
+}
+
+function findStudentSheetRecord(email, produto) {
+  const sheetName = produto === 'workshop' ? ALUNAS_WORK_SHEET : ALUNAS_SELET_SHEET;
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(sheetName);
+  if (!sheet || sheet.getLastRow() < 2) return null;
+  const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, 11).getValues();
+  for (let i = rows.length - 1; i >= 0; i--) {
+    if (normalizeEmail(rows[i][2]) === email) {
+      return { date: rows[i][0], paymentId: String(rows[i][4] || ''), status: String(rows[i][6] || '') };
+    }
+  }
+  return null;
+}
+
+function isBlockedSheetStatus(status) {
+  const value = String(status || '').toUpperCase();
+  return value.indexOf('BLOQUE') >= 0 || value.indexOf('REVOG') >= 0 || value.indexOf('INATIV') >= 0 || value.indexOf('CANCEL') >= 0 || value.indexOf('ESTORN') >= 0;
+}
+
+function normalizeProduct(value) {
+  value = String(value || '').toLowerCase().trim();
+  if (value.indexOf('work') >= 0) return 'workshop';
+  if (value.indexOf('selet') >= 0) return 'seletividade';
+  return value;
+}
+
+function normalizeAccessStatus(value) {
+  value = String(value || '').toUpperCase().trim();
+  if (['LIBERADO','ATIVO','SIM'].indexOf(value) >= 0) return 'LIBERADO';
+  if (['BLOQUEADO','REVOGADO','INATIVO','NÃO','NAO'].indexOf(value) >= 0) return 'BLOQUEADO';
+  return value;
 }
 
 function setupSistema() {
@@ -184,12 +261,17 @@ function setupSistema() {
 }
 
 function instalarSincronizacao() {
-  const exists = ScriptApp.getProjectTriggers().some(function(trigger) {
-    return trigger.getHandlerFunction() === 'syncAsaasEvents';
+  ensureAllSheets();
+  ScriptApp.getProjectTriggers().forEach(function(trigger) {
+    if (trigger.getHandlerFunction() === 'syncAsaasEvents') ScriptApp.deleteTrigger(trigger);
   });
-  if (!exists) {
-    ScriptApp.newTrigger('syncAsaasEvents').timeBased().everyMinutes(15).create();
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty(WELCOME_EMAILS_START_PROPERTY)) {
+    marcarPagamentosExistentesComoAnteriores();
+    props.setProperty(WELCOME_EMAILS_START_PROPERTY, new Date().toISOString());
   }
+  ScriptApp.newTrigger('syncAsaasEvents').timeBased().everyMinutes(1).create();
+  return { ok: true, intervaloMinutos: 1, emailsAtivadosEm: props.getProperty(WELCOME_EMAILS_START_PROPERTY) };
 }
 
 function instalarMonitoramentoDuasVezesAoDia() {
@@ -233,7 +315,8 @@ function verificarSistemaCompleto() {
     const ss = SpreadsheetApp.openById(SHEET_ID);
     const required = [SHEET_NAME, COMU_FREE_SHEET, EVENTOS_SHEET, ALUNAS_WORK_SHEET,
       LEADS_QUENTE_SHEET, ALUNAS_SELET_SHEET, LEADS_SELET_SHEET,
-      ADMIN_AULAS_SHEET, ADMIN_COMENTARIOS_SHEET];
+      ADMIN_AULAS_SHEET, ADMIN_COMENTARIOS_SHEET, ACESSOS_MANUAIS_SHEET,
+      EMAILS_ENVIADOS_SHEET];
     const missing = required.filter(function(name) { return !ss.getSheetByName(name); });
     if (missing.length) throw new Error('Abas ausentes: ' + missing.join(', '));
     return required.length + ' abas verificadas';
@@ -309,6 +392,7 @@ function syncAsaasEvents() {
       if (isPaidStatus(payment.status)) {
         upsertAlunaProduto(payment, customer, produto);
         markLeadAsConverted(payment, customer, produto);
+        sendWelcomeEmailOnce(payment, customer, produto);
       } else {
         upsertLeadProduto(payment, customer, produto, 'NÃO CONVERTIDO');
       }
@@ -321,8 +405,9 @@ function syncAsaasEvents() {
 function listAsaasPayments() {
   const result = [];
   let offset = 0;
+  const since = Utilities.formatDate(new Date(Date.now() - 90 * 86400000), Session.getScriptTimeZone(), 'yyyy-MM-dd');
   for (let page = 0; page < 30; page++) {
-    const response = asaasGet('/payments?limit=100&offset=' + offset);
+    const response = asaasGet('/payments?limit=100&offset=' + offset + '&dateCreated%5Bge%5D=' + encodeURIComponent(since));
     const data = response.data || [];
     Array.prototype.push.apply(result, data);
     if (!response.hasMore || data.length === 0) break;
@@ -459,6 +544,122 @@ function upsertAlunaProduto(payment, customer, produto) {
   upsertById(sheet, 5, payment.id, values);
 }
 
+function sendWelcomeEmailOnce(payment, customer, produto) {
+  const email = normalizeEmail(customer && customer.email);
+  const paymentId = String(payment && payment.id || '');
+  if (!email || !paymentId || !welcomeEmailsAreEnabledFor(payment)) return { sent: false, reason: 'not-eligible' };
+
+  const log = ensureEmailLogSheet();
+  const key = produto + ':' + paymentId;
+  const row = findRowByValue(log, 2, key);
+  const previousStatus = row > 1 ? String(log.getRange(row, 8).getValue()).toUpperCase() : '';
+  if (previousStatus === 'ENVIADO' || previousStatus.indexOf('ANTERIOR') >= 0) {
+    return { sent: false, reason: 'already-sent' };
+  }
+
+  const name = cleanText(customer.name || 'Nutricionista', 100);
+  const message = buildWelcomeEmail(produto, name);
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: message.subject,
+      body: message.textBody,
+      htmlBody: message.htmlBody,
+      name: 'Priscila Leite',
+      replyTo: 'nutri4nutri@gmail.com'
+    });
+    upsertEmailLog(log, row, [new Date(), key, productLabel(produto), paymentId, name, email, message.subject, 'ENVIADO', '']);
+    return { sent: true };
+  } catch (err) {
+    upsertEmailLog(log, row, [new Date(), key, productLabel(produto), paymentId, name, email, message.subject, 'ERRO', String(err)]);
+    throw err;
+  }
+}
+
+function marcarPagamentosExistentesComoAnteriores() {
+  const log = ensureEmailLogSheet();
+  const customerCache = {};
+  listAsaasPayments().forEach(function(payment) {
+    const produto = identifyPaymentProduct(payment);
+    if (!produto || !isPaidStatus(payment.status) || !payment.id) return;
+    const key = produto + ':' + payment.id;
+    if (findRowByValue(log, 2, key) > 1) return;
+    const customer = getCustomer(payment.customer, customerCache);
+    log.appendRow([
+      new Date(), key, productLabel(produto), payment.id,
+      cleanText(customer.name || '', 100), normalizeEmail(customer.email), '',
+      'ANTERIOR À ATIVAÇÃO', ''
+    ]);
+  });
+}
+
+function welcomeEmailsAreEnabledFor(payment) {
+  const raw = PropertiesService.getScriptProperties().getProperty(WELCOME_EMAILS_START_PROPERTY);
+  if (!raw) return false;
+  const start = new Date(raw);
+  const paidAt = new Date(payment.paymentDate || payment.clientPaymentDate || payment.dateCreated || 0);
+  return !isNaN(start.getTime()) && !isNaN(paidAt.getTime()) && paidAt.getTime() >= start.getTime();
+}
+
+function upsertEmailLog(sheet, row, values) {
+  if (row > 1) sheet.getRange(row, 1, 1, values.length).setValues([values]);
+  else sheet.appendRow(values);
+}
+
+function buildWelcomeEmail(produto, name) {
+  return produto === 'workshop' ? buildWorkshopWelcomeEmail(name) : buildSeletividadeWelcomeEmail(name);
+}
+
+function buildWorkshopWelcomeEmail(name) {
+  const safeName = escapeHtmlEmail(name);
+  const meetUrl = String(PropertiesService.getScriptProperties().getProperty(WORKSHOP_MEET_PROPERTY) || '').trim();
+  const accessHtml = /^https:\/\//i.test(meetUrl)
+    ? '<p style="margin:24px 0;text-align:center"><a href="' + escapeHtmlEmail(meetUrl) + '" style="display:inline-block;background:#C7A16A;color:#102D24;text-decoration:none;font-weight:bold;padding:14px 24px;border-radius:8px">Entrar no Google Meet</a></p><p style="font-size:13px;color:#6b665f;word-break:break-all">' + escapeHtmlEmail(meetUrl) + '</p>'
+    : '<div style="margin:22px 0;padding:16px 18px;background:#F4EFE5;border-left:4px solid #C7A16A"><strong>O link do Google Meet ainda está sendo preparado.</strong><br>Ele será enviado antes do encontro assim que a sala for definida.</div>';
+  const accessText = /^https:\/\//i.test(meetUrl) ? meetUrl : 'O link do Google Meet será enviado assim que a sala for definida.';
+  return {
+    subject: name + ', sua vaga no Workshop de Seletividade Alimentar está confirmada 💛',
+    textBody: 'Oi, ' + name + '!\n\nSua vaga no Workshop de Seletividade Alimentar está confirmada. Nosso encontro acontecerá ao vivo, no dia 26 de setembro, pelo Google Meet.\n\nAcesso: ' + accessText + '\n\nA atividade é uma ferramenta. Ela não é o tratamento.\n\nNos vemos no workshop.\n\nPriscila Leite\nNutricionista Infantil | Educadora | Mentora de Nutricionistas\nNutri4Nutri',
+    htmlBody: emailShell('<span style="display:none;max-height:0;overflow:hidden">Guarde este e-mail: aqui estão as informações para participar do encontro.</span><p>Oi, <strong>' + safeName + '</strong>! Tudo bem?</p><p>Fiquei muito feliz em saber que você decidiu participar do <strong>Workshop de Seletividade Alimentar</strong>.</p><p>Obrigada por me dar a oportunidade de compartilhar com você um pouco do raciocínio que utilizo na prática para compreender e conduzir casos de seletividade alimentar com mais segurança.</p><p>Durante o nosso encontro, eu quero te ajudar a olhar para além da recusa alimentar.</p><p>Vamos conversar sobre como organizar as informações do caso, o que merece sua atenção, como começar a construir hipóteses, definir prioridades e entender o que precisa acontecer <strong>antes de simplesmente escolher uma atividade</strong>.</p><p>Porque uma das coisas que eu mais quero que você leve desse workshop é:</p><p style="font-size:20px;color:#123D31"><strong>A atividade é uma ferramenta. Ela não é o tratamento.</strong></p><p>Nosso encontro acontecerá <strong>ao vivo, no dia 26 de setembro</strong>, pelo Google Meet.</p><h2 style="color:#123D31">Seu acesso ao workshop</h2>' + accessHtml + '<p>Guarde este e-mail para conseguir encontrar as informações facilmente quando chegar o dia.</p><p>Minha recomendação é entrar alguns minutos antes para conferir áudio, câmera e conexão e aproveitar nosso encontro desde o começo.</p><p>Estou preparando essa aula para que você termine o workshop não apenas com mais informação, mas conseguindo olhar para um caso e pensar:</p><p><strong>“Agora eu sei melhor o que preciso enxergar antes de decidir o que fazer.”</strong></p><p>Nos vemos no workshop. 💛</p>')
+  };
+}
+
+function buildSeletividadeWelcomeEmail(name) {
+  const safeName = escapeHtmlEmail(name);
+  const courseUrl = 'https://nutri4nutri.com.br/cursos';
+  return {
+    subject: name + ', seja bem-vinda à Formação em Seletividade Alimentar 💛',
+    textBody: 'Oi, ' + name + '!\n\nSeja bem-vinda à Formação em Seletividade Alimentar. Seu acesso já está disponível.\n\nAcesse https://nutri4nutri.com.br/cursos, procure a formação Seletividade Alimentar, clique em “Já comprei → Acessar o curso” e use o mesmo e-mail informado na compra.\n\nPriscila Leite\nNutricionista Infantil | Educadora | Mentora de Nutricionistas\nNutri4Nutri',
+    htmlBody: emailShell('<span style="display:none;max-height:0;overflow:hidden">Seu acesso já está disponível. Veja como entrar na área de membros.</span><p>Oi, <strong>' + safeName + '</strong>! Tudo bem?</p><p>Quero começar te dando as boas-vindas à <strong>Formação em Seletividade Alimentar</strong>.</p><p>Fico muito feliz que você tenha decidido continuar comigo depois do workshop e aprofundar o seu raciocínio e a sua condução clínica.</p><p>Agora vamos avançar para um processo mais completo, em que você poderá compreender melhor a avaliação dos casos, organizar seu planejamento terapêutico e desenvolver mais segurança para conduzir crianças com seletividade e recusa alimentar.</p><p>Seu acesso à formação já pode ser feito pela área de membros da Nutri4Nutri.</p><h2 style="color:#123D31">Como acessar seu curso</h2><ol><li>Acesse a página de cursos da Nutri4Nutri: <a href="' + courseUrl + '"><strong>' + courseUrl + '</strong></a></li><li>Procure pela formação <strong>Seletividade Alimentar</strong>.</li><li>Clique em <strong>“Já comprei → Acessar o curso”</strong>.</li><li>Preencha seu <strong>nome</strong> e o <strong>mesmo e-mail utilizado na compra</strong>.</li><li>Pronto. Você será direcionada para o conteúdo da formação.</li></ol><p style="margin:24px 0;text-align:center"><a href="' + courseUrl + '" style="display:inline-block;background:#C7A16A;color:#102D24;text-decoration:none;font-weight:bold;padding:14px 24px;border-radius:8px">Acessar a área de membros</a></p><p>É importante utilizar o mesmo e-mail informado no momento da compra para que o sistema consiga reconhecer o seu acesso.</p><p>A partir daqui, minha orientação é que você não tente consumir tudo correndo.</p><p>Vá módulo por módulo, pensando nos seus próprios atendimentos e observando como aquilo que está aprendendo pode mudar a forma como você avalia, planeja e conduz cada caso.</p><p>Mais do que acumular informação, eu quero que você consiga transformar conhecimento em <strong>conduta diante do paciente real</strong>.</p><p>Seja muito bem-vinda. 💛</p>')
+  };
+}
+
+function emailShell(content) {
+  return '<div style="margin:0;padding:28px;background:#F7F4ED;font-family:Arial,sans-serif;color:#2D2924;line-height:1.65"><div style="max-width:640px;margin:auto;background:#FFFFFF;border:1px solid #E8E0D2;border-radius:16px;overflow:hidden"><div style="background:#123D31;color:#F7F4ED;padding:22px 28px"><div style="font-family:Georgia,serif;font-size:25px;color:#E2BC78">Nutri For Nutri</div><div style="font-size:12px;opacity:.8">Priscila Leite</div></div><div style="padding:28px">' + content + '<div style="margin-top:30px;padding-top:20px;border-top:1px solid #E8E0D2"><strong>Priscila Leite</strong><br>Nutricionista Infantil | Educadora | Mentora de Nutricionistas<br>Nutri4Nutri</div></div></div></div>';
+}
+
+function escapeHtmlEmail(value) {
+  return String(value || '').replace(/[&<>"']/g, function(char) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char];
+  });
+}
+
+function configurarLinkWorkshop(url) {
+  url = String(url || '').trim();
+  if (!/^https:\/\/meet\.google\.com\/[a-z0-9-]+/i.test(url)) throw new Error('Informe um link válido do Google Meet.');
+  PropertiesService.getScriptProperties().setProperty(WORKSHOP_MEET_PROPERTY, url);
+  return { ok: true };
+}
+
+function testarEmailsBoasVindasAline() {
+  const recipient = 'divarebel.on@gmail.com';
+  ['workshop','seletividade'].forEach(function(produto) {
+    const message = buildWelcomeEmail(produto, 'Aline');
+    MailApp.sendEmail({to:recipient, subject:'[TESTE] ' + message.subject, body:message.textBody, htmlBody:message.htmlBody, name:'Priscila Leite', replyTo:'nutri4nutri@gmail.com'});
+  });
+  return { ok: true, enviados: 2, destinatario: recipient };
+}
+
 function upsertLeadQuente(payment, customer, situation) {
   return upsertLeadProduto(payment, customer, 'workshop', situation);
 }
@@ -514,7 +715,26 @@ function ensureAllSheets() {
   ensureSheet(ALUNAS_SELET_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
   ensureSheet(LEADS_SELET_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
   ensureSheet(MONITORAMENTO_SHEET, ['Data / Hora','Status Geral','Verificação','Resultado','Detalhes']);
+  ensureManualAccessSheet();
+  ensureEmailLogSheet();
   ensureAdminSheets();
+}
+
+function ensureManualAccessSheet() {
+  const sheet = ensureSheet(ACESSOS_MANUAIS_SHEET, ['Data','Nome','Email','Curso','Status do Acesso','Observação','Atualizado por']);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1,1,1,7).setBackground('#123D31').setFontColor('#FFFFFF').setFontWeight('bold');
+  sheet.getRange('D2:D').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(['WORKSHOP','SELETIVIDADE'], true).setAllowInvalid(false).build());
+  sheet.getRange('E2:E').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(['LIBERADO','BLOQUEADO'], true).setAllowInvalid(false).build());
+  sheet.getRange('E1').setNote('LIBERADO concede acesso mesmo sem a API. BLOQUEADO impede o acesso mesmo se houver pagamento. Apagar a linha devolve a decisão para a API.');
+  return sheet;
+}
+
+function ensureEmailLogSheet() {
+  const sheet = ensureSheet(EMAILS_ENVIADOS_SHEET, ['Data / Hora','Chave','Produto','ID Pagamento','Nome','Email','Assunto','Status','Erro']);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1,1,1,9).setBackground('#123D31').setFontColor('#FFFFFF').setFontWeight('bold');
+  return sheet;
 }
 
 function ensureSheet(name, headers) {
