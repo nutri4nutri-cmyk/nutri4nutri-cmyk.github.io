@@ -11,6 +11,8 @@ const ADMIN_AULAS_SHEET = 'ADMIN AULAS';
 const ADMIN_COMENTARIOS_SHEET = 'ADMIN COMENTARIOS';
 const ACESSOS_MANUAIS_SHEET = 'ACESSOS MANUAIS';
 const EMAILS_ENVIADOS_SHEET = 'EMAILS ENVIADOS';
+const FILA_EMAILS_SHEET = 'FILA EMAILS';
+const EMAIL_SENDER = 'nutri4nutri@gmail.com';
 const ADMIN_EMAILS = ['nutri4nutri@gmail.com', 'divarebel.on@gmail.com'];
 const PAGAMENTOS_SHEET = 'Pagamentos'; // compatibilidade com compras antigas
 const ASAAS_BASE_URL = 'https://api.asaas.com/v3';
@@ -348,11 +350,11 @@ function verificarSistemaCompleto() {
 
   if (failures.length) {
     const body = failures.map(function(item) { return item.name + ': ' + item.detail; }).join('\n');
-    MailApp.sendEmail({
+    queueEmailFromPriscila({
       to: ADMIN_EMAILS.join(','),
       subject: 'Alerta técnico — Nutri4Nutri',
       body: 'A verificação automática encontrou falhas:\n\n' + body + '\n\nHorário: ' + startedAt,
-      name: 'Priscila Leite'
+      key: 'alerta-tecnico:' + startedAt.toISOString()
     });
   }
   return { ok: failures.length === 0, status: status, verificacoes: checks };
@@ -561,16 +563,16 @@ function sendWelcomeEmailOnce(payment, customer, produto) {
   const name = cleanText(customer.name || 'Nutricionista', 100);
   const message = buildWelcomeEmail(produto, name);
   try {
-    MailApp.sendEmail({
+    queueEmailFromPriscila({
       to: email,
       subject: message.subject,
       body: message.textBody,
       htmlBody: message.htmlBody,
-      name: 'Priscila Leite',
-      replyTo: 'nutri4nutri@gmail.com'
+      key: key,
+      logKey: key
     });
-    upsertEmailLog(log, row, [new Date(), key, productLabel(produto), paymentId, name, email, message.subject, 'ENVIADO', '']);
-    return { sent: true };
+    upsertEmailLog(log, row, [new Date(), key, productLabel(produto), paymentId, name, email, message.subject, 'NA FILA', '']);
+    return { sent: false, queued: true };
   } catch (err) {
     upsertEmailLog(log, row, [new Date(), key, productLabel(produto), paymentId, name, email, message.subject, 'ERRO', String(err)]);
     throw err;
@@ -656,9 +658,15 @@ function testarEmailsBoasVindasAline() {
   const recipient = 'divarebel.on@gmail.com';
   ['workshop','seletividade'].forEach(function(produto) {
     const message = buildWelcomeEmail(produto, 'Aline');
-    MailApp.sendEmail({to:recipient, subject:'[TESTE] ' + message.subject, body:message.textBody, htmlBody:message.htmlBody, name:'Priscila Leite', replyTo:'nutri4nutri@gmail.com'});
+    queueEmailFromPriscila({
+      to: recipient,
+      subject: '[TESTE] ' + message.subject,
+      body: message.textBody,
+      htmlBody: message.htmlBody,
+      key: 'teste-boas-vindas:' + produto + ':' + Utilities.getUuid()
+    });
   });
-  return { ok: true, enviados: 2, destinatario: recipient };
+  return { ok: true, enfileirados: 2, destinatario: recipient, remetente: EMAIL_SENDER };
 }
 
 function upsertLeadQuente(payment, customer, situation) {
@@ -718,6 +726,7 @@ function ensureAllSheets() {
   ensureSheet(MONITORAMENTO_SHEET, ['Data / Hora','Status Geral','Verificação','Resultado','Detalhes']);
   ensureManualAccessSheet();
   ensureEmailLogSheet();
+  ensureEmailQueueSheet();
   ensureAdminSheets();
 }
 
@@ -736,6 +745,110 @@ function ensureEmailLogSheet() {
   sheet.setFrozenRows(1);
   sheet.getRange(1,1,1,9).setBackground('#123D31').setFontColor('#FFFFFF').setFontWeight('bold');
   return sheet;
+}
+
+function ensureEmailQueueSheet() {
+  const sheet = ensureSheet(FILA_EMAILS_SHEET, [
+    'Criado Em','Chave','Destinatário','Assunto','Texto','HTML','Status',
+    'Enviado Em','Remetente Real','Erro','Tentativas','Chave do Log','Última Tentativa'
+  ]);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1,1,1,13).setBackground('#123D31').setFontColor('#FFFFFF').setFontWeight('bold');
+  return sheet;
+}
+
+function queueEmailFromPriscila(options) {
+  options = options || {};
+  const recipients = String(options.to || '').trim();
+  const subject = String(options.subject || '').trim();
+  if (!recipients || !subject) throw new Error('Destinatário e assunto são obrigatórios para enfileirar o e-mail.');
+
+  const sheet = ensureEmailQueueSheet();
+  const key = String(options.key || Utilities.getUuid());
+  const existingRow = findRowByValue(sheet, 2, key);
+  if (existingRow > 1) return { queued: false, reason: 'already-queued', key: key };
+
+  sheet.appendRow([
+    new Date(), key, recipients, subject, String(options.body || ''), String(options.htmlBody || ''),
+    'PENDENTE', '', '', '', 0, String(options.logKey || ''), ''
+  ]);
+  return { queued: true, key: key };
+}
+
+function instalarEnvioPelaContaDaPriscila() {
+  const effectiveEmail = normalizeEmail(Session.getEffectiveUser().getEmail());
+  if (effectiveEmail !== EMAIL_SENDER) {
+    throw new Error('Execute esta função conectada como ' + EMAIL_SENDER + '. Conta atual: ' + (effectiveEmail || 'não identificada'));
+  }
+  ensureAllSheets();
+  ScriptApp.getProjectTriggers().forEach(function(trigger) {
+    if (trigger.getHandlerFunction() === 'processarFilaEmailsPriscila') ScriptApp.deleteTrigger(trigger);
+  });
+  ScriptApp.newTrigger('processarFilaEmailsPriscila').timeBased().everyMinutes(1).create();
+  return { ok: true, remetenteReal: effectiveEmail, intervaloMinutos: 1 };
+}
+
+function processarFilaEmailsPriscila() {
+  const effectiveEmail = normalizeEmail(Session.getEffectiveUser().getEmail());
+  if (effectiveEmail !== EMAIL_SENDER) {
+    throw new Error('Envio bloqueado: o acionador deve pertencer a ' + EMAIL_SENDER + '. Conta atual: ' + (effectiveEmail || 'não identificada'));
+  }
+
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(5000)) return { ok: true, skipped: 'locked' };
+  try {
+    const sheet = ensureEmailQueueSheet();
+    const lastRow = sheet.getLastRow();
+    if (lastRow < 2) return { ok: true, processados: 0 };
+    const rows = sheet.getRange(2, 1, lastRow - 1, 13).getValues();
+    let sent = 0;
+    let failed = 0;
+
+    rows.forEach(function(values, index) {
+      const row = index + 2;
+      const status = String(values[6] || '').toUpperCase();
+      const attempts = Number(values[10] || 0);
+      const lastAttempt = values[12] instanceof Date ? values[12] : new Date(values[12] || 0);
+      const staleProcessing = status === 'PROCESSANDO' && (!lastAttempt.getTime() || Date.now() - lastAttempt.getTime() > 5 * 60000);
+      const eligible = status === 'PENDENTE' || status === 'ERRO' || staleProcessing;
+      if (!eligible || attempts >= 3) return;
+
+      const now = new Date();
+      sheet.getRange(row, 7).setValue('PROCESSANDO');
+      sheet.getRange(row, 11).setValue(attempts + 1);
+      sheet.getRange(row, 13).setValue(now);
+      try {
+        MailApp.sendEmail({
+          to: String(values[2] || ''),
+          subject: String(values[3] || ''),
+          body: String(values[4] || ''),
+          htmlBody: String(values[5] || ''),
+          name: 'Priscila Leite',
+          replyTo: EMAIL_SENDER
+        });
+        sheet.getRange(row, 7, 1, 4).setValues([['ENVIADO', new Date(), effectiveEmail, '']]);
+        updateWelcomeEmailLogStatus(String(values[11] || ''), 'ENVIADO', '');
+        sent++;
+      } catch (err) {
+        const errorText = String(err && err.message ? err.message : err);
+        sheet.getRange(row, 7).setValue('ERRO');
+        sheet.getRange(row, 10).setValue(errorText);
+        updateWelcomeEmailLogStatus(String(values[11] || ''), 'ERRO', errorText);
+        failed++;
+      }
+    });
+    return { ok: failed === 0, processados: sent + failed, enviados: sent, falhas: failed, remetenteReal: effectiveEmail };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function updateWelcomeEmailLogStatus(logKey, status, errorText) {
+  if (!logKey) return;
+  const log = ensureEmailLogSheet();
+  const row = findRowByValue(log, 2, logKey);
+  if (row < 2) return;
+  log.getRange(row, 8, 1, 2).setValues([[status, String(errorText || '')]]);
 }
 
 function ensureSheet(name, headers) {
@@ -867,12 +980,12 @@ function requestAdminCode(email) {
   const code = String(Math.floor(100000 + Math.random()*900000));
   const record = {code:code, expiresAt:Date.now()+600000, attempts:0};
   PropertiesService.getScriptProperties().setProperty(adminCodeKey(email), JSON.stringify(record));
-  MailApp.sendEmail({
+  queueEmailFromPriscila({
     to:email,
-    name:'Priscila Leite',
-    replyTo:'nutri4nutri@gmail.com',
     subject:'Seu código de acesso — Nutri For Nutri',
-    htmlBody:'<div style="font-family:Arial,sans-serif;color:#17130f"><p>Olá!</p><p>Seu código de acesso ao painel da <strong>Priscila Leite</strong> é:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px;color:#a47855">'+code+'</p><p>Ele expira em 10 minutos e pode ser usado uma vez.</p><p>Nutri For Nutri · Priscila Leite</p></div>'
+    body:'Seu código de acesso ao painel da Priscila Leite é: '+code+'\n\nEle expira em 10 minutos e pode ser usado uma vez.',
+    htmlBody:'<div style="font-family:Arial,sans-serif;color:#17130f"><p>Olá!</p><p>Seu código de acesso ao painel da <strong>Priscila Leite</strong> é:</p><p style="font-size:30px;font-weight:bold;letter-spacing:6px;color:#a47855">'+code+'</p><p>Ele expira em 10 minutos e pode ser usado uma vez.</p><p>Nutri For Nutri · Priscila Leite</p></div>',
+    key:'codigo-admin:'+email+':'+Utilities.getUuid()
   });
   return {ok:true};
 }
