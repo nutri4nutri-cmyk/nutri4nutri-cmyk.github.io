@@ -21,6 +21,8 @@ const SELETIVIDADE_PUBLIC_LINK_SLUG = '0gbq24ep6hqvqsh9';
 const WELCOME_EMAILS_START_PROPERTY = 'WELCOME_EMAILS_START_AT';
 const WORKSHOP_MEET_PROPERTY = 'WORKSHOP_MEET_URL';
 const WORKSHOP_MEET_URL = 'https://meet.google.com/bsi-rwjc-vrv';
+const WORKSHOP_WAITLIST_TAG = 'LISTA_ESPERA_WORKSHOP_PAGINA_ENCERRADA';
+const WORKSHOP_WAITLIST_GIFT_URL = 'https://nutri4nutri.com.br/materiais/checklist_anamnese_raciocinio_clinico.pdf';
 
 function getAsaasKey() {
   return PropertiesService.getScriptProperties().getProperty('ASAAS_API_KEY');
@@ -53,6 +55,7 @@ function doPost(e) {
 
     const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
 
+    if (data.action === 'joinWorkshopWaitlist') return jsonOutput(joinWorkshopWaitlist(data));
     if (data.action === 'requestAdminCode') return jsonOutput(requestAdminCode(data.email));
     if (data.action === 'verifyAdminCode') return jsonOutput(verifyAdminCode(data.email, data.code));
     if (data.action === 'listAdminData') return jsonOutput(listAdminData(data.token));
@@ -685,6 +688,71 @@ function upsertLeadProduto(payment, customer, produto, situation) {
   upsertById(sheet, 5, payment.id, values);
 }
 
+function joinWorkshopWaitlist(data) {
+  const name = cleanText(data.name || data.nome, 120);
+  const email = normalizeEmail(data.email);
+  const phone = cleanText(data.phone || data.telefone, 40);
+  if (!name || !email || !phone || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: 'Preencha nome, e-mail e WhatsApp válidos.' };
+  }
+
+  const sheet = ensureSheet(LEADS_QUENTE_SHEET, [
+    'Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor',
+    'Descrição','Referência','Situação Remarketing','Última Atualização','Origem / Tag'
+  ]);
+  ensureWorkshopLeadTagColumn_(sheet);
+
+  const now = new Date();
+  const row = findRowByValue(sheet, 3, email);
+  let alreadyRegistered = row > 1;
+  if (row > 1) {
+    const current = sheet.getRange(row, 1, 1, 13).getValues()[0];
+    const isPaymentRecord = Boolean(current[4]) || String(current[10] || '').toUpperCase() === 'CONVERTIDO';
+    if (!current[1]) sheet.getRange(row, 2).setValue(name);
+    if (!current[3]) sheet.getRange(row, 4).setValue(phone);
+    if (!isPaymentRecord) {
+      sheet.getRange(row, 2).setValue(name);
+      sheet.getRange(row, 4).setValue(phone);
+      sheet.getRange(row, 7).setValue('Lista de espera');
+      sheet.getRange(row, 9).setValue('Lista de espera — próximo Workshop de Seletividade Alimentar');
+      sheet.getRange(row, 11).setValue('LISTA DE ESPERA');
+      sheet.getRange(row, 12).setValue(now);
+    }
+    sheet.getRange(row, 13).setValue(WORKSHOP_WAITLIST_TAG);
+  } else {
+    sheet.appendRow([
+      now, name, email, phone, '', '', 'Lista de espera', '',
+      'Lista de espera — próximo Workshop de Seletividade Alimentar', '',
+      'LISTA DE ESPERA', now, WORKSHOP_WAITLIST_TAG
+    ]);
+  }
+
+  const firstName = cleanText(name.split(/\s+/)[0], 50) || 'Nutri';
+  const safeName = escapeHtmlEmail(firstName);
+  const message = {
+    subject: firstName + ', você está na lista de espera do próximo workshop 💛',
+    body: 'Oi, ' + firstName + '!\n\nSeu nome já está na lista de espera do próximo Workshop de Seletividade Alimentar da Priscila Leite. Assim que a próxima data for definida, você receberá as informações por e-mail.\n\nComo presente, baixe agora o Checklist de Anamnese e Raciocínio Clínico:\n' + WORKSHOP_WAITLIST_GIFT_URL + '\n\nPriscila Leite\nNutricionista Infantil | Educadora | Mentora de Nutricionistas\nNutri4Nutri',
+    htmlBody: emailShell('<span style="display:none;max-height:0;overflow:hidden">Sua inscrição foi confirmada e seu presente já está disponível.</span><p>Oi, <strong>' + safeName + '</strong>! Tudo bem?</p><p>Seu nome já está na <strong>lista de espera do próximo Workshop de Seletividade Alimentar</strong>.</p><p>Assim que a próxima data for definida, você receberá as informações por e-mail.</p><div style="margin:24px 0;padding:20px;background:#F4EFE5;border-left:4px solid #C7A16A"><strong>Seu presente chegou 🍏</strong><br>Preparei um Checklist de Anamnese e Raciocínio Clínico para apoiar sua organização diante do paciente real.</div><p style="text-align:center;margin:28px 0"><a href="' + WORKSHOP_WAITLIST_GIFT_URL + '" style="display:inline-block;background:#C7A16A;color:#102D24;text-decoration:none;font-weight:bold;padding:14px 24px;border-radius:8px">Baixar meu presente</a></p><p>Guarde este e-mail para acessar o material quando precisar.</p>')
+  };
+  const queued = queueEmailFromPriscila({
+    to: email,
+    subject: message.subject,
+    body: message.body,
+    htmlBody: message.htmlBody,
+    key: 'waitlist-workshop-gift:' + email
+  });
+  refreshDashboard();
+  return { ok: true, alreadyRegistered: alreadyRegistered, giftQueued: Boolean(queued.queued) };
+}
+
+function ensureWorkshopLeadTagColumn_(sheet) {
+  if (sheet.getMaxColumns() < 13) sheet.insertColumnsAfter(sheet.getMaxColumns(), 13 - sheet.getMaxColumns());
+  if (String(sheet.getRange(1, 13).getValue() || '').trim() !== 'Origem / Tag') {
+    sheet.getRange(1, 13).setValue('Origem / Tag');
+    sheet.getRange(1, 12).copyTo(sheet.getRange(1, 13), SpreadsheetApp.CopyPasteType.PASTE_FORMAT, false);
+  }
+}
+
 function markLeadAsConverted(payment, customer, produto) {
   const sheetName = produto === 'seletividade' ? LEADS_SELET_SHEET : LEADS_QUENTE_SHEET;
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(sheetName);
@@ -720,7 +788,8 @@ function ensureAllSheets() {
   ensureSheet(COMU_FREE_SHEET, ['Data / Hora','Nome','Email','Telefone','Origem','Primeiro Evento','Último Evento']);
   ensureSheet(EVENTOS_SHEET, ['Data / Hora Sync','ID Pagamento','Evento Derivado','Status','Tipo Cobrança','Data Criação','Data Pagamento','Nome','Email','Telefone','Descrição','Referência','Valor','Link / Produto']);
   ensureSheet(ALUNAS_WORK_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
-  ensureSheet(LEADS_QUENTE_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
+  const leadsWorkshop = ensureSheet(LEADS_QUENTE_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização','Origem / Tag']);
+  ensureWorkshopLeadTagColumn_(leadsWorkshop);
   ensureSheet(ALUNAS_SELET_SHEET, ['Data da Compra','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Última Atualização']);
   ensureSheet(LEADS_SELET_SHEET, ['Data da Tentativa','Nome','Email','Telefone','ID Pagamento','Tipo Cobrança','Status','Valor','Descrição','Referência','Situação Remarketing','Última Atualização']);
   ensureSheet(MONITORAMENTO_SHEET, ['Data / Hora','Status Geral','Verificação','Resultado','Detalhes']);

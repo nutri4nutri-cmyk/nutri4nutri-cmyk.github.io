@@ -16,6 +16,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://nutri4nutri.com.br/lista-espera-workshop.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://nutri4nutri.com.br/biolink.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
