@@ -24,6 +24,264 @@ const WORKSHOP_MEET_URL = 'https://meet.google.com/bsi-rwjc-vrv';
 const WORKSHOP_WAITLIST_TAG = 'LISTA_ESPERA_WORKSHOP_PAGINA_ENCERRADA';
 const WORKSHOP_WAITLIST_GIFT_URL = 'https://nutri4nutri.com.br/materiais/checklist_anamnese_raciocinio_clinico.pdf';
 
+const PAID_COURSES = {
+  "workshop": {
+    "title": "Workshop: Seletividade Alimentar",
+    "badge": "Gravação completa · Priscila Leite",
+    "modules": [
+      {
+        "title": "Workshop Completo",
+        "lessons": [
+          {
+            "name": "Aula 1 — Boas-vindas e fundamentos",
+            "dur": "12min",
+            "vid": "WZvDSasrrqw",
+            "body": "<p>Priscila apresenta a proposta do workshop e estabelece a base para compreender a seletividade alimentar para além da recusa. A aula introduz o raciocínio clínico que orientará todo o encontro e mostra por que a conduta deve partir da leitura individual de cada criança.</p>"
+          },
+          {
+            "name": "Aula 2 — Marcos do desenvolvimento",
+            "dur": "14min",
+            "vid": "xckXhGaT2h4",
+            "body": "<p>Uma leitura dos principais marcos do desenvolvimento infantil relacionados à alimentação. Priscila explica como habilidades motoras, orais e comportamentais interferem no comer e por que reconhecer a etapa de desenvolvimento evita expectativas e intervenções inadequadas.</p>"
+          },
+          {
+            "name": "Aula 3 — Impactos nutricionais e funcionamento intestinal",
+            "dur": "15min",
+            "vid": "X4CB0Jh0AaU",
+            "body": "<p>A aula conecta restrição alimentar, possíveis deficiências nutricionais e funcionamento intestinal. Você entende quais sinais merecem investigação e como alterações clínicas podem sustentar ou intensificar recusas, desconfortos e repertórios alimentares reduzidos.</p>"
+          },
+          {
+            "name": "Aula 4 — Comer é aprendido",
+            "dur": "15min",
+            "vid": "QPJ-EM_Kp8w",
+            "body": "<p>Priscila mostra que comer envolve aprendizagem, experiências repetidas e segurança — não apenas fome ou vontade. A aula ajuda a compreender como a criança constrói sua relação com os alimentos e como o adulto pode favorecer esse processo sem pressão.</p>"
+          },
+          {
+            "name": "Aula 5 — Avaliação e planejamento terapêutico",
+            "dur": "15min",
+            "vid": "o4Jdh7FC8_E",
+            "body": "<p>Como sair da anamnese com informações realmente úteis para a conduta. A aula organiza o olhar clínico para levantar hipóteses, identificar prioridades, definir objetivos e construir um planejamento terapêutico coerente com as necessidades do paciente.</p>"
+          },
+          {
+            "name": "Aula 6 — Escalada do comer e experiência sensorial",
+            "dur": "15min",
+            "vid": "iWmhhsG8P4U",
+            "body": "<p>Uma visão prática da escalada do comer e das etapas que antecedem a ingestão. Priscila aborda como a criança se aproxima, tolera, explora e aprende sobre o alimento, respeitando seu perfil e transformando a experiência sensorial em parte do tratamento.</p>"
+          },
+          {
+            "name": "Aula 7 — Família, comportamento e ambiente",
+            "dur": "16min",
+            "vid": "IoowjmXcLNs",
+            "body": "<p>A alimentação acontece dentro de uma rotina e de relações familiares. Nesta aula, você aprende a observar respostas dos cuidadores, padrões de comportamento e características do ambiente que podem facilitar ou dificultar a evolução clínica.</p>"
+          },
+          {
+            "name": "Aula 8 — Dificuldade alimentar, seletividade e TARE",
+            "dur": "15min",
+            "vid": "fqO5wBiXkZA",
+            "body": "<p>Priscila diferencia conceitos que costumam ser confundidos na prática clínica. A aula ajuda a reconhecer limites entre dificuldade alimentar, seletividade e TARE, além de destacar sinais de alerta e situações que exigem investigação ou encaminhamento.</p>"
+          },
+          {
+            "name": "Aula 9 — Competências alimentares e autonomia",
+            "dur": "16min",
+            "vid": "o7MxNf2mTPM",
+            "body": "<p>O foco se volta para as competências que a criança precisa desenvolver ao longo do processo. Você entende como promover participação, confiança e autonomia nas refeições sem transformar o tratamento em uma sequência de atividades desconectadas.</p>"
+          },
+          {
+            "name": "Aula 10 — Adolescentes, equipe interdisciplinar e encerramento",
+            "dur": "19min",
+            "vid": "mdH5OuKAQOc",
+            "body": "<p>A aula final aborda particularidades do atendimento a adolescentes, a importância da atuação interdisciplinar e os critérios para organizar continuidade e encerramento. Priscila fecha o workshop integrando avaliação, planejamento e condução clínica.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Próximo Passo",
+        "lessons": [
+          {
+            "name": "Aprofunde sua prática em Seletividade Alimentar",
+            "dur": "Formação",
+            "body": "<div style=\"padding:12px 0 8px;\"><p>Você concluiu o workshop e agora já consegue enxergar o caso com mais clareza antes de decidir o que fazer. Se deseja aprofundar esse raciocínio e transformar conhecimento em uma condução clínica estruturada, o próximo passo é a <strong>Formação em Seletividade Alimentar</strong>.</p><p>Na formação, Priscila acompanha você em um processo mais completo de avaliação, planejamento terapêutico e condução de crianças com seletividade e recusa alimentar.</p><p><strong>Continue essa jornada e desenvolva mais segurança para atuar diante do paciente real.</strong></p><p style=\"margin-top:24px;\"><a href=\"https://www.asaas.com/c/0gbq24ep6hqvqsh9\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-flex;align-items:center;justify-content:center;background:#0D0C0A;color:#F7F4ED;padding:15px 24px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;\">Quero entrar na Formação em Seletividade Alimentar →</a></p></div>"
+          }
+        ]
+      }
+    ]
+  },
+  "seletividade": {
+    "title": "Seletividade Alimentar",
+    "badge": "Formação Especializada",
+    "modules": [
+      {
+        "title": "Introdução",
+        "lessons": [
+          {
+            "name": "Boas-vindas",
+            "dur": "3min",
+            "vid": "yQd6X2MhJY4",
+            "body": "<p>Seja bem-vinda à <strong>Formação em Seletividade Alimentar</strong>. Aqui você vai aprender a identificar, avaliar e conduzir casos de seletividade com segurança e método.</p>"
+          },
+          {
+            "name": "Como aproveitar o curso",
+            "dur": "3min",
+            "vid": "tbzp8AMsrt0",
+            "body": "<p>Entenda como o curso está organizado, a melhor forma de navegar pelos módulos e como tirar o máximo proveito de cada aula e material de apoio.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Módulo 1 — Avaliação e Diagnóstico",
+        "lessons": [
+          {
+            "name": "Entendendo a seletividade alimentar",
+            "dur": "20min",
+            "vid": "6eKNRV7_BfI",
+            "body": "<p>O que é seletividade alimentar, como diferenciá-la de outros quadros de recusa e por que ela exige uma abordagem especializada.</p>"
+          },
+          {
+            "name": "Diagnóstico diferencial",
+            "dur": "28min",
+            "vid": "InNHjO49wrA",
+            "body": "<p>Como diferenciar seletividade alimentar de ARFID, neofobia, recusa condicionada e quadros associados a condições como TEA, TDAH e transtornos sensoriais.</p>"
+          },
+          {
+            "name": "Instrumentos e escalas de avaliação",
+            "dur": "22min",
+            "body": "<p>Ferramentas validadas para quantificar a severidade da seletividade e monitorar a evolução clínica ao longo do tratamento.</p>"
+          },
+          {
+            "name": "Material do Módulo 1",
+            "dur": "PDF",
+            "body": "<div style=\"padding:32px 0;text-align:center;\"><div style=\"font-size:48px;margin-bottom:16px;\">📄</div><h2 style=\"font-family:var(--font);color:var(--tx);margin-bottom:8px;\">Entendendo a Seletividade Alimentar</h2><p style=\"color:var(--tx2);margin-bottom:24px;\">Material de apoio completo do Módulo 1 em PDF</p><a href=\"materiais/Modulo_1_Entendendo_a_Seletividade_Alimentar.pdf\" download style=\"display:inline-block;background:var(--go);color:#fff;font-family:var(--font);font-weight:600;padding:14px 28px;border-radius:8px;text-decoration:none;font-size:15px;\">⬇ Baixar PDF</a></div>"
+          }
+        ]
+      },
+      {
+        "title": "Módulo 2 — Planejamento",
+        "lessons": [
+          {
+            "name": "Estruturando o plano terapêutico",
+            "dur": "25min",
+            "body": "<p>Como organizar um plano de intervenção para casos de seletividade, com etapas claras, objetivos mensuráveis e indicadores de progresso.</p>"
+          },
+          {
+            "name": "Hierarquia sensorial dos alimentos",
+            "dur": "20min",
+            "body": "<p>Como mapear a hierarquia sensorial da criança e usá-la para construir a sequência de introdução de novos alimentos de forma estratégica e segura.</p>"
+          },
+          {
+            "name": "Definindo metas com a família",
+            "dur": "16min",
+            "body": "<p>Como negociar metas realistas com os pais, evitar armadilhas comuns e manter o engajamento familiar ao longo do processo.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Módulo 3 — Condução Clínica",
+        "lessons": [
+          {
+            "name": "Exposição gradual e dessensibilização",
+            "dur": "30min",
+            "body": "<p>O protocolo completo de exposição gradual para crianças seletivas, passo a passo, com exemplos práticos e adaptações para diferentes perfis.</p>"
+          },
+          {
+            "name": "Manejo comportamental no consultório",
+            "dur": "26min",
+            "body": "<p>Técnicas de manejo comportamental durante as sessões, como lidar com resistência, como usar reforços positivos e como estruturar a sessão para maximizar a adesão da criança.</p>"
+          },
+          {
+            "name": "Documentação e monitoramento",
+            "dur": "14min",
+            "body": "<p>Como documentar o progresso de forma sistemática, monitorar a evolução e adaptar o plano conforme necessário.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Módulo 4 — Casos Clínicos Reais",
+        "drip": 7,
+        "lessons": [
+          {
+            "name": "Caso 1 — Seletividade severa em pré-escolar",
+            "dur": "38min",
+            "body": "<p>Análise detalhada de um caso real de seletividade severa em uma criança de 3 anos, desde a avaliação inicial até a alta, incluindo os desafios de manejo familiar e as estratégias que funcionaram.</p><ul><li>Apresentação do caso e histórico alimentar</li><li>Avaliação sensorial e diagnóstico</li><li>Plano de intervenção estruturado</li><li>Evolução sessão a sessão</li><li>Desfecho clínico e alta</li></ul>"
+          },
+          {
+            "name": "Caso 2 — Seletividade por hipersensibilidade sensorial",
+            "dur": "32min",
+            "body": "<p>Caso de uma criança com hipersensibilidade tátil e gustativa intensa, sem diagnóstico formal de TEA ou TDAH, mas com um perfil sensorial atípico que impactava severamente a alimentação.</p><p>Aprenda como adaptar as estratégias de exposição para perfis sensoriais extremos e como trabalhar a co-regulação familiar.</p>"
+          },
+          {
+            "name": "Caso 3 — Recusa pós-episódio traumático",
+            "dur": "28min",
+            "body": "<p>Como conduzir um caso de recusa alimentar severa desencadeada por um engasgo traumático em uma criança de 5 anos. O trabalho envolveu dessensibilização da ansiedade antecipatória e reconstrução progressiva da relação com os alimentos.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Módulo 5 — TEA, TDAH e Seletividade",
+        "drip": 7,
+        "lessons": [
+          {
+            "name": "Seletividade no TEA — especificidades clínicas",
+            "dur": "35min",
+            "body": "<p>Crianças com TEA apresentam padrões de seletividade com características únicas: a rigidez é maior, a janela de tolerância é mais estreita e o processo de dessensibilização exige adaptações específicas.</p><p>Nesta aula você aprende a modificar o protocolo de intervenção para o perfil do TEA, respeitando as necessidades sensoriais e comunicativas de cada criança.</p><ul><li>Por que a seletividade no TEA é diferente</li><li>Adaptações no protocolo de exposição gradual</li><li>O papel do suporte visual e de rotinas</li><li>Trabalho com a família e equipe interdisciplinar</li></ul>"
+          },
+          {
+            "name": "TDAH e a relação com o alimento",
+            "dur": "24min",
+            "body": "<p>A criança com TDAH tem uma relação com o alimento moldada pela impulsividade, pelo desinteresse por textura/aparência e pelo impacto da medicação no apetite. Entenda como esses fatores se cruzam com a seletividade e como adaptar a conduta.</p>"
+          },
+          {
+            "name": "Adaptações clínicas para crianças neuroatípicas",
+            "dur": "28min",
+            "body": "<p>Um guia prático de adaptações que você pode fazer no ambiente, na linguagem, na estrutura das sessões e nas orientações para a família quando atende crianças neuroatípicas com seletividade alimentar.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Módulo 6 — Alta e Pós-Tratamento",
+        "drip": 7,
+        "lessons": [
+          {
+            "name": "Critérios de alta — quando e como",
+            "dur": "20min",
+            "body": "<p>Como definir com clareza os critérios de alta para casos de seletividade alimentar. Quais indicadores sinalizam que a criança atingiu um nível de funcionamento alimentar sustentável — e como conduzir este momento com a família.</p>"
+          },
+          {
+            "name": "Prevenção de recaída e manejo doméstico",
+            "dur": "18min",
+            "body": "<p>Estratégias para consolidar os ganhos do tratamento no ambiente doméstico e orientar a família sobre como manter a evolução após a alta. O que fazer (e o que evitar) nos meses seguintes.</p>"
+          },
+          {
+            "name": "Encerramento e acompanhamento pós-alta",
+            "dur": "16min",
+            "body": "<p>Como estruturar o encerramento do processo terapêutico de forma clínica e emocionalmente cuidadosa, e como organizar o acompanhamento pós-alta para consolidar os resultados a longo prazo.</p>"
+          }
+        ]
+      },
+      {
+        "title": "Bônus — Materiais Extras",
+        "bonus": true,
+        "lessons": [
+          {
+            "name": "Material do Módulo 1",
+            "dur": "PDF",
+            "body": "<div style=\"padding:32px 0;text-align:center;\"><div style=\"font-size:48px;margin-bottom:16px;\">📄</div><h2 style=\"font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;\">Entendendo a Seletividade Alimentar</h2><p style=\"color:rgba(13,12,10,.5);font-size:13px;margin-bottom:28px;\">Material de apoio completo do Módulo 1 em PDF</p><a href=\"materiais/Modulo_1_Entendendo_a_Seletividade_Alimentar.pdf\" download style=\"display:inline-flex;align-items:center;gap:8px;background:#0D0C0A;color:#F7F4ED;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;\">⬇ Baixar PDF</a></div>"
+          },
+          {
+            "name": "Material do Módulo 2",
+            "dur": "PDF",
+            "body": "<div style=\"padding:32px 0;text-align:center;\"><div style=\"font-size:48px;margin-bottom:16px;\">📄</div><h2 style=\"font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;\">A Ciência do Comportamento Alimentar</h2><p style=\"color:rgba(13,12,10,.5);font-size:13px;margin-bottom:28px;\">Material de apoio completo do Módulo 2 em PDF</p><a href=\"materiais/Modulo_2_A_Ciencia_do_Comportamento_Alimentar.pdf\" download style=\"display:inline-flex;align-items:center;gap:8px;background:#0D0C0A;color:#F7F4ED;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;\">⬇ Baixar PDF</a></div>"
+          },
+          {
+            "name": "Material do Módulo 3",
+            "dur": "PDF",
+            "body": "<div style=\"padding:32px 0;text-align:center;\"><div style=\"font-size:48px;margin-bottom:16px;\">📄</div><h2 style=\"font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;margin-bottom:8px;\">Desenvolvimento Oral</h2><p style=\"color:rgba(13,12,10,.5);font-size:13px;margin-bottom:28px;\">Material de apoio completo do Módulo 3 em PDF</p><a href=\"materiais/Modulo_3_Desenvolvimento_Oral.pdf\" download style=\"display:inline-flex;align-items:center;gap:8px;background:#0D0C0A;color:#F7F4ED;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;\">⬇ Baixar PDF</a></div>"
+          }
+        ]
+      }
+    ]
+  }
+};
+
 function getAsaasKey() {
   return PropertiesService.getScriptProperties().getProperty('ASAAS_API_KEY');
 }
@@ -35,6 +293,7 @@ function doGet(e) {
     const curso = e.parameter.curso || '';
     return jsonOutput(verificarAcesso(email, curso));
   }
+  if (action === 'paidCourseContent') return jsonOutput(getPaidCourseContent(e.parameter.email || '', e.parameter.curso || ''));
   if (action === 'communityContent') return jsonOutput(getCommunityContent(e.parameter.email || ''));
   if (action === 'lessonComments') return jsonOutput(getLessonComments(e.parameter.lessonId || ''));
   return jsonOutput({ status: 'ok' });
@@ -159,6 +418,14 @@ function verificarAcesso(email, curso) {
     console.error('verificarAcesso:', err);
   }
   return { acesso: false, diasDesdeCompra: 0 };
+}
+
+function getPaidCourseContent(email, curso) {
+  curso = normalizeProduct(curso);
+  if (!PAID_COURSES[curso]) return { ok: false, acesso: false, error: 'Curso inválido' };
+  const access = verificarProdutoAPI(normalizeEmail(email), curso);
+  if (!access || !access.acesso) return { ok: false, acesso: false };
+  return { ok: true, acesso: true, diasDesdeCompra: access.diasDesdeCompra || 0, course: PAID_COURSES[curso] };
 }
 
 function verificarWorkshopAPI(email) {
@@ -940,6 +1207,29 @@ function asaasGet(path) {
   const body = response.getContentText();
   if (code < 200 || code >= 300) throw new Error('Asaas HTTP ' + code + ': ' + body.slice(0, 300));
   return JSON.parse(body);
+}
+
+function asaasPut(path, payload) {
+  const key = getAsaasKey();
+  if (!key) throw new Error('ASAAS_API_KEY não configurada');
+  const response = UrlFetchApp.fetch(ASAAS_BASE_URL + path, {
+    method: 'put',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload || {}),
+    headers: { access_token: key },
+    muteHttpExceptions: true
+  });
+  const code = response.getResponseCode();
+  const body = response.getContentText();
+  if (code < 200 || code >= 300) throw new Error('Asaas HTTP ' + code + ': ' + body.slice(0, 300));
+  return JSON.parse(body);
+}
+
+function atualizarPrecoGravacaoWorkshop97() {
+  const id = getWorkshopPaymentLinkId();
+  if (!id) throw new Error('Link de pagamento do Workshop não localizado');
+  const result = asaasPut('/paymentLinks/' + encodeURIComponent(id), { value: 97, active: true });
+  return { ok: true, id: String(result.id || id), value: Number(result.value), active: !!result.active, url: String(result.url || '') };
 }
 
 function isPaidStatus(status) {
