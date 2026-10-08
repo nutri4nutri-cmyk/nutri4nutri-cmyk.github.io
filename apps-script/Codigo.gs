@@ -433,6 +433,12 @@ function verificarWorkshopAPI(email) {
 }
 
 function verificarProdutoAPI(email, produto) {
+  email = normalizeEmail(email);
+  produto = normalizeProduct(produto);
+  if (ADMIN_EMAILS.indexOf(email) >= 0) {
+    return { acesso: true, diasDesdeCompra: 999, fonte: 'admin' };
+  }
+
   const manual = verificarControleManual(email, produto);
   if (manual) return manual;
 
