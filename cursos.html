@@ -872,7 +872,7 @@ function verifyWorkshop(e) {
   if (!WS_ASAAS_VERIFY) {
     // Modo de desenvolvimento: acesso liberado sem verificação
     try { localStorage.setItem('nfn_email', email); } catch(ex){}
-    window.location.href = 'workshop-seletividade.html';
+    window.location.href = 'player.html?c=workshop';
     return;
   }
 
@@ -883,7 +883,7 @@ function verifyWorkshop(e) {
         try { localStorage.setItem('nfn_email', email); } catch(ex){}
         var pl = new URLSearchParams({name:'', email:email, course:'workshop', type:'access'});
         try { navigator.sendBeacon(WS_URL, pl); } catch(ex){}
-        window.location.href = 'workshop-seletividade.html';
+        window.location.href = 'player.html?c=workshop';
       } else {
         errDiv.textContent = 'E-mail não encontrado. Verifique o e-mail usado na compra ou entre em contato pelo Instagram @nutri4nutri.';
         errDiv.style.display = 'block';

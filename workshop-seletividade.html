@@ -53,7 +53,7 @@ src="https://www.facebook.com/tr?id=1017324754333197&ev=PageView&noscript=1"
   if(!email){deny();return;}
   fetch(VERIFY_URL+'?action=verificar&email='+encodeURIComponent(email)+'&curso=workshop',{cache:'no-store'})
     .then(function(response){if(!response.ok)throw new Error('verify');return response.json();})
-    .then(function(data){if(data&&data.acesso){document.documentElement.classList.add('workshop-access-ok');}else{deny();}})
+    .then(function(data){if(data&&data.acesso){location.replace('player.html?c=workshop');}else{deny();}})
     .catch(deny);
 })();
 </script>
